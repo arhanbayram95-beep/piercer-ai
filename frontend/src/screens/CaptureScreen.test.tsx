@@ -59,7 +59,18 @@ describe('CaptureScreen', () => {
     mockLaunchImageLibrary.mockClear();
     mockLaunchImageLibrary.mockResolvedValue({ canceled: false, assets: [{ base64: 'R0lGOD' }] });
     mockHasPermission = true;
-    useAppStore.setState({ screen: 'capture', images: [] });
+    useAppStore.setState({ screen: 'capture', images: [], selectedLocation: null });
+  });
+
+  it('shows no location-specific guide copy when no location was selected', () => {
+    render(<CaptureScreen />);
+    expect(screen.queryByTestId('capture-guide-copy')).toBeNull();
+  });
+
+  it('shows a guide prompt naming the piercing location picked on the previous screen', () => {
+    useAppStore.setState({ selectedLocation: 'helix' });
+    render(<CaptureScreen />);
+    expect(screen.getByTestId('capture-guide-copy').props.children).toContain('Helix');
   });
 
   it('prompts for camera access when permission is not granted', () => {

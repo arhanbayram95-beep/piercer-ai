@@ -5,6 +5,7 @@ export type AppScreen =
   | 'onboarding'
   | 'paywall'
   | 'welcome'
+  | 'location'
   | 'capture'
   | 'studio'
   | 'preview'

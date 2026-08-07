@@ -62,6 +62,7 @@ export default function PreviewScreen() {
   const clearImages = useAppStore((s) => s.clearImages);
   const setRenderResult = useAppStore((s) => s.setRenderResult);
   const clearStackedItems = useAppStore((s) => s.clearStackedItems);
+  const setLocation = useAppStore((s) => s.setLocation);
 
   const [showAfter, setShowAfter] = useState(true);
   const [adjustments, setAdjustments] = useState<Record<SliderKey, number>>(defaultAdjustments);
@@ -91,6 +92,7 @@ export default function PreviewScreen() {
     clearImages();
     setRenderResult(null);
     clearStackedItems();
+    setLocation(null);
     goToScreen('welcome');
   };
 

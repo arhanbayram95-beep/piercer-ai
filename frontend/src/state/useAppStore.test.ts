@@ -78,6 +78,14 @@ describe('useAppStore', () => {
     ]);
   });
 
+  it('starts with no piercing location selected and can set/clear it', () => {
+    expect(useAppStore.getState().selectedLocation).toBeNull();
+    useAppStore.getState().setLocation('helix');
+    expect(useAppStore.getState().selectedLocation).toBe('helix');
+    useAppStore.getState().setLocation(null);
+    expect(useAppStore.getState().selectedLocation).toBeNull();
+  });
+
   it('defaults to English and can switch language', () => {
     expect(useAppStore.getState().languageCode).toBe('en');
     useAppStore.getState().setLanguageCode('es');

@@ -35,7 +35,7 @@ export default function WelcomeScreen() {
       </FadeInView>
 
       <View style={styles.footer}>
-        <PrimaryButton label={t('welcome.cta')} onPress={() => goToScreen('capture')} />
+        <PrimaryButton label={t('welcome.cta')} onPress={() => goToScreen('location')} />
       </View>
     </View>
   );

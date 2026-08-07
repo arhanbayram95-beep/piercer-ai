@@ -4,6 +4,7 @@ import CaptureScreen from '../screens/CaptureScreen';
 import LoadingScreen from '../screens/LoadingScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import PaywallScreen from '../screens/PaywallScreen';
+import PiercingLocationScreen from '../screens/PiercingLocationScreen';
 import PreviewScreen from '../screens/PreviewScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import StudioScreen from '../screens/StudioScreen';
@@ -16,6 +17,7 @@ const SCREENS: Record<AppScreen, React.ComponentType> = {
   onboarding: OnboardingScreen,
   paywall: PaywallScreen,
   welcome: WelcomeScreen,
+  location: PiercingLocationScreen,
   capture: CaptureScreen,
   studio: StudioScreen,
   preview: PreviewScreen,

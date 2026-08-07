@@ -5,6 +5,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Camera, useCameraPermission, usePhotoOutput } from 'react-native-vision-camera';
 import PrimaryButton from '../components/common/PrimaryButton';
+import { PIERCING_LOCATIONS } from '../content/piercingLocations';
 import { useTranslation } from '../i18n/useTranslation';
 import { useAppStore } from '../state/useAppStore';
 import { Theme } from '../ui/theme';
@@ -37,15 +38,19 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
 }
 
 // Single-photo capture of whatever body part the user wants to preview
-// jewelry on (ears, nose, brow, navel, etc.) — the guide overlay below is
-// deliberately a neutral framing box, not a face-shaped ring, since this app
-// isn't limited to faces. A gallery-upload fallback exists alongside the
-// live camera for users who'd rather use an existing photo, or whose device
-// camera permission is denied.
+// jewelry on — the guide overlay below is deliberately a neutral framing
+// box, not a face-shaped ring, since this app isn't limited to faces. As of
+// the piercing-selection-first reorder, the user already picked a specific
+// piercing location on PiercingLocationScreen before reaching here, so the
+// prompt above the guide names that location (e.g. "clearly see your
+// helix") instead of staying generic. A gallery-upload fallback exists
+// alongside the live camera for users who'd rather use an existing photo,
+// or whose device camera permission is denied.
 export default function CaptureScreen() {
   const { hasPermission, requestPermission } = useCameraPermission();
   const [isCapturing, setIsCapturing] = useState(false);
   const [isPickingFromLibrary, setIsPickingFromLibrary] = useState(false);
+  const selectedLocation = useAppStore((s) => s.selectedLocation);
   // usePhotoOutput/outputs must stay reference-stable across renders — a
   // fresh options object or array literal here reconfigures (unbinds and
   // rebinds) the native camera session on every re-render, including the
@@ -64,6 +69,15 @@ export default function CaptureScreen() {
   const goToScreen = useAppStore((s) => s.goToScreen);
   const goBack = useAppStore((s) => s.goBack);
   const t = useTranslation();
+
+  // selectedLocation is set on PiercingLocationScreen, the step before this
+  // one — null only if this screen is somehow reached without going through
+  // it (e.g. a future deep link), in which case the guide prompt is simply
+  // omitted rather than showing a broken/generic fallback string.
+  const locationEntry = PIERCING_LOCATIONS.find((location) => location.id === selectedLocation);
+  const guideCopy = locationEntry
+    ? t('capture.guide.withLocation', { location: t(locationEntry.labelKey) })
+    : null;
 
   // Discards whatever's been captured so far in this session (never
   // partial-submitted — process-and-discard applies to an abandoned
@@ -236,6 +250,11 @@ export default function CaptureScreen() {
         </Pressable>
 
         <View style={styles.guideWrap}>
+          {guideCopy && (
+            <Text style={styles.guideCopy} testID="capture-guide-copy">
+              {guideCopy}
+            </Text>
+          )}
           <Animated.View style={[styles.guideRing, { transform: [{ scale: pulse }] }]} />
         </View>
 
@@ -314,6 +333,17 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    gap: Theme.spacing.md,
+    paddingHorizontal: Theme.spacing.containerPadding,
+  },
+  guideCopy: {
+    ...Theme.typography.bodyMd,
+    fontSize: 15,
+    color: Theme.colors.text.primary,
+    textAlign: 'center',
+    textShadowColor: 'rgba(0,0,0,0.6)',
+    textShadowRadius: 6,
+    textShadowOffset: { width: 0, height: 1 },
   },
   // A neutral framing box rather than a face-shaped oval — this app frames
   // any body part (ear, nose, brow, navel, etc.), not just faces.

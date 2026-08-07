@@ -369,6 +369,91 @@ export const translations = {
   'common.close': {
     en: 'Close', zh: '关闭', hi: 'बंद करें', es: 'Cerrar', fr: 'Fermer', ar: 'إغلاق', bn: 'বন্ধ করুন', pt: 'Fechar', ru: 'Закрыть', ur: 'بند کریں',
   },
+  'location.title': {
+    en: 'Choose a Piercing', zh: '选择穿孔位置', hi: 'पियर्सिंग चुनें', es: 'Elige un piercing',
+    fr: 'Choisissez un piercing', ar: 'اختر موضع الثقب', bn: 'একটি পিয়ার্সিং বেছে নিন', pt: 'Escolha um piercing',
+    ru: 'Выберите пирсинг', ur: 'ایک پیئرسنگ منتخب کریں',
+  },
+  'location.subtitle': {
+    en: "Pick where you'd like to preview jewelry — we'll guide your photo around it.",
+    zh: "Pick where you'd like to preview jewelry — we'll guide your photo around it.",
+    hi: "Pick where you'd like to preview jewelry — we'll guide your photo around it.",
+    es: "Pick where you'd like to preview jewelry — we'll guide your photo around it.",
+    fr: "Pick where you'd like to preview jewelry — we'll guide your photo around it.",
+    ar: "Pick where you'd like to preview jewelry — we'll guide your photo around it.",
+    bn: "Pick where you'd like to preview jewelry — we'll guide your photo around it.",
+    pt: "Pick where you'd like to preview jewelry — we'll guide your photo around it.",
+    ru: "Pick where you'd like to preview jewelry — we'll guide your photo around it.",
+    ur: "Pick where you'd like to preview jewelry — we'll guide your photo around it.",
+  },
+  'location.continue': {
+    en: 'Continue', zh: '继续', hi: 'जारी रखें', es: 'Continuar', fr: 'Continuer', ar: 'متابعة',
+    bn: 'চালিয়ে যান', pt: 'Continuar', ru: 'Продолжить', ur: 'جاری رکھیں',
+  },
+  'location.category.ear': {
+    en: 'Ear', zh: '耳部', hi: 'कान', es: 'Oreja', fr: 'Oreille', ar: 'الأذن', bn: 'কান', pt: 'Orelha',
+    ru: 'Ухо', ur: 'کان',
+  },
+  'location.category.face': {
+    en: 'Face', zh: '面部', hi: 'चेहरा', es: 'Cara', fr: 'Visage', ar: 'الوجه', bn: 'মুখ', pt: 'Rosto',
+    ru: 'Лицо', ur: 'چہرہ',
+  },
+  'location.category.body': {
+    en: 'Body', zh: '身体', hi: 'शरीर', es: 'Cuerpo', fr: 'Corps', ar: 'الجسم', bn: 'শরীর', pt: 'Corpo',
+    ru: 'Тело', ur: 'جسم',
+  },
+  'location.lobe': {
+    en: 'Lobe', zh: '耳垂', hi: 'लोब', es: 'Lóbulo', fr: 'Lobe', ar: 'شحمة الأذن', bn: 'লোব', pt: 'Lóbulo',
+    ru: 'Мочка', ur: 'لوب',
+  },
+  'location.helix': {
+    en: 'Helix', zh: '耳廓', hi: 'हेलिक्स', es: 'Hélix', fr: 'Hélix', ar: 'حلزون الأذن', bn: 'হেলিক্স',
+    pt: 'Hélix', ru: 'Хеликс', ur: 'ہیلکس',
+  },
+  'location.tragus': {
+    en: 'Tragus', zh: '耳屏', hi: 'ट्रैगस', es: 'Trago', fr: 'Tragus', ar: 'الزنمة', bn: 'ট্র্যাগাস',
+    pt: 'Trago', ru: 'Козелок', ur: 'ٹریگس',
+  },
+  'location.rook': {
+    en: 'Rook', zh: '对耳轮上脚', hi: 'रूक', es: 'Rook', fr: 'Rook', ar: 'روك', bn: 'রুক', pt: 'Rook',
+    ru: 'Рук', ur: 'روک',
+  },
+  'location.daith': {
+    en: 'Daith', zh: '耳甲艇', hi: 'डेथ', es: 'Daith', fr: 'Daith', ar: 'دايث', bn: 'ডেইথ', pt: 'Daith',
+    ru: 'Дейт', ur: 'ڈیتھ',
+  },
+  'location.industrial': {
+    en: 'Industrial', zh: '工业耳钉', hi: 'इंडस्ट्रियल', es: 'Industrial', fr: 'Industriel', ar: 'صناعي',
+    bn: 'ইন্ডাস্ট্রিয়াল', pt: 'Industrial', ru: 'Индастриал', ur: 'انڈسٹریل',
+  },
+  'location.septum': {
+    en: 'Septum', zh: '鼻中隔', hi: 'सेप्टम', es: 'Septum', fr: 'Septum', ar: 'حاجز الأنف', bn: 'সেপটাম',
+    pt: 'Septo', ru: 'Септум', ur: 'سیپٹم',
+  },
+  'location.eyebrow': {
+    en: 'Eyebrow', zh: '眉毛', hi: 'आईब्रो', es: 'Ceja', fr: 'Sourcil', ar: 'الحاجب', bn: 'ভ্রু', pt: 'Sobrancelha',
+    ru: 'Бровь', ur: 'ابرو',
+  },
+  'location.nipple': {
+    en: 'Nipple', zh: '乳头', hi: 'निपल', es: 'Pezón', fr: 'Téton', ar: 'الحلمة', bn: 'নিপল', pt: 'Mamilo',
+    ru: 'Сосок', ur: 'نپل',
+  },
+  'location.navel': {
+    en: 'Navel', zh: '肚脐', hi: 'नाभि', es: 'Ombligo', fr: 'Nombril', ar: 'السرة', bn: 'নাভি', pt: 'Umbigo',
+    ru: 'Пупок', ur: 'ناف',
+  },
+  'capture.guide.withLocation': {
+    en: 'Position yourself so we can clearly see your {location}.',
+    zh: 'Position yourself so we can clearly see your {location}.',
+    hi: 'Position yourself so we can clearly see your {location}.',
+    es: 'Position yourself so we can clearly see your {location}.',
+    fr: 'Position yourself so we can clearly see your {location}.',
+    ar: 'Position yourself so we can clearly see your {location}.',
+    bn: 'Position yourself so we can clearly see your {location}.',
+    pt: 'Position yourself so we can clearly see your {location}.',
+    ru: 'Position yourself so we can clearly see your {location}.',
+    ur: 'Position yourself so we can clearly see your {location}.',
+  },
   'studio.title': {
     en: 'Piercing Studio', zh: '穿孔工作室', hi: 'पियर्सिंग स्टूडियो', es: 'Estudio de piercing',
     fr: 'Studio de piercing', ar: 'استوديو الثقب', bn: 'পিয়ার্সিং স্টুডিও', pt: 'Estúdio de piercing',

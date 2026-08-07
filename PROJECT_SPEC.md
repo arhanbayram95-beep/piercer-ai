@@ -346,6 +346,23 @@ a permissive stub pending real RevenueCat server-side verification (Phase
 5.1) — so today, nothing server-side stops a client from sending
 `additionalItems` without being Pro; the gate is UI-only until 5.1 lands.
 
+**Flow reorder: piercing-selection-first (added 2026-08-08):** product
+decision — pick the piercing location before capturing a photo, not after.
+New order: Welcome → **PiercingLocationScreen** (new, `'location'` in
+`AppScreen`) → Capture → Studio → Preview → Paywall. New shared data module
+`frontend/src/content/piercingLocations.ts` (id/category/label only —
+deliberately no pain-rating or description copy yet, pending a separate
+product decision on tone/source) exports `PIERCING_LOCATIONS`
+(lobe/helix/tragus/rook/daith/industrial/septum/eyebrow/nipple/navel,
+grouped `ear`/`face`/`body`) — built to be reused by a future piercing-
+reference/info page rather than duplicated. `studioSlice.selectedLocation`
+holds the pick (null until chosen); `CaptureScreen` reads it to show a
+location-specific guide prompt ("Position yourself so we can clearly see
+your {location}") instead of the old generic body-part framing copy —
+falls back to no prompt (not a broken string) if somehow reached with no
+location selected. This is piece 1 of 3 in a larger piercer.ai-specific
+scope change; pieces 2/3 are pending open product-decision answers.
+
 ## 5. Naming Notes
 
 **Decision (2026-07-24):** the public-facing name is **"Face Reader - AI

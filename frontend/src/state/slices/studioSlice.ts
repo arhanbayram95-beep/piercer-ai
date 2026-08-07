@@ -1,4 +1,5 @@
 import { StateCreator } from 'zustand';
+import { PiercingLocationId } from '../../content/piercingLocations';
 
 // Jewelry catalog for the Piercing Studio drawer (PiercingStudioDrawer.tsx) —
 // selections here are what StudioScreen sends to POST /api/v1/render/preview
@@ -26,6 +27,11 @@ export interface JewelryItem {
 export const MAX_STACKED_ITEMS = 3;
 
 export interface StudioSlice {
+  // Picked first, on PiercingLocationScreen, before Capture even starts —
+  // null until the user chooses one. CaptureScreen reads this to show a
+  // location-specific guide prompt instead of the old generic framing copy.
+  selectedLocation: PiercingLocationId | null;
+  setLocation: (location: PiercingLocationId | null) => void;
   selectedJewelryType: JewelryType;
   selectedFinish: JewelryFinish;
   setJewelryType: (type: JewelryType) => void;
@@ -47,10 +53,12 @@ export interface StudioSlice {
 }
 
 export const createStudioSlice: StateCreator<StudioSlice> = (set) => ({
+  selectedLocation: null,
   selectedJewelryType: 'hoops',
   selectedFinish: 'silver',
   stackedItems: [],
   renderResult: null,
+  setLocation: (location) => set({ selectedLocation: location }),
   setJewelryType: (type) => set({ selectedJewelryType: type }),
   setFinish: (finish) => set({ selectedFinish: finish }),
   addStackedItem: (item) =>

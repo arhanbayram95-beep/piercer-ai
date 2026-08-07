@@ -34,6 +34,12 @@ describe('AppNavigator', () => {
     expect(screen.getByTestId('settings-screen')).toBeTruthy();
   });
 
+  it('renders the piercing location screen when routed there', () => {
+    useAppStore.setState({ screen: 'location', selectedLocation: null });
+    render(<AppNavigator />);
+    expect(screen.getByTestId('location-screen')).toBeTruthy();
+  });
+
   it('renders the studio screen when routed there', () => {
     useAppStore.setState({ screen: 'studio', images: [] });
     render(<AppNavigator />);

@@ -13,6 +13,6 @@ describe('WelcomeScreen', () => {
     expect(screen.getByText("You're All Set")).toBeTruthy();
 
     fireEvent.press(screen.getByText("Let's Go"));
-    expect(useAppStore.getState().screen).toBe('capture');
+    expect(useAppStore.getState().screen).toBe('location');
   });
 });
