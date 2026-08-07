@@ -2,7 +2,9 @@
 
 This is the condensed "just show me the app" version. For the full setup reference (real backend, physical device, troubleshooting network issues) see `README.md`.
 
-This machine currently has **no Android SDK/emulator and no `eas-cli` installed**, so the fastest path below uses the web preview in mock mode — zero setup, no keys, no device. Camera capture won't work in a browser (the camera library has no web support), but everything else — onboarding, the piercing location picker, the reference page, the personality quiz, settings, paywall — will.
+This machine currently has **no Android SDK/emulator and no `eas-cli` installed**, so the fastest path below uses the web preview in mock mode — zero setup, no keys, no device. The live camera itself doesn't run in a browser (no web support in `react-native-vision-camera`), so the web build falls back to gallery upload instead; everything else — onboarding, the piercing location picker, the reference page, the personality quiz, settings, paywall — works normally.
+
+**Node version matters.** `react-native` 0.86 requires Node ≥20.19.4 — on an older Node (this machine's system Node is 18.19.1), Metro crashes immediately with `configs.toReversed is not a function` before the app ever loads. `frontend/.nvmrc` pins the right version; if you use `nvm`, run `nvm use` in `frontend/` first. If you don't have `nvm`, check `node -v` before troubleshooting anything else.
 
 ---
 
@@ -10,6 +12,7 @@ This machine currently has **no Android SDK/emulator and no `eas-cli` installed*
 
 ```bash
 cd frontend
+nvm use          # if you have nvm — picks up the pinned Node version from .nvmrc
 npm install
 EXPO_PUBLIC_USE_MOCK_API=true npx expo start --web
 ```
