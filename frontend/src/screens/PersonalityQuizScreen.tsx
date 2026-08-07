@@ -4,9 +4,20 @@ import GlassCard from '../components/common/GlassCard';
 import PrimaryButton from '../components/common/PrimaryButton';
 import { PIERCING_LOCATIONS } from '../content/piercingLocations';
 import { ARCHETYPE_RECOMMENDATIONS, computeArchetype, PersonalityArchetype, QUIZ_QUESTIONS } from '../content/personalityQuiz';
+import { TranslationKey } from '../i18n/translations';
 import { useTranslation } from '../i18n/useTranslation';
+import { JewelryType } from '../state/slices/studioSlice';
 import { useAppStore } from '../state/useAppStore';
 import { Theme } from '../ui/theme';
+
+const JEWELRY_TYPE_LABEL_KEYS: Record<JewelryType, TranslationKey> = {
+  hoops: 'studio.jewelry.hoops',
+  studs: 'studio.jewelry.studs',
+  barbells: 'studio.jewelry.barbells',
+  industrial: 'studio.jewelry.industrial',
+  septum: 'studio.jewelry.septum',
+  dermal: 'studio.jewelry.dermal',
+};
 
 // Quiz entry point of the personality-matching module — pure client-side
 // logic, no AI/backend call (see content/personalityQuiz.ts). Genuinely
@@ -47,22 +58,33 @@ export default function PersonalityQuizScreen() {
 
   // Reuses the existing Capture -> Studio -> Preview try-on flow rather
   // than showing recommendation text and stopping — pre-selects the
-  // archetype's top location + jewelry style so the user lands straight in
-  // Capture ready to go.
+  // archetype's top location + jewelry style (recommendedLocations[0],
+  // guaranteed compatible per content/personalityQuiz.test.ts) so the user
+  // lands straight in Capture ready to go.
   const handleTryOn = () => {
     if (!result) return;
     const recommendation = ARCHETYPE_RECOMMENDATIONS[result];
-    setLocation(recommendation.recommendedLocationIds[0]);
-    setJewelryType(recommendation.recommendedJewelryType);
+    const primary = recommendation.recommendedLocations[0];
+    setLocation(primary.locationId);
+    setJewelryType(primary.jewelryType);
     setFinish(recommendation.recommendedFinish);
     goToScreen('capture');
   };
 
   if (result) {
     const recommendation = ARCHETYPE_RECOMMENDATIONS[result];
-    const locationNames = recommendation.recommendedLocationIds
-      .map((id) => PIERCING_LOCATIONS.find((location) => location.id === id))
-      .filter((location): location is (typeof PIERCING_LOCATIONS)[number] => Boolean(location));
+    // Each entry names both the location AND its specific compatible
+    // jewelry type — not just the location — so what's displayed can never
+    // imply a pairing the app won't actually let the user build in Studio
+    // (content/locationJewelryTypes.ts).
+    const displayLocations = recommendation.recommendedLocations
+      .map(({ locationId, jewelryType }) => {
+        const location = PIERCING_LOCATIONS.find((entry) => entry.id === locationId);
+        return location ? { location, jewelryType } : null;
+      })
+      .filter((entry): entry is { location: (typeof PIERCING_LOCATIONS)[number]; jewelryType: JewelryType } =>
+        Boolean(entry)
+      );
 
     return (
       <View style={styles.container} testID="quiz-screen">
@@ -88,9 +110,9 @@ export default function PersonalityQuizScreen() {
               {t(recommendation.descriptionKey)}
             </Text>
             <View style={styles.locationRow}>
-              {locationNames.map((location) => (
+              {displayLocations.map(({ location, jewelryType }) => (
                 <Text key={location.id} style={styles.locationChip}>
-                  {t(location.labelKey)}
+                  {t(location.labelKey)} · {t(JEWELRY_TYPE_LABEL_KEYS[jewelryType])}
                 </Text>
               ))}
             </View>

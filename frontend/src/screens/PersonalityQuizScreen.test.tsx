@@ -49,6 +49,19 @@ describe('PersonalityQuizScreen', () => {
     expect(useAppStore.getState().screen).toBe('capture');
   });
 
+  it('displays each recommended location paired with its own compatible jewelry type', () => {
+    render(<PersonalityQuizScreen />);
+    answerAllAs('rebel');
+    fireEvent.press(screen.getByTestId('quiz-continue-button'));
+
+    // Regression coverage for the content bug where Rebel's display text
+    // paired Industrial and Snug with "septum" jewelry, which neither
+    // location supports.
+    expect(screen.getByText('Septum · Septum')).toBeTruthy();
+    expect(screen.getByText('Industrial · Industrial')).toBeTruthy();
+    expect(screen.getByText('Snug · Barbells')).toBeTruthy();
+  });
+
   it('lets the user retake the quiz from the result view', () => {
     render(<PersonalityQuizScreen />);
     answerAllAs('romantic');

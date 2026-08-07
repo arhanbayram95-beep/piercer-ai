@@ -457,6 +457,28 @@ cross-checked against the new restriction — one mismatch found and fixed
 (the Rebel archetype recommended `barbells` for its first location,
 `septum`, which only allows `septum`/`hoops`; changed to `septum`).
 
+**Follow-up (2026-08-08):** QA's final pass found the same class of bug
+still present in `personalityQuiz.ts`'s *display* data — each archetype's
+`ArchetypeRecommendation` listed 3 suggested locations sharing one
+`recommendedJewelryType`, which only happened to be checked for index 0
+(the one `PersonalityQuizScreen`'s "Try It On" actually applies). Romantic
+listed `philtrumMedusa` (studs-only) under a shared "hoops" recommendation;
+Rebel listed `industrial` and `snug` under a shared "septum" recommendation
+— neither supports it, and in fact **no location other than `septum` itself
+supports the `septum` jewelry type**, so "one shared type per archetype"
+was structurally unfixable for Rebel without either dropping to fewer
+distinct locations or changing the data shape. Restructured
+`ArchetypeRecommendation.recommendedLocationIds`/`recommendedJewelryType`
+into `recommendedLocations: { locationId, jewelryType }[]`, so every listed
+location carries its own compatible type; `recommendedLocations[0]` (the
+one actually pushed into app state) is unchanged from the prior fix.
+`PersonalityQuizScreen`'s result chips now display both the location and
+its paired type (e.g. "Snug · Barbells") instead of just the location name,
+so the visible copy can never imply an unbuildable pairing.
+`personalityQuiz.test.ts` gained a regression test asserting every
+archetype's every listed location/jewelryType pair is valid against
+`locationJewelryTypes.ts`.
+
 ## 5. Naming Notes
 
 **Decision (2026-07-24):** the public-facing name is **"Face Reader - AI

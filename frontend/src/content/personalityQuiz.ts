@@ -87,11 +87,27 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
   },
 ];
 
+// Each listed location carries its OWN compatible jewelry type rather than
+// the archetype sharing one type across all three — a single shared type
+// can't stay valid for every location (e.g. only the 'septum' location
+// itself supports the 'septum' jewelry type; nothing else does), and an
+// earlier version of this data that assumed otherwise shipped a real
+// content bug (Rebel recommended "septum" jewelry for Industrial and Snug,
+// neither of which support it; Romantic recommended "hoops" for
+// philtrumMedusa, which only supports studs). recommendedLocations[0] is
+// the one actually pushed into app state by "Try It On" — every entry,
+// including [0], must stay consistent with
+// content/locationJewelryTypes.ts's PIERCING_LOCATION_JEWELRY_TYPES
+// (enforced by personalityQuiz.test.ts).
+export interface RecommendedLocation {
+  locationId: PiercingLocationId;
+  jewelryType: JewelryType;
+}
+
 export interface ArchetypeRecommendation {
   nameKey: TranslationKey;
   descriptionKey: TranslationKey;
-  recommendedLocationIds: PiercingLocationId[];
-  recommendedJewelryType: JewelryType;
+  recommendedLocations: RecommendedLocation[];
   recommendedFinish: JewelryFinish;
 }
 
@@ -99,32 +115,41 @@ export const ARCHETYPE_RECOMMENDATIONS: Record<PersonalityArchetype, ArchetypeRe
   minimalist: {
     nameKey: 'quiz.archetype.minimalist.name',
     descriptionKey: 'quiz.archetype.minimalist.description',
-    recommendedLocationIds: ['lobe', 'upperLobe', 'nostril'],
-    recommendedJewelryType: 'studs',
+    recommendedLocations: [
+      { locationId: 'lobe', jewelryType: 'studs' },
+      { locationId: 'upperLobe', jewelryType: 'studs' },
+      { locationId: 'nostril', jewelryType: 'studs' },
+    ],
     recommendedFinish: 'silver',
   },
   romantic: {
     nameKey: 'quiz.archetype.romantic.name',
     descriptionKey: 'quiz.archetype.romantic.description',
-    recommendedLocationIds: ['tragus', 'philtrumMedusa', 'helix'],
-    recommendedJewelryType: 'hoops',
+    recommendedLocations: [
+      { locationId: 'tragus', jewelryType: 'hoops' },
+      { locationId: 'philtrumMedusa', jewelryType: 'studs' },
+      { locationId: 'helix', jewelryType: 'hoops' },
+    ],
     recommendedFinish: 'gold',
   },
   rebel: {
     nameKey: 'quiz.archetype.rebel.name',
     descriptionKey: 'quiz.archetype.rebel.description',
-    recommendedLocationIds: ['septum', 'industrial', 'snug'],
-    // Must stay one of PIERCING_LOCATION_JEWELRY_TYPES's valid types for
-    // the first recommendedLocationIds entry (septum: ['septum', 'hoops'])
-    // — see content/locationJewelryTypes.ts.
-    recommendedJewelryType: 'septum',
+    recommendedLocations: [
+      { locationId: 'septum', jewelryType: 'septum' },
+      { locationId: 'industrial', jewelryType: 'industrial' },
+      { locationId: 'snug', jewelryType: 'barbells' },
+    ],
     recommendedFinish: 'blackSteel',
   },
   freeSpirit: {
     nameKey: 'quiz.archetype.freeSpirit.name',
     descriptionKey: 'quiz.archetype.freeSpirit.description',
-    recommendedLocationIds: ['rook', 'daith', 'conch'],
-    recommendedJewelryType: 'hoops',
+    recommendedLocations: [
+      { locationId: 'rook', jewelryType: 'hoops' },
+      { locationId: 'daith', jewelryType: 'hoops' },
+      { locationId: 'conch', jewelryType: 'hoops' },
+    ],
     recommendedFinish: 'titanium',
   },
 };
