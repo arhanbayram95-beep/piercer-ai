@@ -1,37 +1,33 @@
-# Face Reader — AI Physiognomy Tool (Ilm-i Sima)
+# piercer.ai
 
-A React Native mobile app that gives users playful, AI-generated character and expression analysis from their own photos. Built for the US/EU entertainment-app market — think Co-Star/Nebula-style "vibe reading," not a clinical or diagnostic product. See `PROJECT_SPEC.md` for the full product spec and `DESIGN.md` for the visual system.
+A React Native mobile app that lets users photograph a body part and preview a realistic AI-rendered piercing on it before committing. Built for the US/EU entertainment/lifestyle app market. See `PROJECT_SPEC.md` for the full product spec and `DESIGN.md` for the visual system.
 
 ---
 
 ## Core Features
 
-* **Three reading modules**, all sharing the same capture mechanic, each with its own AI system prompt:
-  * **Character Analysis** — 3 photos (Calm, Bright, Deep expressions) of yourself.
-  * **Relationship Harmony** — 2 photos (you, then another person).
-  * **Career Match** — 1 photo of yourself.
-* **Multimodal AI Vision** — Google Gemini (`gemini-flash-latest`) generates the structured reading. Anthropic Claude remains a candidate under pricing evaluation (see `PROJECT_SPEC.md` §4); the AI-calling code is isolated in `backend/src/services/` so switching providers again stays a contained change.
+* **Capture → Studio → AI Render → Preview flow** — photograph (or pick from the gallery) any body part, choose a jewelry type (Hoops, Studs, Barbells, Industrial, Septum, Dermal) and finish (Silver, Gold, Titanium, Black Steel) in the Piercing Studio drawer, then get a hyper-realistic AI-rendered preview with a before/after toggle and placement tweaks (position/rotation/scale).
+* **Multimodal AI Vision** — Google Gemini's `gemini-2.5-flash-image` generates the rendered image (a different model from the text/JSON-output `gemini-flash-latest` this app used pre-pivot — see `PROJECT_SPEC.md` §4 for why the model choice matters here). The AI-calling code is isolated in `backend/src/services/` so switching providers stays a contained change.
 * **Privacy-first (process-and-discard)** — captured photos live in memory only, on both the client and the server, and are purged immediately after the API response returns. No image ever touches disk or a database.
-* **Story-ready share cards** — `react-native-view-shot` renders a 9:16 shareable card of your result.
+* **Shareable results** — `react-native-view-shot` exports the rendered preview.
 * **10-language UI** — en/zh/hi/es/fr/ar/bn/pt/ru/ur, via a lightweight custom i18n dictionary (`frontend/src/i18n/`). Legal documents (Privacy Policy/Terms) stay English-only pending professional translation.
-* **On-device face detection** — a frame without a face never reaches the backend; the shutter routes to the "no face detected" screen instead (`PROJECT_SPEC.md` §2.2, privacy + cost control).
-* **Monetization (RevenueCat)** — SDK wired end to end against a RevenueCat Test Store; still waiting on real store products, see "What's not wired up yet" below.
+* **Freemium + stacking (RevenueCat)** — one free render per session, then gated behind the `piercer_pro_access` entitlement; Pro also unlocks stacking multiple jewelry pieces in one render (up to `MAX_STACKED_ITEMS`). SDK is wired end to end against a RevenueCat Test Store; see "What's not wired up yet" below.
 
 ---
 
 ## Tech Stack
 
-* **Frontend:** React Native + TypeScript, Expo SDK 57 / React Native 0.86 (blank TS template). State via `Zustand`. Camera + face detection via `react-native-vision-camera` + `react-native-vision-camera-face-detector`. Audio via `expo-audio`. Subscriptions via `react-native-purchases`. Share cards via `react-native-view-shot`.
+* **Frontend:** React Native + TypeScript, Expo SDK 57 / React Native 0.86 (blank TS template). State via `Zustand`. Camera via `react-native-vision-camera` (photo capture only — no face detection); gallery fallback via `expo-image-picker`. Audio via `expo-audio`. Subscriptions via `react-native-purchases`. Share/export via `react-native-view-shot`.
 * **Backend:** Node.js + TypeScript, **Fastify**. Thin gateway — holds the AI provider key, never exposes it to the frontend.
-* **AI:** Google Gemini via `@google/genai`, structured JSON output via `responseSchema`/`responseMimeType` (not tool-use — that's Anthropic's mechanism, see `PROJECT_SPEC.md` §4 if you're reading this after a provider switch).
+* **AI:** Google Gemini via `@google/genai`. The render endpoint uses `gemini-2.5-flash-image` with `config.responseModalities: [TEXT, IMAGE]` to get image bytes back (`response.candidates[0].content.parts[].inlineData`) — not the `responseSchema` structured-JSON pattern, which is for text-only output. See `PROJECT_SPEC.md` §4 if you're reading this after a provider or model switch.
 
 ---
 
 ## Prerequisites
 
 * Node.js 20+ and npm
-* An **EAS dev-client build** installed on a physical phone, **or** an iOS Simulator / Android Emulator running one. This app no longer runs in plain Expo Go: `react-native-vision-camera` (face detection) and `react-native-purchases` (subscriptions) are native modules Expo Go doesn't ship. Build one with `npx eas build --profile development --platform android` (or `ios`) from `frontend/` — see `frontend/eas.json`. You only need to rebuild when a native dependency changes; JS changes reload over Metro as usual.
-* A Google Gemini API key ([aistudio.google.com](https://aistudio.google.com/)) — free tier works for development; see the note on model choice below
+* An **EAS dev-client build** installed on a physical phone, **or** an iOS Simulator / Android Emulator running one. This app no longer runs in plain Expo Go: `react-native-vision-camera` (camera) and `react-native-purchases` (subscriptions) are native modules Expo Go doesn't ship. Build one with `npx eas build --profile development --platform android` (or `ios`) from `frontend/` — see `frontend/eas.json`. You only need to rebuild when a native dependency changes; JS changes reload over Metro as usual.
+* A Google Gemini API key ([aistudio.google.com](https://aistudio.google.com/)) — see the note on model choice below
 * Your phone and your dev machine **on the same Wi-Fi network** (see the "Running on a physical device" section — this trips people up more than anything else in this repo)
 
 ---
@@ -54,7 +50,7 @@ GEMINI_API_KEY=your-key-here
 REVENUECAT_API_KEY=
 ```
 
-`REVENUECAT_API_KEY` can stay blank — RevenueCat isn't wired up yet (see below). Leaving it blank does not break anything else.
+`REVENUECAT_API_KEY` can stay blank — RevenueCat server-side verification isn't wired up yet (see below). Leaving it blank does not break anything else.
 
 Then start it:
 
@@ -62,9 +58,9 @@ Then start it:
 npm run dev
 ```
 
-You should see `Face Reader backend listening on port 3000`. Leave this running in its own terminal.
+You should see `piercer.ai backend listening on port 3000`. Leave this running in its own terminal.
 
-> **Model note:** the default is `gemini-flash-latest` (in `backend/src/services/readingService.ts`) — Google's auto-updating alias for the current recommended flash model, chosen so a dated model being retired doesn't need another manual swap. Two dated models were tried and dropped first: `gemini-2.0-flash` returned a `429` (zero free-tier quota), and `gemini-2.5-flash` started returning a `404` ("no longer available to new users") on newly-created API keys as of 2026-07-28. If you hit quota or availability errors, that's the first thing to check.
+> **Model note:** the render endpoint uses `gemini-2.5-flash-image` (in `backend/src/services/renderService.ts`), Google's image-generation/editing model — this is deliberately *not* `gemini-flash-latest` (a text/vision-in, text-out model with no documented image-output capability), which the old face-reading feature used for structured JSON responses. As of this writing the render backend has only been exercised against a mocked Gemini client in tests, never a real key — confirm the model name and response shape still match before shipping.
 
 ### 2. Frontend setup
 
@@ -101,13 +97,13 @@ Open the dev-client build on your phone and point it at the Metro URL shown in t
 
 ### 3. Testing without a backend or API key at all
 
-Don't want to set up a Gemini key yet? Run in mock mode instead — the full capture → analyze → reveal flow works end-to-end with no backend running:
+Don't want to set up a Gemini key yet? Run in mock mode instead — the full capture → studio → render → preview flow works end-to-end with no backend running:
 
 ```bash
 EXPO_PUBLIC_USE_MOCK_API=true npx expo start
 ```
 
-This returns canned, clearly-labeled placeholder readings (one per module, so you can see the content genuinely differs) instead of calling anything real.
+This returns a canned, clearly-labeled placeholder render instead of calling anything real.
 
 ---
 
@@ -147,10 +143,12 @@ Both should be fully green on a clean checkout.
 
 ## What's not wired up yet
 
-* **Real subscription purchases** — the RevenueCat SDK is installed and wired end to end (`frontend/src/utils/purchases.ts`, `PaywallScreen.tsx`), and a real purchase has been driven through RevenueCat's **Test Store** on-device. What's still missing is App Store Connect / Google Play Console in-app products and the `aura_pro_access` entitlement mapped to them in the RevenueCat dashboard — until then no real money moves. With no `EXPO_PUBLIC_REVENUECAT_API_KEY` set, the paywall falls back to a local-only stub that unlocks pro without charging.
-* **Server-side entitlement enforcement** — `backend/src/middleware/entitlement.ts` is still a permissive stub that lets every request through. `@fastify/rate-limit` (20 req/10 min per IP) is the only thing currently protecting the paid Gemini endpoint.
-* **Paid-tier Gemini key** — Google's free tier may use submitted content to improve its products for users outside the EEA/UK/Switzerland, which contradicts the no-training guarantee the Privacy Policy makes. The production key must be on a billing-enabled project before real user photos hit the endpoint. See `QA_FINDINGS.md`'s Security Review.
-* **App Store / Play Store listings** — don't exist yet. "Rate on App Store" (`frontend/src/utils/storeLinks.ts`) opens a correctly-formed store URL with a placeholder app ID — replace `IOS_APP_STORE_ID`/`ANDROID_PACKAGE_NAME` once the app is actually published. `app.json`'s `app.faceai.facereader` bundle id / package name is likewise a placeholder, and is effectively permanent once published.
+* **Real subscription purchases** — the RevenueCat SDK is installed and wired end to end (`frontend/src/utils/purchases.ts`, `PaywallScreen.tsx`), and a real purchase has been driven through RevenueCat's **Test Store** on-device pre-pivot. What's still missing is App Store Connect / Google Play Console in-app products and the `piercer_pro_access` entitlement mapped to them in the RevenueCat dashboard — until then no real money moves. With no `EXPO_PUBLIC_REVENUECAT_API_KEY` set, the paywall falls back to a local-only stub that unlocks pro without charging.
+* **Server-side entitlement enforcement** — `backend/src/middleware/entitlement.ts` (`requireActiveEntitlement`) is still a permissive stub that lets every request through, including the render endpoint it's nominally attached to. `@fastify/rate-limit` (20 req/10 min per IP) is the only thing currently protecting the paid Gemini endpoint. The one-free-render limit and jewelry-stacking cap are enforced client-side only right now.
+* **The render backend has never been called against the real Gemini API** — `gemini-2.5-flash-image` and the request/response shape are verified against the installed SDK's type definitions and current docs, but only exercised with a mocked client in tests. Needs a real `GEMINI_API_KEY` run before shipping.
+* **Legal copy** — `backend/src/routes/legal.ts` (and its static HTML/TXT mirrors) has been rebranded off the old face-reading product, but the BIPA/GDPR biometric-data reasoning it inherited was written for face photos and needs actual legal counsel review for the different privacy fact pattern of piercing/body-part photos before shipping. Flagged in-code, not resolved.
+* **App Store / Play Store listings** — don't exist yet. "Rate on App Store" (`frontend/src/utils/storeLinks.ts`) opens a correctly-formed store URL with a placeholder app ID — replace `IOS_APP_STORE_ID`/`ANDROID_PACKAGE_NAME` once the app is actually published. `app.json`'s `com.piercer.ai` bundle id / package name is likewise effectively permanent once published.
+* **On-device visual verification** — the new Capture/Studio/Preview screens have automated test coverage but haven't been visually checked on a real device or simulator in this environment.
 
 Check `IMPLEMENTATION_PLAN.md` for the full, up-to-date phase-by-phase status.
 
@@ -170,7 +168,7 @@ backend/
   src/
     routes/        # HTTP/Fastify layer only
     services/      # Business logic, prompt assembly, Gemini SDK calls
-    middleware/     # Entitlement/consent checks
+    middleware/     # Entitlement/rate-limit checks
     config/        # Env loading
 ```
 
