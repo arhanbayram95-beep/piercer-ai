@@ -1,15 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
-import AnalyzeScreen from '../screens/AnalyzeScreen';
-import AnalyzingScreen from '../screens/AnalyzingScreen';
 import CaptureScreen from '../screens/CaptureScreen';
 import LoadingScreen from '../screens/LoadingScreen';
-import NoFaceDetectedScreen from '../screens/NoFaceDetectedScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import PaywallScreen from '../screens/PaywallScreen';
-import ResultsScreen from '../screens/ResultsScreen';
-import RevealScreen from '../screens/RevealScreen';
-import ReviewScreen from '../screens/ReviewScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import WelcomeScreen from '../screens/WelcomeScreen';
 import { AppScreen } from '../state/slices/navigationSlice';
@@ -20,14 +14,8 @@ const SCREENS: Record<AppScreen, React.ComponentType> = {
   onboarding: OnboardingScreen,
   paywall: PaywallScreen,
   welcome: WelcomeScreen,
-  analyze: AnalyzeScreen,
   capture: CaptureScreen,
-  analyzing: AnalyzingScreen,
-  reveal: RevealScreen,
-  results: ResultsScreen,
-  review: ReviewScreen,
   settings: SettingsScreen,
-  noFaceDetected: NoFaceDetectedScreen,
 };
 
 export default function AppNavigator() {

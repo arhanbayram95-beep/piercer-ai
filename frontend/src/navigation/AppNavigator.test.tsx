@@ -13,14 +13,13 @@ jest.mock('../utils/sound', () => ({
 // pulls in react-native-vision-camera's native turbo module at import time —
 // this file never actually renders the capture screen, so a minimal mock is
 // enough to stop that native init from crashing Jest.
-jest.mock('react-native-vision-camera', () => ({
-  useCameraPermission: () => ({ hasPermission: true, requestPermission: jest.fn() }),
-  usePhotoOutput: () => ({ capturePhoto: jest.fn() }),
-}));
-
-jest.mock('react-native-vision-camera-face-detector', () => {
+jest.mock('react-native-vision-camera', () => {
   const { View } = require('react-native');
-  return { Camera: (props: any) => <View testID="camera-preview" {...props} /> };
+  return {
+    useCameraPermission: () => ({ hasPermission: true, requestPermission: jest.fn() }),
+    usePhotoOutput: () => ({ capturePhoto: jest.fn() }),
+    Camera: (props: any) => <View testID="camera-preview" {...props} />,
+  };
 });
 
 describe('AppNavigator', () => {
@@ -30,39 +29,27 @@ describe('AppNavigator', () => {
     expect(screen.getByTestId('settings-screen')).toBeTruthy();
   });
 
-  it('renders the analyze hub when routed there', () => {
-    useAppStore.setState({ screen: 'analyze' });
-    render(<AppNavigator />);
-    expect(screen.getByTestId('analyze-screen')).toBeTruthy();
-  });
-
-  it('renders the results screen when routed there', () => {
-    useAppStore.setState({ screen: 'results' });
-    render(<AppNavigator />);
-    expect(screen.getByTestId('results-screen')).toBeTruthy();
-  });
-
-  it('renders the analyzing screen when routed there', () => {
-    useAppStore.setState({ screen: 'analyzing', images: [] });
-    render(<AppNavigator />);
-    expect(screen.getByTestId('analyzing-screen')).toBeTruthy();
-  });
-
-  it('renders the reveal screen when routed there', () => {
-    useAppStore.setState({ screen: 'reveal', reading: null });
-    render(<AppNavigator />);
-    expect(screen.getByTestId('reveal-screen')).toBeTruthy();
-  });
-
   it('renders the welcome screen when routed there', () => {
     useAppStore.setState({ screen: 'welcome' });
     render(<AppNavigator />);
     expect(screen.getByTestId('welcome-screen')).toBeTruthy();
   });
 
-  it('renders the no-face-detected screen when routed there', () => {
-    useAppStore.setState({ screen: 'noFaceDetected' });
+  it('renders the onboarding screen when routed there', () => {
+    useAppStore.setState({ screen: 'onboarding' });
     render(<AppNavigator />);
-    expect(screen.getByTestId('no-face-detected-screen')).toBeTruthy();
+    expect(screen.getByTestId('onboarding-screen')).toBeTruthy();
+  });
+
+  it('renders the paywall screen when routed there', () => {
+    useAppStore.setState({ screen: 'paywall' });
+    render(<AppNavigator />);
+    expect(screen.getByTestId('paywall-screen')).toBeTruthy();
+  });
+
+  it('renders the loading screen when routed there', () => {
+    useAppStore.setState({ screen: 'loading' });
+    render(<AppNavigator />);
+    expect(screen.getByTestId('loading-screen')).toBeTruthy();
   });
 });

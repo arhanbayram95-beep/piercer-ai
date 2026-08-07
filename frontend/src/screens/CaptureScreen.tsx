@@ -1,16 +1,13 @@
 import { fromByteArray } from 'base64-js';
 import * as Haptics from 'expo-haptics';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, Animated, Pressable, StyleSheet, Text, View } from 'react-native';
-import { useCameraPermission, usePhotoOutput, type CameraPosition } from 'react-native-vision-camera';
-import { Camera, type Face } from 'react-native-vision-camera-face-detector';
+import { Camera, useCameraPermission, usePhotoOutput } from 'react-native-vision-camera';
 import PrimaryButton from '../components/common/PrimaryButton';
 import { useTranslation } from '../i18n/useTranslation';
-import { TranslationKey } from '../i18n/translations';
-import { ReadingModuleId } from '../api/types';
 import { useAppStore } from '../state/useAppStore';
 import { Theme } from '../ui/theme';
-import { playCaptureChime, playPromptChime } from '../utils/sound';
+import { playCaptureChime } from '../utils/sound';
 
 const CAPTURE_TIMEOUT_MS = 6000;
 
@@ -38,38 +35,11 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   });
 }
 
-interface CaptureStep {
-  key: string;
-  titleKey: TranslationKey;
-  promptKey: TranslationKey;
-  // Front camera for the user's own photo, back camera for photographing
-  // someone else — only Relationship Harmony's second photo uses 'back'.
-  facing: CameraPosition;
-}
-
-// One sequence per module, length matching MODULE_PHOTO_COUNTS
-// (api/types.ts) — Character Analysis captures 3 of the user, Relationship
-// Harmony 1 of the user then 1 of someone else, Career Match 1 of the user.
-const MODULE_STEPS: Record<ReadingModuleId, CaptureStep[]> = {
-  'three-expression': [
-    { key: 'rest', titleKey: 'capture.step.rest.title', promptKey: 'capture.step.rest.prompt', facing: 'front' },
-    { key: 'grin', titleKey: 'capture.step.grin.title', promptKey: 'capture.step.grin.prompt', facing: 'front' },
-    { key: 'stern', titleKey: 'capture.step.stern.title', promptKey: 'capture.step.stern.prompt', facing: 'front' },
-  ],
-  'relationship-harmony': [
-    { key: 'person1', titleKey: 'capture.step.person1.title', promptKey: 'capture.step.person1.prompt', facing: 'front' },
-    { key: 'person2', titleKey: 'capture.step.person2.title', promptKey: 'capture.step.person2.prompt', facing: 'back' },
-  ],
-  'career-match': [
-    { key: 'solo', titleKey: 'capture.step.solo.title', promptKey: 'capture.step.solo.prompt', facing: 'front' },
-  ],
-};
-
+// Placeholder single-photo capture flow — piercing-specific multi-step
+// capture (body part selection, guide overlays, etc.) is a later phase.
 export default function CaptureScreen() {
   const { hasPermission, requestPermission } = useCameraPermission();
-  const [stepIndex, setStepIndex] = useState(0);
   const [isCapturing, setIsCapturing] = useState(false);
-  const [hasFace, setHasFace] = useState(false);
   // usePhotoOutput/outputs must stay reference-stable across renders — a
   // fresh options object or array literal here reconfigures (unbinds and
   // rebinds) the native camera session on every re-render, including the
@@ -83,7 +53,6 @@ export default function CaptureScreen() {
   const flash = useRef(new Animated.Value(0)).current;
   const pulse = useRef(new Animated.Value(1)).current;
 
-  const selectedModule = useAppStore((s) => s.selectedModule);
   const addImage = useAppStore((s) => s.addImage);
   const clearImages = useAppStore((s) => s.clearImages);
   const goToScreen = useAppStore((s) => s.goToScreen);
@@ -99,8 +68,6 @@ export default function CaptureScreen() {
     goBack();
   };
 
-  const steps = MODULE_STEPS[selectedModule];
-
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
@@ -110,31 +77,8 @@ export default function CaptureScreen() {
     ).start();
   }, [pulse]);
 
-  useEffect(() => {
-    if (stepIndex > 0) {
-      playPromptChime();
-    }
-    // Only fire when the step actually changes, not on every render.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stepIndex]);
-
-  // On-device face detection rejects non-face frames before any API call
-  // (PROJECT_SPEC.md §2.2, privacy + cost control) — a missing face routes
-  // straight to NoFaceDetectedScreen instead of capturing, same
-  // process-and-discard treatment as an abandoned capture (handleCancel
-  // above), rather than letting a bad frame reach the backend.
-  const handleFacesDetected = useCallback((faces: Face[]) => {
-    setHasFace(faces.length > 0);
-  }, []);
-
   const handleCapture = async () => {
     if (isCapturing) return;
-
-    if (!hasFace) {
-      clearImages();
-      goToScreen('noFaceDetected');
-      return;
-    }
 
     setIsCapturing(true);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -147,12 +91,8 @@ export default function CaptureScreen() {
 
     // No catch-less finally here on purpose: a failed capturePhoto()/
     // getFileDataAsync() (the same underlying native camera instability as
-    // the "Camera is closed" teardown race) must NOT advance the step or
-    // navigate to analyzing — a try/finally alone would do that regardless
-    // of success, silently under-counting images and only surfacing as a
-    // confusing "check your connection" failure once analyzing sees fewer
-    // photos than the module needs. On failure, stay on the current step so
-    // the shutter can just be pressed again.
+    // the "Camera is closed" teardown race) must NOT navigate onward — a
+    // try/finally alone would do that regardless of success.
     //
     // The very first capturePhoto() per screen mount reliably races a
     // one-time native session reconfigure (confirmed via on-device logcat:
@@ -198,11 +138,8 @@ export default function CaptureScreen() {
     }
 
     setIsCapturing(false);
-    if (stepIndex < steps.length - 1) {
-      setStepIndex(stepIndex + 1);
-    } else {
-      goToScreen('analyzing');
-    }
+    // Placeholder destination — piercing preview flow is a later phase.
+    goToScreen('settings');
   };
 
   if (!hasPermission) {
@@ -224,18 +161,13 @@ export default function CaptureScreen() {
     );
   }
 
-  const currentStep = steps[stepIndex];
-  const currentTitle = t(currentStep.titleKey);
-
   return (
     <View style={styles.container} testID="capture-screen">
       <Camera
         style={StyleSheet.absoluteFill}
         isActive
-        device={currentStep.facing}
-        cameraFacing={currentStep.facing}
+        device="back"
         outputs={cameraOutputs}
-        onFacesDetected={handleFacesDetected}
         onError={(error) => console.error('Camera error:', error)}
       />
 
@@ -252,28 +184,16 @@ export default function CaptureScreen() {
           <Text style={styles.closeIcon}>✕</Text>
         </Pressable>
 
-        <View style={styles.dots}>
-          {steps.map((step, index) => (
-            <View
-              key={step.key}
-              style={[styles.dot, index === stepIndex && styles.dotActive, index < stepIndex && styles.dotDone]}
-            />
-          ))}
-        </View>
-
         <View style={styles.guideWrap}>
           <Animated.View style={[styles.guideRing, { transform: [{ scale: pulse }] }]} />
         </View>
 
         <View style={styles.footer}>
-          <Text style={styles.stepTitle}>{currentTitle}</Text>
-          <Text style={styles.stepPrompt}>{t(currentStep.promptKey)}</Text>
-
           <Pressable
             onPress={handleCapture}
             disabled={isCapturing}
             accessibilityRole="button"
-            accessibilityLabel={`Capture ${currentTitle} photo`}
+            accessibilityLabel="Capture photo"
             testID="shutter-button"
             style={styles.shutterOuter}
           >
@@ -330,26 +250,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: 'rgba(26, 5, 11, 0.15)',
   },
-  dots: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 10,
-    paddingTop: Theme.spacing.xl,
-  },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: Theme.radius.full,
-    backgroundColor: 'rgba(255, 223, 158, 0.3)',
-  },
-  dotActive: {
-    width: 10,
-    height: 10,
-    backgroundColor: Theme.colors.accent.crimsonPrimary,
-  },
-  dotDone: {
-    backgroundColor: Theme.colors.accent.goldSecondary,
-  },
   guideWrap: {
     flex: 1,
     alignItems: 'center',
@@ -371,16 +271,6 @@ const styles = StyleSheet.create({
     gap: Theme.spacing.xs,
     paddingBottom: Theme.spacing.xl,
     paddingHorizontal: Theme.spacing.containerPadding,
-  },
-  stepTitle: {
-    ...Theme.typography.headlineMd,
-    color: Theme.colors.text.primary,
-  },
-  stepPrompt: {
-    ...Theme.typography.bodyMd,
-    fontSize: 14,
-    color: Theme.colors.text.secondary,
-    marginBottom: Theme.spacing.sm,
   },
   shutterOuter: {
     width: 76,

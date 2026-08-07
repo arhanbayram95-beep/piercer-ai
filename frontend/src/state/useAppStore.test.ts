@@ -1,5 +1,4 @@
 import { useAppStore } from './useAppStore';
-import { ReadingResult } from '../api/types';
 
 describe('useAppStore', () => {
   beforeEach(() => {
@@ -27,14 +26,14 @@ describe('useAppStore', () => {
 
   it('goBack returns to wherever goToScreen was last called from', () => {
     useAppStore.getState().goToScreen('settings');
-    useAppStore.getState().goToScreen('review');
+    useAppStore.getState().goToScreen('paywall');
     useAppStore.getState().goBack();
     expect(useAppStore.getState().screen).toBe('settings');
   });
 
-  it('goBack falls back to the Analyze hub when there is nothing recorded to return to', () => {
+  it('goBack falls back to the Welcome home base when there is nothing recorded to return to', () => {
     useAppStore.getState().goBack();
-    expect(useAppStore.getState().screen).toBe('analyze');
+    expect(useAppStore.getState().screen).toBe('welcome');
   });
 
   it('tracks age verification and image consent independently', () => {
@@ -68,25 +67,5 @@ describe('useAppStore', () => {
     const { anonymousId } = useAppStore.getState();
     expect(anonymousId).toMatch(/^faceai-anon-/);
     expect(useAppStore.getState().anonymousId).toBe(anonymousId);
-  });
-
-  it('defaults to the three-expression module and can switch it', () => {
-    expect(useAppStore.getState().selectedModule).toBe('three-expression');
-    useAppStore.getState().setSelectedModule('career-match');
-    expect(useAppStore.getState().selectedModule).toBe('career-match');
-  });
-
-  it('holds the most recent reading result and can clear it', () => {
-    expect(useAppStore.getState().reading).toBeNull();
-    const reading: ReadingResult = {
-      module: 'career_path',
-      work_archetype_card: { title: 'Career Archetype', badge_tag: 'Strategic Innovator', summary: 's' },
-      domains_card: { title: 'Recommended Industries', top_industry_pills: ['Engineering & R&D'] },
-      recommendations_card: { title: 'Ideal Role Matches', checklist_items: [] },
-    };
-    useAppStore.getState().setReading(reading);
-    expect(useAppStore.getState().reading).toEqual(reading);
-    useAppStore.getState().setReading(null);
-    expect(useAppStore.getState().reading).toBeNull();
   });
 });

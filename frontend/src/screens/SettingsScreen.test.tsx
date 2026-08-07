@@ -14,6 +14,10 @@ jest.mock('expo-device', () => ({
   osBuildId: '22A123',
 }));
 
+jest.mock('expo-store-review', () => ({
+  requestReview: jest.fn(),
+}));
+
 describe('SettingsScreen', () => {
   beforeEach(() => {
     useAppStore.setState({ screen: 'settings', languageCode: 'en', isProActive: false });
@@ -51,10 +55,11 @@ describe('SettingsScreen', () => {
     (Alert.alert as jest.Mock).mockRestore();
   });
 
-  it('opens the review screen from Rate Us', () => {
+  it('requests the native store review prompt from Rate Us', () => {
+    const StoreReview = require('expo-store-review');
     render(<SettingsScreen />);
     fireEvent.press(screen.getByTestId('settings-rate-us'));
-    expect(useAppStore.getState().screen).toBe('review');
+    expect(StoreReview.requestReview).toHaveBeenCalledTimes(1);
   });
 
   it('opens the external privacy policy page from the Legal section', () => {
@@ -99,7 +104,7 @@ describe('SettingsScreen', () => {
 
     expect(Share.share).toHaveBeenCalledTimes(1);
     const [{ message }] = (Share.share as jest.Mock).mock.calls[0];
-    expect(message).toMatch(/Face Reader/);
+    expect(message).toMatch(/piercer\.ai/);
   });
 
   it('re-renders every screen label in the newly selected language', () => {

@@ -8,8 +8,7 @@ interface PrimaryButtonProps {
   variant?: 'primary' | 'secondary';
   // Strips the filled/outlined pill down to just the label (+ optional
   // icon) floating on the screen's own background — no card/block behind
-  // it. Used where a solid pill reads as too heavy a block (see
-  // RevealScreen's action row).
+  // it. Used where a solid pill reads as too heavy a block.
   flow?: boolean;
   icon?: string;
   disabled?: boolean;

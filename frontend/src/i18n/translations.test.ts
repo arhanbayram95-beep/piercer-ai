@@ -22,7 +22,7 @@ describe('translations', () => {
     expect(translate('nav.settings', 'xx')).toBe('Settings');
   });
 
-  it('interpolates template variables', () => {
-    expect(translate('review.starLabel', 'en', { n: 4 })).toBe('Rate 4 stars');
+  it('leaves text unchanged when no placeholder in it matches the given vars', () => {
+    expect(translate('nav.settings', 'en', { n: 4 })).toBe('Settings');
   });
 });

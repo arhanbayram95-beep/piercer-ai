@@ -5,11 +5,11 @@ import AppLogo from './AppLogo';
 describe('AppLogo', () => {
   it('is icon-only by default', () => {
     render(<AppLogo />);
-    expect(screen.queryByText('Face Reader')).toBeNull();
+    expect(screen.queryByText('piercer.ai')).toBeNull();
   });
 
   it('shows the wordmark when explicitly opted into', () => {
     render(<AppLogo showWordmark />);
-    expect(screen.getByText('Face Reader')).toBeTruthy();
+    expect(screen.getByText('piercer.ai')).toBeTruthy();
   });
 });

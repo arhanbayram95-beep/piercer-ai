@@ -2,33 +2,18 @@ import { FastifyInstance } from 'fastify';
 import { buildApp } from '../../src/app';
 import { ReadingModelClient } from '../../src/services/geminiClient';
 
-function textResponse(body: unknown) {
-  return { text: JSON.stringify(body) };
-}
-
-const PHOTOS_3 = ['base64-calm', 'base64-bright', 'base64-deep'];
-const CHARACTER_READING = {
-  module: 'character_analysis',
-  archetype_card: { title: 'Character Archetype', badge_tag: 'Analytical Visionary', summary: 'One punchy sentence.' },
-  facial_structure_card: { title: 'Facial Structure', shape_tag: 'Oval', description: 'Structural description.' },
-  spirit_animal_card: { title: 'Spirit Animal Match', animal: 'Wolf', description: 'Symbolic description.' },
-  traits_card: {
-    title: 'Facial Trait Analysis',
-    metadata_badges: [{ key: 'Eye Energy', value: 'Direct & Piercing' }],
-    strength_pills: ['Strategic Thinking'],
-    growth_pills: ['Pacing Energy'],
-  },
-  celebrity_match_card: { title: 'Celebrity Archetype Match', match_name: 'A Public Figure', match_description: 'Same register.' },
-};
-
-describe('rate limiting on /api/v1/reading/analyze', () => {
+describe('global rate limiting', () => {
   let app: FastifyInstance;
-  let generateContent: jest.Mock;
 
   beforeEach(async () => {
-    generateContent = jest.fn().mockResolvedValue(textResponse(CHARACTER_READING));
-    const readingModelClient: ReadingModelClient = { models: { generateContent } };
+    const readingModelClient: ReadingModelClient = { models: { generateContent: jest.fn() } };
     app = await buildApp(readingModelClient);
+    // Legal routes are deliberately exempt from rate limiting (see
+    // routes/legal.ts), so a throwaway route stands in for whatever
+    // production endpoint eventually lands here — it only needs to pick up
+    // the global @fastify/rate-limit registration under test.
+    app.get('/__test-route', async () => ({ ok: true }));
+    await app.ready();
   });
 
   afterEach(async () => {
@@ -36,7 +21,7 @@ describe('rate limiting on /api/v1/reading/analyze', () => {
   });
 
   it('allows requests under the limit through', async () => {
-    const response = await app.inject({ method: 'POST', url: '/api/v1/reading/analyze', payload: { photos: PHOTOS_3 } });
+    const response = await app.inject({ method: 'GET', url: '/__test-route' });
     expect(response.statusCode).toBe(200);
   });
 
@@ -46,7 +31,7 @@ describe('rate limiting on /api/v1/reading/analyze', () => {
     // 21 in a row from one test genuinely exercises the real threshold.
     let last;
     for (let i = 0; i < 21; i++) {
-      last = await app.inject({ method: 'POST', url: '/api/v1/reading/analyze', payload: { photos: PHOTOS_3 } });
+      last = await app.inject({ method: 'GET', url: '/__test-route' });
     }
 
     expect(last?.statusCode).toBe(429);

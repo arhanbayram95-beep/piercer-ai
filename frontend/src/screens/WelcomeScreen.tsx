@@ -8,7 +8,7 @@ import { useAppStore } from '../state/useAppStore';
 import { Theme } from '../ui/theme';
 
 // The dedicated first-time landing moment after the paywall, before
-// handing off to the Analyze hub (the app's actual home base — there is
+// handing off to the capture flow (the app's actual home base — there is
 // no separate main-menu/dashboard screen).
 export default function WelcomeScreen() {
   const goToScreen = useAppStore((s) => s.goToScreen);
@@ -35,7 +35,7 @@ export default function WelcomeScreen() {
       </FadeInView>
 
       <View style={styles.footer}>
-        <PrimaryButton label={t('welcome.cta')} onPress={() => goToScreen('analyze')} />
+        <PrimaryButton label={t('welcome.cta')} onPress={() => goToScreen('capture')} />
       </View>
     </View>
   );

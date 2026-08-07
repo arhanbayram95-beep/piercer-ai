@@ -14,10 +14,10 @@ describe('CORS', () => {
     await app.close();
   });
 
-  it('answers a cross-origin preflight for the analyze endpoint instead of 404ing it', async () => {
+  it('answers a cross-origin preflight instead of 404ing it', async () => {
     const response = await app.inject({
       method: 'OPTIONS',
-      url: '/api/v1/reading/analyze',
+      url: '/legal/privacy',
       headers: {
         origin: 'https://example.com',
         'access-control-request-method': 'POST',

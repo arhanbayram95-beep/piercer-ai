@@ -1,5 +1,6 @@
 import Constants from 'expo-constants';
 import * as Device from 'expo-device';
+import * as StoreReview from 'expo-store-review';
 import React, { useState } from 'react';
 import { Alert, Image, Linking, Platform, Pressable, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
 import BottomNavBar from '../components/common/BottomNavBar';
@@ -13,9 +14,9 @@ import { Theme } from '../ui/theme';
 import { buildContactMailUrl } from '../utils/contactMail';
 import { PRIVACY_POLICY_URL, TERMS_URL } from '../utils/legalLinks';
 
-// No published store URL yet — add it here once Face Reader is live on the
+// No published store URL yet — add it here once piercer.ai is live on the
 // App Store / Play Store so the share message includes a real link.
-const SHARE_MESSAGE = 'Check out Face Reader — playful AI character readings from your photos! ✦';
+const SHARE_MESSAGE = 'Check out piercer.ai — preview piercings on your own photos! ✦';
 
 interface SettingsRowConfig {
   label: string;
@@ -74,7 +75,7 @@ function resolveOsVersionLabel(): string {
 function resolveSignOff(): string {
   if (Platform.OS === 'ios') return 'Sent from my iPhone';
   if (Platform.OS === 'android') return 'Sent from my Android device';
-  return 'Sent from Face Reader';
+  return 'Sent from piercer.ai';
 }
 
 function resolveBuildNumber(): string | null {
@@ -116,6 +117,10 @@ export default function SettingsScreen() {
 
   const handleShareApp = () => {
     Share.share({ message: SHARE_MESSAGE });
+  };
+
+  const handleRateUs = () => {
+    StoreReview.requestReview();
   };
 
   // No RevenueCat integration yet (Phase 5.1) — this can't look up real
@@ -165,7 +170,7 @@ export default function SettingsScreen() {
               onPress: () => setLanguageVisible(true),
               testID: 'settings-language',
             },
-            { label: t('settings.row.rateUs'), onPress: () => goToScreen('review'), testID: 'settings-rate-us' },
+            { label: t('settings.row.rateUs'), onPress: handleRateUs, testID: 'settings-rate-us' },
             { label: t('settings.row.shareApp'), onPress: handleShareApp, testID: 'settings-share-app' },
           ]}
         />

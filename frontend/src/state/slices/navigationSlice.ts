@@ -1,27 +1,15 @@
 import { StateCreator } from 'zustand';
 
-export type AppScreen =
-  | 'loading'
-  | 'onboarding'
-  | 'paywall'
-  | 'welcome'
-  | 'analyze'
-  | 'capture'
-  | 'analyzing'
-  | 'reveal'
-  | 'results'
-  | 'review'
-  | 'settings'
-  | 'noFaceDetected';
+export type AppScreen = 'loading' | 'onboarding' | 'paywall' | 'welcome' | 'capture' | 'settings';
 
 // Transient, forward-only screens — never a sensible place for goBack() to
-// land on (you never want to "go back" into the camera, a loading spinner,
-// or a reading you already finished viewing).
-const NON_RETURNABLE_SCREENS = new Set<AppScreen>(['loading', 'analyzing', 'reveal', 'capture', 'noFaceDetected']);
+// land on (you never want to "go back" into the camera or a loading
+// spinner).
+const NON_RETURNABLE_SCREENS = new Set<AppScreen>(['loading', 'capture']);
 
-// The Analyze hub is the app's home base — there is no separate "main
+// The Welcome screen is the app's home base — there is no separate "main
 // menu" screen.
-const DEFAULT_SCREEN: AppScreen = 'analyze';
+const DEFAULT_SCREEN: AppScreen = 'welcome';
 
 export interface NavigationSlice {
   screen: AppScreen;

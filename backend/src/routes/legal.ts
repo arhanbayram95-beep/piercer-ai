@@ -3,9 +3,9 @@ import { FastifyInstance } from 'fastify';
 // Mirrors frontend/src/content/legalContent.ts — App Store Connect and Play
 // Console both require a real public URL for the privacy policy in store
 // listing metadata, not just in-app modal text (see QA_FINDINGS.md,
-// 2026-07-29). No shared package between frontend/backend (same tradeoff as
-// readingSchema.ts/api/types.ts), so this is a deliberate second copy: any
-// change to the legal copy has to land in both places.
+// 2026-07-29). No shared package between frontend/backend, so this is a
+// deliberate second copy: any change to the legal copy has to land in both
+// places.
 interface LegalSection {
   heading: string;
   body: string;

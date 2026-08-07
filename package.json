@@ -1,7 +1,7 @@
 {
   "name": "piercer.ai",
   "version": "1.0.0",
-  "description": "A React Native mobile app that gives users playful, AI-generated character and expression analysis from their own photos. Built for the US/EU entertainment-app market — think Co-Star/Nebula-style \"vibe reading,\" not a clinical or diagnostic product. See `PROJECT_SPEC.md` for the full product spec and `DESIGN.md` for the visual system.",
+  "description": "A React Native mobile app that lets users photograph a body part and preview a realistic AI-rendered piercing on it before committing. See `PROJECT_SPEC.md` for the full product spec and `DESIGN.md` for the visual system.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

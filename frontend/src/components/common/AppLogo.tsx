@@ -8,7 +8,7 @@ interface AppLogoProps {
   // the handful of once-per-session brand moments (first launch, the
   // post-onboarding welcome, the externally-shared card) where it's
   // explicitly opted into. Everywhere the user revisits constantly (the
-  // Analyze hub, onboarding, every single analysis run) showing the full
+  // capture flow, onboarding, every single capture) showing the full
   // wordmark every time read as repetitive.
   showWordmark?: boolean;
   // 'row' (default) sits the wordmark beside the icon, matching the
@@ -31,7 +31,7 @@ export default function AppLogo({ size = 'sm', showWordmark = false, layout = 'r
       </View>
       {showWordmark && (
         <Text style={[styles.wordmark, isLarge && styles.wordmarkLg, isStacked && styles.wordmarkStacked]}>
-          {isStacked ? 'Face\nReader' : 'Face Reader'}
+          {isStacked ? 'piercer\n.ai' : 'piercer.ai'}
         </Text>
       )}
     </View>

@@ -1,20 +1,20 @@
 {
   "expo": {
-    "name": "Face Reader - AI Physiognomy Tool",
-    "slug": "arhan",
+    "name": "piercer.ai",
+    "slug": "piercer-ai",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "app.faceai.facereader",
+      "bundleIdentifier": "com.piercer.ai",
       "infoPlist": {
-        "NSCameraUsageDescription": "Face Reader uses your camera to capture your photos for your reading. Photos are processed in memory and never stored."
+        "NSCameraUsageDescription": "piercer.ai uses your camera to capture photos of the body part you want to preview jewelry on. Photos are processed in memory and never stored."
       }
     },
     "android": {
-      "package": "app.faceai.facereader",
+      "package": "com.piercer.ai",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#1A050B"
@@ -22,8 +22,7 @@
       "predictiveBackGestureEnabled": false,
       "usesCleartextTraffic": true,
       "permissions": [
-        "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO"
+        "android.permission.CAMERA"
       ]
     },
     "web": {
