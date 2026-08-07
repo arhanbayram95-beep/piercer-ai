@@ -384,6 +384,53 @@ Because `PiercingLocationScreen` (the pre-Capture picker) renders whatever
 options rather than the original 10 — a deliberate side effect of keeping
 one shared source of truth rather than forking the list.
 
+**Personality/body-type piercing matching module (added 2026-08-08, piece 3
+of the 3-piece scope change):** three genuinely independent input legs,
+per the product brief:
+- **Quiz leg** (`frontend/src/content/personalityQuiz.ts`,
+  `PersonalityQuizScreen.tsx`) — pure client-side, no AI/backend call. 6
+  questions, 4 light on-brand archetypes (Minimalist/Romantic/Rebel/Free
+  Spirit), majority-vote scoring with deterministic tie-breaking, static
+  rule-based archetype -> recommended location(s) + jewelry style mapping.
+- **Photo leg** (`backend/src/services/{matchSchema,matchPrompt,matchService}.ts`,
+  `POST /api/v1/match/photo`, `frontend/src/api/match.ts`,
+  `PersonalityPhotoScreen.tsx`) — a real AI vision call, but unlike
+  render.ts this one returns structured JSON (recommended location IDs +
+  reasons), not an image, so it reuses Gemini's actual `responseSchema`
+  mechanism on `gemini-flash-latest` (the same model/mechanism the
+  pre-pivot reading feature used) rather than render.ts's image-generation
+  model. Not live-tested against a real key in this pass (none in this
+  environment) — only against a mocked client in tests, same outstanding
+  caveat as render.ts.
+- **Body/face-type leg** (`frontend/src/content/locationJewelryRecommendations.ts`,
+  a `StudioScreen.tsx` banner) — deliberately reuses the existing
+  Capture -> Studio -> Preview try-on flow rather than adding a new
+  recommendation screen or AI call, per the product owner's explicit
+  reading of this leg: it's a static per-location jewelry-style suggestion
+  surfaced as a dismissible banner once a photo is captured, with an
+  "Apply" action that just pre-selects the suggested jewelry type/finish in
+  the existing drawer.
+
+Both the quiz and photo legs' result views end in a "Try It On" action that
+pre-selects `studioSlice.selectedLocation`/`selectedJewelryType`/
+`selectedFinish` and routes straight into Capture — none of the three legs
+introduce a standalone text-only recommendation dead end.
+
+**No disclaimer on this module** — an explicit, informed override of
+CLAUDE.md's "disclaimers are non-negotiable" rule, confirmed by the product
+owner specifically for this module (not the rest of the app). Flagged with
+an in-code comment on `PersonalityQuizScreen.tsx` and
+`PersonalityPhotoScreen.tsx` (the two screens that would otherwise carry
+`DisclaimerFooter`) rather than silently omitted — same transparency
+pattern as the BIPA/GDPR flag in `backend/src/routes/legal.ts`. The
+module's baseline tone constraints (light, non-clinical, no negative
+commentary) were never waived, just the disclaimer requirement — see
+`matchPrompt.ts`'s `TONE_RULES`.
+
+New Settings row (`settings.row.piercingMatch`) opens the module's hub
+screen (`MatchHubScreen.tsx`), which offers the quiz and photo paths as two
+separate buttons — not a combined picker/dropdown, per the brief.
+
 ## 5. Naming Notes
 
 **Decision (2026-07-24):** the public-facing name is **"Face Reader - AI

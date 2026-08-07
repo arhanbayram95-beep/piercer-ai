@@ -61,6 +61,12 @@ describe('SettingsScreen', () => {
     expect(useAppStore.getState().screen).toBe('reference');
   });
 
+  it('opens the piercing match hub from the General section', () => {
+    render(<SettingsScreen />);
+    fireEvent.press(screen.getByTestId('settings-piercing-match'));
+    expect(useAppStore.getState().screen).toBe('match');
+  });
+
   it('requests the native store review prompt from Rate Us', () => {
     const StoreReview = require('expo-store-review');
     render(<SettingsScreen />);

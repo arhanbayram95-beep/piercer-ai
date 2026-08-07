@@ -175,6 +175,11 @@ export default function SettingsScreen() {
               onPress: () => goToScreen('reference'),
               testID: 'settings-piercing-reference',
             },
+            {
+              label: t('settings.row.piercingMatch'),
+              onPress: () => goToScreen('match'),
+              testID: 'settings-piercing-match',
+            },
             { label: t('settings.row.rateUs'), onPress: handleRateUs, testID: 'settings-rate-us' },
             { label: t('settings.row.shareApp'), onPress: handleShareApp, testID: 'settings-share-app' },
           ]}

@@ -23,6 +23,7 @@ describe('StudioScreen', () => {
       screen: 'studio',
       previousScreen: 'capture',
       images: ['AQID'],
+      selectedLocation: null,
       selectedJewelryType: 'hoops',
       selectedFinish: 'silver',
       stackedItems: [],
@@ -128,5 +129,36 @@ describe('StudioScreen', () => {
     await waitFor(() => expect(useAppStore.getState().screen).toBe('preview'));
     expect(mockRenderPreview).toHaveBeenCalled();
     expect(useAppStore.getState().freeRendersUsed).toBe(5);
+  });
+
+  it('does not show the body/face-type recommendation banner when no location was picked', () => {
+    render(<StudioScreen />);
+    expect(screen.queryByTestId('studio-recommendation-banner')).toBeNull();
+  });
+
+  it('shows a jewelry recommendation banner based on the picked location', () => {
+    useAppStore.setState({ selectedLocation: 'septum' });
+    render(<StudioScreen />);
+    expect(screen.getByTestId('studio-recommendation-banner')).toBeTruthy();
+  });
+
+  it('applies the recommended jewelry type/finish and dismisses the banner', () => {
+    useAppStore.setState({ selectedLocation: 'septum', selectedJewelryType: 'hoops', selectedFinish: 'silver' });
+    render(<StudioScreen />);
+
+    fireEvent.press(screen.getByTestId('studio-recommendation-apply'));
+
+    expect(useAppStore.getState().selectedJewelryType).toBe('hoops');
+    expect(useAppStore.getState().selectedFinish).toBe('blackSteel');
+    expect(screen.queryByTestId('studio-recommendation-banner')).toBeNull();
+  });
+
+  it('lets the user dismiss the recommendation banner without applying it', () => {
+    useAppStore.setState({ selectedLocation: 'septum' });
+    render(<StudioScreen />);
+
+    fireEvent.press(screen.getByTestId('studio-recommendation-dismiss'));
+
+    expect(screen.queryByTestId('studio-recommendation-banner')).toBeNull();
   });
 });

@@ -2,8 +2,11 @@ import React, { useEffect, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
 import CaptureScreen from '../screens/CaptureScreen';
 import LoadingScreen from '../screens/LoadingScreen';
+import MatchHubScreen from '../screens/MatchHubScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import PaywallScreen from '../screens/PaywallScreen';
+import PersonalityPhotoScreen from '../screens/PersonalityPhotoScreen';
+import PersonalityQuizScreen from '../screens/PersonalityQuizScreen';
 import PiercingLocationScreen from '../screens/PiercingLocationScreen';
 import PiercingReferenceScreen from '../screens/PiercingReferenceScreen';
 import PreviewScreen from '../screens/PreviewScreen';
@@ -24,6 +27,9 @@ const SCREENS: Record<AppScreen, React.ComponentType> = {
   preview: PreviewScreen,
   settings: SettingsScreen,
   reference: PiercingReferenceScreen,
+  match: MatchHubScreen,
+  matchQuiz: PersonalityQuizScreen,
+  matchPhoto: PersonalityPhotoScreen,
 };
 
 export default function AppNavigator() {

@@ -34,6 +34,24 @@ describe('AppNavigator', () => {
     expect(screen.getByTestId('reference-screen')).toBeTruthy();
   });
 
+  it('renders the match hub screen when routed there', () => {
+    useAppStore.setState({ screen: 'match' });
+    render(<AppNavigator />);
+    expect(screen.getByTestId('match-hub-screen')).toBeTruthy();
+  });
+
+  it('renders the personality quiz screen when routed there', () => {
+    useAppStore.setState({ screen: 'matchQuiz' });
+    render(<AppNavigator />);
+    expect(screen.getByTestId('quiz-screen')).toBeTruthy();
+  });
+
+  it('renders the personality photo match screen when routed there', () => {
+    useAppStore.setState({ screen: 'matchPhoto' });
+    render(<AppNavigator />);
+    expect(screen.getByTestId('match-photo-screen')).toBeTruthy();
+  });
+
   it('renders the settings screen when routed there', () => {
     useAppStore.setState({ screen: 'settings' });
     render(<AppNavigator />);

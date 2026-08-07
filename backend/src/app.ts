@@ -3,6 +3,7 @@ import { VisionModelClient } from './services/geminiClient';
 import { registerCors } from './middleware/cors';
 import { registerRateLimit } from './middleware/rateLimit';
 import { registerLegalRoutes } from './routes/legal';
+import { registerMatchRoutes } from './routes/match';
 import { registerRenderRoutes } from './routes/render';
 
 // Generous enough for several full-resolution phone photos (uncapped
@@ -19,6 +20,7 @@ export async function buildApp(visionModelClient: VisionModelClient): Promise<Fa
   await registerRateLimit(app);
   registerLegalRoutes(app);
   registerRenderRoutes(app, visionModelClient);
+  registerMatchRoutes(app, visionModelClient);
 
   // Defense-in-depth: every expected failure path already responds with a
   // sanitized message; Fastify's own schema-validation errors, passed
