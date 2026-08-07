@@ -1,0 +1,57 @@
+{
+  "expo": {
+    "name": "Face Reader - AI Physiognomy Tool",
+    "slug": "arhan",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.faceai.facereader",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Face Reader uses your camera to capture your photos for your reading. Photos are processed in memory and never stored."
+      }
+    },
+    "android": {
+      "package": "app.faceai.facereader",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1A050B"
+      },
+      "predictiveBackGestureEnabled": false,
+      "usesCleartextTraffic": true,
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-status-bar",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#1A050B"
+        }
+      ],
+      "expo-asset"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "2970ea0e-9543-40f9-bdab-711f9e120980"
+      }
+    },
+    "owner": "arhanbayrams-team",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/2970ea0e-9543-40f9-bdab-711f9e120980"
+    }
+  }
+}

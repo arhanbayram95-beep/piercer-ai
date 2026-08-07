@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FaceAI - Rate Experience</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Hanken+Grotesk:wght@400;500&family=Geist:wght@400;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Hanken+Grotesk:wght@100..900&family=Manrope:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#f3ddde",
+                        "on-secondary-container": "#d5b470",
+                        "on-error-container": "#ffdad6",
+                        "secondary-fixed": "#ffdf9e",
+                        "background": "#1b1011",
+                        "on-tertiary-fixed": "#002112",
+                        "error-container": "#93000a",
+                        "inverse-on-surface": "#3a2d2e",
+                        "on-surface-variant": "#debfc1",
+                        "secondary-container": "#5d460b",
+                        "primary-fixed": "#ffdadc",
+                        "on-secondary": "#3f2e00",
+                        "tertiary-container": "#00633f",
+                        "surface-container-lowest": "#160b0c",
+                        "primary-fixed-dim": "#ffb2b9",
+                        "on-tertiary": "#003822",
+                        "surface-container-high": "#342728",
+                        "tertiary": "#86d7aa",
+                        "surface-container-highest": "#3f3132",
+                        "on-background": "#f3ddde",
+                        "on-tertiary-container": "#8bdcaf",
+                        "on-primary-fixed": "#400010",
+                        "surface-container": "#281d1e",
+                        "on-surface": "#f3ddde",
+                        "on-error": "#690005",
+                        "on-primary-container": "#ffb9bf",
+                        "inverse-primary": "#aa3249",
+                        "secondary-fixed-dim": "#e4c27d",
+                        "primary-container": "#9e2941",
+                        "outline": "#a58a8c",
+                        "on-secondary-fixed-variant": "#5a4309",
+                        "surface-dim": "#1b1011",
+                        "surface-bright": "#443637",
+                        "surface": "#1b1011",
+                        "on-secondary-fixed": "#261a00",
+                        "tertiary-fixed-dim": "#86d7aa",
+                        "on-tertiary-fixed-variant": "#005233",
+                        "outline-variant": "#574143",
+                        "surface-container-low": "#24191a",
+                        "tertiary-fixed": "#a2f4c5",
+                        "surface-tint": "#ffb2b9",
+                        "on-primary-fixed-variant": "#891833",
+                        "surface-variant": "#3f3132",
+                        "secondary": "#e4c27d",
+                        "primary": "#ffb2b9",
+                        "on-primary": "#67001f",
+                        "error": "#ffb4ab"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "4px",
+                        "container-max": "1200px",
+                        "md": "24px",
+                        "lg": "40px",
+                        "sm": "16px",
+                        "xs": "8px",
+                        "xl": "64px",
+                        "gutter": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Manrope"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-lg": ["Manrope"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "display-lg-mobile": ["Manrope"],
+                        "label-caps": ["Geist"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "display-lg-mobile": ["36px", { "lineHeight": "42px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background: linear-gradient(135deg, #1A050B 0%, #2D0A12 100%);
+            min-height: 100vh;
+            color: #f3ddde;
+            overflow-x: hidden;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            border: 1px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+        }
+
+        .glass-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, #9E2941, #EBC983);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-clip: xor;
+            mask-clip: exclude;
+            opacity: 0.8;
+        }
+
+        .star-glow {
+            filter: drop-shadow(0 0 10px rgba(235, 201, 131, 0.4));
+            transition: all 0.3s ease;
+        }
+
+        .cosmic-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes scan-beam {
+            0% { transform: translateY(-100%); opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { transform: translateY(200%); opacity: 0; }
+        }
+
+        .scan-line {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #EBC983, transparent);
+            box-shadow: 0 0 15px #9E2941;
+            animation: scan-beam 4s infinite linear;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center font-body-md text-body-md-mobile p-sm md:p-xl relative">
+<canvas class="cosmic-particles" id="particleCanvas"></canvas>
+<!-- Top Navigation -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-sm py-md backdrop-blur-md border-b border-outline-variant/30 bg-transparent">
+<h1 class="font-headline-md text-headline-md-mobile text-secondary">Rate Experience</h1>
+<button class="material-symbols-outlined text-secondary transition-all duration-300 active:scale-95 hover:opacity-80 cursor-pointer" data-icon="close">close</button>
+</header>
+<!-- Scanning Visual Effect -->
+<div class="fixed inset-0 pointer-events-none overflow-hidden z-10">
+<div class="scan-line w-full absolute top-0"></div>
+</div>
+<!-- Main Content Canvas -->
+<main class="w-full max-w-lg z-20 mt-xl mb-xl">
+<div class="glass-card rounded-xl p-md md:p-lg flex flex-col items-center text-center shadow-[0_0_40px_rgba(158,41,65,0.2)]">
+<!-- 3D Star Emblem -->
+<div class="w-32 h-32 md:w-48 md:h-48 mb-md relative flex items-center justify-center">
+<img class="w-full h-full object-contain drop-shadow-[0_0_25px_rgba(235,201,131,0.3)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAl_iSLLI6kKQiSaHt_BeEMeiKOap1X79RPZ0KvBO6PqL6bNT2qpIs3byvWHh-3_naY1bD1RBdDrzokIeK_HfCqjOfaQ0AKxdFt906QJeNlFSS7kIXSffZFbz8GJxl6O1tK9gouN3HXwFtpMKIVbAw2QWC6P8SGr75631534MZ8Pv2srq22RCkMURqlmgW7H9LF6ga3zZ2e6sEN8fc008ayC3meT-N8CRuE5unUfA-NjHz-DX2TV5jm_hBCOEpaEH4lBiKbI6vWzM8"/>
+</div>
+<!-- Content -->
+<h2 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-secondary mb-xs leading-tight">
+                Enjoying your insights with FaceAI?
+            </h2>
+<p class="text-on-surface-variant font-body-md text-body-md mb-lg max-w-xs mx-auto">
+                Your feedback helps us train our AI models and improve your experience.
+            </p>
+<!-- Star Rating Input -->
+<div class="flex gap-xs md:gap-sm mb-lg" id="starContainer">
+<span class="material-symbols-outlined text-secondary text-4xl cursor-pointer star-glow hover:scale-110 active:scale-90 transition-transform" data-icon="star">star</span>
+<span class="material-symbols-outlined text-secondary text-4xl cursor-pointer star-glow hover:scale-110 active:scale-90 transition-transform" data-icon="star">star</span>
+<span class="material-symbols-outlined text-secondary text-4xl cursor-pointer star-glow hover:scale-110 active:scale-90 transition-transform" data-icon="star">star</span>
+<span class="material-symbols-outlined text-secondary text-4xl cursor-pointer star-glow hover:scale-110 active:scale-90 transition-transform" data-icon="star">star</span>
+<span class="material-symbols-outlined text-secondary text-4xl cursor-pointer star-glow hover:scale-110 active:scale-90 transition-transform" data-icon="star">star</span>
+</div>
+<!-- Actions -->
+<div class="w-full flex flex-col gap-sm">
+<button class="w-full py-md bg-secondary text-background font-headline-md text-headline-md rounded-lg shadow-[0_0_20px_rgba(235,201,131,0.2)] hover:opacity-90 active:scale-[0.98] transition-all">
+                    Rate on App Store
+                </button>
+<button class="w-full py-xs text-on-surface-variant hover:text-secondary font-label-caps text-label-caps transition-colors duration-300">
+                    Maybe Later
+                </button>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Shell (Suppressed for focused task screen, but placeholder for structure) -->
+<!-- Not rendered as per Destination Rule for Task-Focused screens -->
+<script>
+        // Star Rating Interactivity
+        const stars = document.querySelectorAll('#starContainer span');
+        stars.forEach((star, index) => {
+            star.addEventListener('click', () => {
+                stars.forEach((s, i) => {
+                    if (i <= index) {
+                        s.style.fontVariationSettings = "'FILL' 1";
+                    } else {
+                        s.style.fontVariationSettings = "'FILL' 0";
+                    }
+                });
+            });
+        });
+
+        // Simple Cosmic Particles Effect
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.5;
+                this.speedX = (Math.random() - 0.5) * 0.2;
+                this.speedY = (Math.random() - 0.5) * 0.2;
+                this.opacity = Math.random();
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(235, 201, 131, ${this.opacity * 0.3})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            for (let i = 0; i < 150; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+    </script>
+</body></html>

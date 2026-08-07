@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FaceAI Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&amp;family=Hanken+Grotesk:wght@400;500&amp;family=Geist:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-tint": "#ffb2b9",
+                    "on-surface-variant": "#debfc1",
+                    "on-primary": "#67001f",
+                    "surface-container-highest": "#4a2c34",
+                    "on-tertiary-fixed": "#340f17",
+                    "on-surface": "#ffd9e0",
+                    "surface": "#230c13",
+                    "inverse-primary": "#aa3249",
+                    "on-secondary-container": "#d5b470",
+                    "primary-container": "#9e2941",
+                    "surface-container": "#32181f",
+                    "error": "#ffb4ab",
+                    "secondary-container": "#5d460b",
+                    "tertiary-fixed-dim": "#f6b6bf",
+                    "on-tertiary": "#4d242b",
+                    "primary": "#ffb2b9",
+                    "tertiary": "#f6b6bf",
+                    "on-primary-container": "#ffb9bf",
+                    "secondary": "#e4c27d",
+                    "primary-fixed": "#ffdadc",
+                    "surface-container-high": "#3d2229",
+                    "error-container": "#93000a",
+                    "surface-dim": "#230c13",
+                    "on-secondary": "#3f2e00",
+                    "tertiary-container": "#784850",
+                    "on-error-container": "#ffdad6",
+                    "surface-variant": "#4a2c34",
+                    "on-primary-fixed-variant": "#891833",
+                    "on-secondary-fixed-variant": "#5a4309",
+                    "on-tertiary-fixed-variant": "#673941",
+                    "surface-container-lowest": "#1d070e",
+                    "inverse-surface": "#ffd9e0",
+                    "secondary-fixed": "#ffdf9e",
+                    "on-error": "#690005",
+                    "outline-variant": "#574143",
+                    "outline": "#a58a8c",
+                    "tertiary-fixed": "#ffd9dd",
+                    "on-tertiary-container": "#fabac3",
+                    "on-primary-fixed": "#400010",
+                    "secondary-fixed-dim": "#e4c27d",
+                    "surface-container-low": "#2d141b",
+                    "background": "#230c13",
+                    "inverse-on-surface": "#452830",
+                    "on-secondary-fixed": "#261a00",
+                    "surface-bright": "#4e3138",
+                    "primary-fixed-dim": "#ffb2b9",
+                    "on-background": "#ffd9e0"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-max": "1280px",
+                    "margin-desktop": "40px",
+                    "base": "8px",
+                    "margin-mobile": "16px",
+                    "gutter": "24px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Geist"],
+                    "body-md": ["Hanken Grotesk"],
+                    "display-lg-mobile": ["Bricolage Grotesque"],
+                    "headline-md": ["Bricolage Grotesque"],
+                    "display-lg": ["Bricolage Grotesque"],
+                    "body-lg": ["Hanken Grotesk"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background: linear-gradient(135deg, #1A050B 0%, #2D0A12 100%);
+            min-height: 100vh;
+            color: #ffd9e0;
+            overflow-x: hidden;
+        }
+
+        .glass-card {
+            background: rgba(45, 10, 18, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+        }
+
+        .glass-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, #EBC983 0%, transparent 40%, transparent 60%, #9E2941 100%);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .glow-button {
+            box-shadow: 0 0 15px rgba(235, 201, 131, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .glow-button:hover {
+            box-shadow: 0 0 25px rgba(235, 201, 131, 0.6);
+            transform: translateY(-1px);
+        }
+
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            background: #9E2941;
+            border-radius: 50%;
+            opacity: 0.3;
+            filter: blur(1px);
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-100px) translateX(50px); }
+            100% { transform: translateY(0) translateX(0); }
+        }
+
+        .active-glow {
+            box-shadow: 0 0 20px rgba(158, 41, 65, 0.5);
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md">
+<!-- Particle Layer -->
+<div class="floating-particles" id="particle-container"></div>
+<!-- TopAppBar -->
+<header class="bg-surface/60 backdrop-blur-xl text-secondary docked full-width top-0 border-b border-outline-variant/20 shadow-[0_0_20px_rgba(158,41,65,0.1)] flex items-center justify-between px-margin-mobile h-16 w-full z-50">
+<div class="flex items-center gap-3">
+<img alt="FaceAI Logo" class="h-8 w-8 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsvifm6GoEdAcLFqlY_KjR09jL9R2MxFjXrKMGDcaDJWUAK7h48p0mbzvfZeAdAXC3JtY_L6U2DyvC0PrhfTesxctWfxf1oQIKexSI2-cMrzfBQUS7jxNCAXMeeSIuBwlTY2T6BbScK5fIXm2jYJddpFncH3tnewsOe6o3GrUYRT60afjxfknMf9TqviPyWClN3rNJ8ygb08gp4WXSCgSEs7LAa006MepPsyDuniKcStavhR7fU7vsmNAwFOT9Bp5kvkjUWdG7Rs_d"/>
+<span class="font-headline-md text-headline-md-mobile text-secondary tracking-tight">FaceAI</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="bg-primary-container text-on-primary-container px-3 py-1 rounded-full font-label-sm text-label-sm tracking-widest">PRO</span>
+<div class="w-10 h-10 rounded-full border border-outline-variant/30 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A high-fashion editorial portrait of a person with glowing cybernetic facial markings, set against a dark burgundy backdrop with soft golden lighting highlights. Minimalist and luxurious aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDi1BT7PLv32o5N4iBUdc0kjniGXlyvnAXnytC_qmVepW8lozSL5GAqCs7JABTYV9yhFu668TLlnypbMUU54_OsY-HHCBExgua6goj2slF6v4e3xh7efnQxOTMpPhHUo9m9czwTEExqaysdvck5gSrs9u9KN7C09TSrtHJrnWpq9eFgHgwYy3MsPqexYOaIl8NRGQT6Qp71MFmZOAGxAwnjX_hrntQ2wVR02iITaGgP4lOizpDht_67DAA-4NN0Z52yGEkt9t-o5Vl9"/>
+</div>
+</div>
+</header>
+<main class="relative z-10 max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-8 pb-32">
+<!-- Hero Section -->
+<section class="glass-card rounded-3xl p-8 mb-gutter flex flex-col md:flex-row items-center justify-between overflow-hidden">
+<div class="md:w-3/5 space-y-6">
+<div class="space-y-2">
+<h1 class="font-headline-md text-headline-md-mobile md:text-display-lg text-on-surface">3-Expression Face Reading</h1>
+<p class="text-on-surface-variant font-body-lg text-body-lg leading-relaxed max-w-xl">
+                        Capture Calm, Bright, and Deep expressions to reveal your character vibe. Our advanced AI maps your unique facial geometry to reveal hidden temperaments.
+                    </p>
+</div>
+<button class="glow-button bg-secondary text-on-secondary px-8 py-3 rounded-full font-headline-md text-body-md flex items-center gap-2">
+                    Start Analysis <span class="material-symbols-outlined text-[20px]">auto_awesome</span>
+</button>
+</div>
+<div class="md:w-2/5 mt-8 md:mt-0 flex justify-center relative">
+<div class="absolute inset-0 bg-primary/20 blur-[60px] rounded-full"></div>
+<img class="w-full max-w-xs relative z-10 transform hover:scale-105 transition-transform duration-700" data-alt="A futuristic 3D wireframe mesh of a human face, glowing in a mix of crimson red and champagne gold lines against a deep obsidian background. The mesh is intricate and high-tech, symbolizing biometric analysis and artificial intelligence." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDviTZ3QNkxidgdFvNy5s3xBNluo7-OdEMceucBCdoDNZD_mjiCu2CtSnCdevjVmDcXIJmLXonpueWIKRgX02eE38a1WG3fCL-0xONQdJr1BxzYROP0Mp6H9XztI6cvmzx_xwuyntrnru7YWnSdG-B6AVgSDMHz4Zlx-VFf3nVs5z--tdJGJ1MKi6e2wdSonZgtWyWsexwbrMloGTAf8z44NHmAHGTQKDwtU-q9HLN_r-zqA6WMP5D-8qY8GGp9H8AImVHhWRifp-DM"/>
+</div>
+</section>
+<!-- Features Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- Card 1 -->
+<div class="glass-card rounded-2xl p-6 transition-all duration-300 hover:bg-surface-variant/20 group">
+<div class="flex items-start justify-between">
+<div class="space-y-2">
+<h3 class="font-headline-md text-on-surface">Vibe &amp; Temperament</h3>
+<p class="text-on-surface-variant">Instant mood &amp; energy check based on thermal facial mapping.</p>
+</div>
+<span class="material-symbols-outlined text-primary text-3xl transition-transform group-hover:rotate-12" data-icon="lens_blur">lens_blur</span>
+</div>
+<div class="mt-6 pt-4 border-t border-outline-variant/10">
+<div class="flex justify-between items-center text-label-sm font-label-sm text-secondary">
+<span>DETECTION ACTIVE</span>
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="glass-card rounded-2xl p-6 transition-all duration-300 hover:bg-surface-variant/20 group">
+<div class="flex items-start justify-between">
+<div class="space-y-2">
+<h3 class="font-headline-md text-on-surface">Expression Dynamics</h3>
+<p class="text-on-surface-variant">Micro-expression shifts tracked in real-time during your session.</p>
+</div>
+<span class="material-symbols-outlined text-primary text-3xl transition-transform group-hover:scale-110" data-icon="face_retouching_natural">face_retouching_natural</span>
+</div>
+<div class="mt-6 flex gap-2">
+<div class="h-1 flex-1 bg-primary/30 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-2/3"></div>
+</div>
+<div class="h-1 flex-1 bg-secondary/30 rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-1/2"></div>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="glass-card rounded-2xl p-6 transition-all duration-300 hover:bg-surface-variant/20 group">
+<div class="flex items-start justify-between">
+<div class="space-y-2">
+<h3 class="font-headline-md text-on-surface">Face Symmetry</h3>
+<p class="text-on-surface-variant">Proportion &amp; balance reading using Golden Ratio landmarks.</p>
+</div>
+<span class="material-symbols-outlined text-primary text-3xl transition-transform group-hover:rotate-[-10deg]" data-icon="grid_view">grid_view</span>
+</div>
+<div class="mt-4 grid grid-cols-4 gap-1 h-12 items-end">
+<div class="bg-primary/40 h-[60%] rounded-sm"></div>
+<div class="bg-primary/40 h-[90%] rounded-sm"></div>
+<div class="bg-secondary/40 h-[70%] rounded-sm"></div>
+<div class="bg-primary/40 h-[40%] rounded-sm"></div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="glass-card rounded-2xl p-6 transition-all duration-300 hover:bg-surface-variant/20 group">
+<div class="flex items-start justify-between">
+<div class="space-y-2">
+<h3 class="font-headline-md text-on-surface">Daily Vibe Log</h3>
+<p class="text-on-surface-variant">Track mood patterns over time with historical AI insights.</p>
+</div>
+<span class="material-symbols-outlined text-primary text-3xl transition-transform group-hover:translate-y-[-4px]" data-icon="auto_awesome_motion">auto_awesome_motion</span>
+</div>
+<div class="mt-6 flex items-center gap-3 text-label-sm font-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-sm">history</span>
+<span>Last reading: 2 hours ago</span>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[calc(100%-48px)] max-w-md z-50 bg-surface-container/60 backdrop-blur-xl border border-outline-variant/30 rounded-full shadow-[0_0_30px_rgba(158,41,65,0.2)] flex justify-around items-center py-2 px-4">
+<!-- Analyze (Active) -->
+<a class="flex flex-col items-center justify-center bg-secondary text-on-secondary rounded-full px-6 py-2 transition-transform active:scale-90 duration-200 active-glow" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">face</span>
+<span class="font-label-sm text-label-sm">Analyze</span>
+</a>
+<!-- Results -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-2 hover:text-primary transition-colors transition-transform active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-label-sm text-label-sm">Results</span>
+</a>
+<!-- Settings -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-2 hover:text-primary transition-colors transition-transform active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-sm text-label-sm">Settings</span>
+</a>
+</nav>
+<script>
+        // Particle Background Generator
+        const container = document.getElementById('particle-container');
+        const particleCount = 25;
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            
+            const size = Math.random() * 6 + 2;
+            const posX = Math.random() * 100;
+            const posY = Math.random() * 100;
+            const delay = Math.random() * 20;
+            const duration = Math.random() * 10 + 15;
+
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${posX}%`;
+            particle.style.top = `${posY}%`;
+            particle.style.animationDelay = `-${delay}s`;
+            particle.style.animationDuration = `${duration}s`;
+            
+            if (Math.random() > 0.5) {
+                particle.style.background = '#EBC983';
+            }
+
+            container.appendChild(particle);
+        }
+
+        // Add subtle hover tracking for glass cards
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+    </script>
+</body></html>

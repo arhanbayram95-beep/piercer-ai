@@ -1,0 +1,354 @@
+<!DOCTYPE html><html class="dark" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>FaceAI | Initialize</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Plus+Jakarta+Sans:wght@400;500&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        @keyframes pulse-gold {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(235, 201, 131, 0)); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 20px rgba(235, 201, 131, 0.4)); }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .animate-pulse-gold {
+            animation: pulse-gold 4s ease-in-out infinite;
+        }
+
+        .glass-card {
+            background: rgba(18, 17, 38, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(158, 41, 65, 0.15);
+        }
+
+        .glow-border {
+            box-shadow: 0 0 15px rgba(158, 41, 65, 0.3);
+        }
+
+        .shimmer-bar {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .shimmer-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(235, 201, 131, 0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-highest": "#34324a",
+                        "surface-bright": "#38374e",
+                        "surface-variant": "#34324a",
+                        "on-background": "#e3dffe",
+                        "outline": "#999080",
+                        "on-error": "#690005",
+                        "on-primary-fixed-variant": "#5a4309",
+                        "background": "#121126",
+                        "tertiary-container": "#eec2cb",
+                        "outline-variant": "#4d4639",
+                        "surface-dim": "#121126",
+                        "tertiary-fixed-dim": "#e7bbc4",
+                        "inverse-on-surface": "#2f2e45",
+                        "on-primary-fixed": "#261a00",
+                        "error": "#ffb4ab",
+                        "on-primary": "#3f2e00",
+                        "secondary-container": "#891833",
+                        "surface-container-lowest": "#0d0c21",
+                        "inverse-surface": "#e3dffe",
+                        "on-secondary": "#67001f",
+                        "on-secondary-fixed": "#400010",
+                        "on-surface": "#e3dffe",
+                        "secondary": "#ffb2b9",
+                        "on-error-container": "#ffdad6",
+                        "on-primary-container": "#6c5319",
+                        "surface-container-high": "#29283e",
+                        "error-container": "#93000a",
+                        "secondary-fixed": "#ffdadc",
+                        "on-tertiary-container": "#6f4e56",
+                        "surface-container": "#1e1d33",
+                        "primary-container": "#ebc983",
+                        "surface": "#121126",
+                        "surface-container-low": "#1a192f",
+                        "on-tertiary": "#452830",
+                        "secondary-fixed-dim": "#ffb2b9",
+                        "on-tertiary-fixed": "#2d141b",
+                        "surface-tint": "#e4c27d",
+                        "primary-fixed": "#ffdf9e",
+                        "primary-fixed-dim": "#e4c27d",
+                        "on-secondary-container": "#ff97a3",
+                        "tertiary-fixed": "#ffd9e0",
+                        "tertiary": "#ffe2e7",
+                        "on-secondary-fixed-variant": "#891833",
+                        "primary": "#ffe7b9",
+                        "on-surface-variant": "#d0c5b4",
+                        "inverse-primary": "#745b20",
+                        "on-tertiary-fixed-variant": "#5d3e46"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "8px",
+                        "md": "24px",
+                        "base": "4px",
+                        "xl": "64px",
+                        "gutter": "16px",
+                        "container-padding": "20px",
+                        "sm": "16px",
+                        "lg": "40px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Manrope"],
+                        "label-sm": ["JetBrains Mono"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Manrope"],
+                        "headline-lg-mobile": ["Manrope"],
+                        "body-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["26px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen overflow-hidden font-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- Full Screen Cosmic Background -->
+<div class="fixed inset-0 z-0">
+<!-- STITCH_SHADER_START:ANIMATION_4 class="absolute inset-0 w-full h-full opacity-60" -->
+<div class="absolute inset-0 w-full h-full opacity-60" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_4" style="display:block;width:100%;height:100%" width="390" height="884"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_4');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+varying vec2 v_texCoord;
+uniform float u_time;
+uniform vec2 u_resolution;
+
+float noise(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+}
+
+void main() {
+    vec2 uv = v_texCoord;
+    
+    // Base colors from design system
+    vec3 obsidian = vec3(0.102, 0.02, 0.043); // #1A050B
+    vec3 crimson = vec3(0.176, 0.039, 0.071);  // #2D0A12
+    vec3 glowColor = vec3(0.62, 0.161, 0.255); // #9E2941
+    
+    // Dynamic gradient background
+    float grad = uv.y + sin(u_time * 0.5 + uv.x * 3.0) * 0.1;
+    vec3 color = mix(obsidian, crimson, grad);
+    
+    // Glowing neural network lines (simulated with moving sine waves)
+    float lines = 0.0;
+    for(float i = 1.0; i <= 3.0; i++) {
+        float speed = u_time * (0.1 + i * 0.05);
+        lines += smoothstep(0.02, 0.0, abs(uv.y - 0.5 + 0.3 * sin(uv.x * 2.0 * i + speed)));
+        lines += smoothstep(0.02, 0.0, abs(uv.x - 0.5 + 0.3 * cos(uv.y * 2.0 * i + speed)));
+    }
+    
+    // Crimson particles
+    float particles = 0.0;
+    vec2 p_uv = uv * 10.0;
+    vec2 id = floor(p_uv);
+    vec2 f = fract(p_uv);
+    float n = noise(id + floor(u_time * 0.5));
+    if (n > 0.95) {
+        float dist = distance(f, vec2(0.5 + 0.3 * sin(u_time + n * 10.0)));
+        particles = smoothstep(0.1, 0.0, dist) * n;
+    }
+    
+    color += lines * glowColor * 0.3;
+    color += particles * glowColor * 0.5;
+    
+    gl_FragColor = vec4(color, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_4 -->
+<!-- Overlay for Depth -->
+<div class="absolute inset-0 bg-gradient-to-b from-transparent via-background/40 to-background"></div>
+</div>
+<!-- Main Content Canvas -->
+<main class="relative z-10 flex flex-col items-center justify-center min-h-screen px-container-padding">
+<!-- Branding Identity Centerpiece -->
+<div class="flex flex-col items-center space-y-8">
+<div class="relative">
+<!-- Glowing Halo -->
+<div class="absolute -inset-4 bg-primary-container/10 blur-2xl rounded-full animate-pulse"></div>
+<!-- Logo -->
+<img alt="FaceAI Logo" class="w-32 h-32 md:w-48 md:h-48 object-contain animate-pulse-gold relative z-10" src="https://lh3.googleusercontent.com/aida/AP1WRLsgEj6dU3t45NZBwPdA4d4QngNU6YakjsBFXME4SYCORT0vcZcjOBwcQw9JTGaNJ1q5ttpO6s3oMDZbiDDwp1GitkRpC-q0rSYqXkeyA1FMbsyxBAlzJiDWIpoXPCLGjfAh-3wkhARkYFJWmmpo3uz2RpNrwylZOiua3-9Z5W6ar9BEnu_VwjbNTwCdxG745uFsOFAqYxB8T2osUxxhD-GRlrAvTOtexX7eRJTsou09UTij72WtlPqhLwbB" style="transform: scale(1); transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);">
+</div>
+<div class="text-center space-y-2">
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary-container tracking-[0.2em] font-extrabold uppercase drop-shadow-[0_0_10px_rgba(235,201,131,0.5)]">
+                    FaceAI
+                </h1>
+<p class="font-label-sm text-label-sm text-outline-variant tracking-widest uppercase">
+                    Initializing Neural Matrix
+                </p>
+</div>
+</div>
+<!-- Progress Indicator -->
+<div class="fixed bottom-24 w-full max-w-xs px-container-padding">
+<div class="flex flex-col items-center space-y-6">
+<!-- Shimmer Loading Bar -->
+<div class="w-full h-[2px] bg-secondary-container/20 rounded-full shimmer-bar">
+<div class="absolute inset-y-0 left-0 w-2/3 bg-gradient-to-r from-secondary-container to-primary-container glow-border"></div>
+</div>
+<!-- Circular Visualizer Element -->
+<div class="relative w-12 h-12 flex items-center justify-center">
+<!-- Spinning Border -->
+<div class="absolute inset-0 border-2 border-secondary-container/30 border-t-primary-container rounded-full animate-spin"></div>
+<!-- Inner Core -->
+<div class="w-2 h-2 bg-primary-container rounded-full shadow-[0_0_8px_rgba(235,201,131,0.8)]"></div>
+</div>
+<div class="font-label-sm text-[10px] text-on-surface-variant/40 transition-all duration-700" id="status-text" style="opacity: 1;">ESTABLISHING SECURE PROTOCOLS...</div>
+</div>
+</div>
+<!-- Aesthetic Accents -->
+<div class="fixed top-12 left-1/2 -translate-x-1/2 flex items-center space-x-12 opacity-20 pointer-events-none">
+<div class="h-px w-24 bg-gradient-to-r from-transparent to-primary-container"></div>
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: &quot;opsz&quot; 20, &quot;wght&quot; 200;">auto_awesome</span>
+<div class="h-px w-24 bg-gradient-to-l from-transparent to-primary-container"></div>
+</div>
+</main>
+<!-- Micro-interaction Script -->
+<script>
+        const statuses = [
+            "CALIBRATING VISION ENGINE...",
+            "DECRYPTING BIOMETRIC DATA...",
+            "OPTIMIZING NEURAL PATHWAYS...",
+            "ESTABLISHING SECURE PROTOCOLS...",
+            "SYNCHRONIZING COSMIC ARTIFACTS..."
+        ];
+
+        let index = 0;
+        const statusElement = document.getElementById('status-text');
+
+        setInterval(() => {
+            statusElement.style.opacity = '0';
+            setTimeout(() => {
+                index = (index + 1) % statuses.length;
+                statusElement.textContent = statuses[index];
+                statusElement.style.opacity = '1';
+            }, 700);
+        }, 3000);
+
+        // Interaction logic for a "click to skip" or "enter" feel
+        document.body.addEventListener('mousedown', () => {
+            const logo = document.querySelector('img');
+            logo.style.transform = 'scale(0.95)';
+            logo.style.transition = 'transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        });
+
+        document.body.addEventListener('mouseup', () => {
+            const logo = document.querySelector('img');
+            logo.style.transform = 'scale(1)';
+        });
+    </script>
+
+
+</body></html>
