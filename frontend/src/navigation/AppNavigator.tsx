@@ -5,6 +5,7 @@ import LoadingScreen from '../screens/LoadingScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import PaywallScreen from '../screens/PaywallScreen';
 import PiercingLocationScreen from '../screens/PiercingLocationScreen';
+import PiercingReferenceScreen from '../screens/PiercingReferenceScreen';
 import PreviewScreen from '../screens/PreviewScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import StudioScreen from '../screens/StudioScreen';
@@ -22,6 +23,7 @@ const SCREENS: Record<AppScreen, React.ComponentType> = {
   studio: StudioScreen,
   preview: PreviewScreen,
   settings: SettingsScreen,
+  reference: PiercingReferenceScreen,
 };
 
 export default function AppNavigator() {

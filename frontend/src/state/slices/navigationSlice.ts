@@ -9,7 +9,8 @@ export type AppScreen =
   | 'capture'
   | 'studio'
   | 'preview'
-  | 'settings';
+  | 'settings'
+  | 'reference';
 
 // Transient, forward-only screens — never a sensible place for goBack() to
 // land on (you never want to "go back" into the camera or a loading

@@ -28,6 +28,12 @@ jest.mock('expo-image-picker', () => ({
 }));
 
 describe('AppNavigator', () => {
+  it('renders the piercing reference screen when routed there', () => {
+    useAppStore.setState({ screen: 'reference' });
+    render(<AppNavigator />);
+    expect(screen.getByTestId('reference-screen')).toBeTruthy();
+  });
+
   it('renders the settings screen when routed there', () => {
     useAppStore.setState({ screen: 'settings' });
     render(<AppNavigator />);

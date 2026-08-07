@@ -363,6 +363,27 @@ falls back to no prompt (not a broken string) if somehow reached with no
 location selected. This is piece 1 of 3 in a larger piercer.ai-specific
 scope change; pieces 2/3 are pending open product-decision answers.
 
+**Piercing Reference page (added 2026-08-08, piece 2 of the 3-piece scope
+change):** `frontend/src/content/piercingLocations.ts` extended from 10
+locations to 26 — the original 10 gained `painRating` (1-10) and
+`descriptionKey` fields reusing their existing `labelKey`s, and 16 new
+locations were added from scratch (Upper Lobe, Forward Helix, Anti-Tragus,
+Conch, Snug, Orbital, Bridge, Nostril, High Nostril, Philtrum/Medusa,
+Labret, Monroe, Tongue, Cheek/Dimple, Surface, Dermal-as-a-location —
+distinct from `studioSlice`'s `dermal` jewelry type, no collision since
+they're separate id namespaces). Content/ratings are the product owner's
+exact vetted text, not generated. Non-genital scope only, matching
+`JEWELRY_TYPES`. New `PiercingReferenceScreen.tsx`, reachable from Settings
+(`settings.row.piercingReference`) — read-only, no capture/AI/entitlement
+logic. Pain ratings are framed as general community-consensus estimates,
+not medical advice — that framing is rendered as visible on-page copy
+(`reference.disclaimer`), not just a code comment, since a numeric pain
+scale is itself a claim a user could otherwise read as clinical guidance.
+Because `PiercingLocationScreen` (the pre-Capture picker) renders whatever
+`PIERCING_LOCATIONS` contains per category, it now also shows all 26
+options rather than the original 10 — a deliberate side effect of keeping
+one shared source of truth rather than forking the list.
+
 ## 5. Naming Notes
 
 **Decision (2026-07-24):** the public-facing name is **"Face Reader - AI

@@ -55,6 +55,12 @@ describe('SettingsScreen', () => {
     (Alert.alert as jest.Mock).mockRestore();
   });
 
+  it('opens the piercing reference page from the General section', () => {
+    render(<SettingsScreen />);
+    fireEvent.press(screen.getByTestId('settings-piercing-reference'));
+    expect(useAppStore.getState().screen).toBe('reference');
+  });
+
   it('requests the native store review prompt from Rate Us', () => {
     const StoreReview = require('expo-store-review');
     render(<SettingsScreen />);

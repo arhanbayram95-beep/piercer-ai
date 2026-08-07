@@ -170,6 +170,11 @@ export default function SettingsScreen() {
               onPress: () => setLanguageVisible(true),
               testID: 'settings-language',
             },
+            {
+              label: t('settings.row.piercingReference'),
+              onPress: () => goToScreen('reference'),
+              testID: 'settings-piercing-reference',
+            },
             { label: t('settings.row.rateUs'), onPress: handleRateUs, testID: 'settings-rate-us' },
             { label: t('settings.row.shareApp'), onPress: handleShareApp, testID: 'settings-share-app' },
           ]}
