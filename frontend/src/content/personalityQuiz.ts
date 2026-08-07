@@ -114,7 +114,10 @@ export const ARCHETYPE_RECOMMENDATIONS: Record<PersonalityArchetype, ArchetypeRe
     nameKey: 'quiz.archetype.rebel.name',
     descriptionKey: 'quiz.archetype.rebel.description',
     recommendedLocationIds: ['septum', 'industrial', 'snug'],
-    recommendedJewelryType: 'barbells',
+    // Must stay one of PIERCING_LOCATION_JEWELRY_TYPES's valid types for
+    // the first recommendedLocationIds entry (septum: ['septum', 'hoops'])
+    // — see content/locationJewelryTypes.ts.
+    recommendedJewelryType: 'septum',
     recommendedFinish: 'blackSteel',
   },
   freeSpirit: {

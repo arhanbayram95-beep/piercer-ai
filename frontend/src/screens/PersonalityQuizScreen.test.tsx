@@ -44,7 +44,7 @@ describe('PersonalityQuizScreen', () => {
     fireEvent.press(screen.getByTestId('quiz-try-on-button'));
 
     expect(useAppStore.getState().selectedLocation).toBe('septum');
-    expect(useAppStore.getState().selectedJewelryType).toBe('barbells');
+    expect(useAppStore.getState().selectedJewelryType).toBe('septum');
     expect(useAppStore.getState().selectedFinish).toBe('blackSteel');
     expect(useAppStore.getState().screen).toBe('capture');
   });

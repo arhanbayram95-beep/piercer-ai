@@ -431,6 +431,32 @@ New Settings row (`settings.row.piercingMatch`) opens the module's hub
 screen (`MatchHubScreen.tsx`), which offers the quiz and photo paths as two
 separate buttons — not a combined picker/dropdown, per the brief.
 
+**Location-restricted jewelry types (added 2026-08-08):** QA/product flagged
+that Studio offered all 6 jewelry types (Hoops/Studs/Barbells/Industrial/
+Septum/Dermal) regardless of the picked piercing location — e.g. an
+Industrial barbell could be selected for Tongue, which makes no anatomical
+sense. New `frontend/src/content/locationJewelryTypes.ts` (sibling file to
+`piercingLocations.ts`, not folded into it — it needs `JewelryType` from
+`studioSlice.ts`, which itself imports `PiercingLocationId` from
+`piercingLocations.ts`, so importing `JewelryType` there directly would
+create a circular import) exports `PIERCING_LOCATION_JEWELRY_TYPES`
+covering all 26 locations, and `validJewelryTypesFor()` (falls back to
+every jewelry type if no location is selected, same defensive pattern as
+`CaptureScreen`'s location-aware guide copy). `PiercingStudioDrawer` now
+filters its jewelry-type chips through this and auto-corrects
+`selectedJewelryType` via a `useEffect` keyed on `selectedLocation` alone
+(deliberately not on the jewelry type itself, so it reacts only to a
+location change, not to the user's own in-place selection) if the current
+selection becomes invalid — e.g. picking Industrial after Tongue was
+selected snaps the type to `industrial` rather than leaving an
+unrepresented selection. Not aiming for piercing-industry precision, just
+ruling out the obviously-wrong combos, per explicit product guidance.
+`content/locationJewelryRecommendations.ts` (piece 3's body/face-type leg)
+and `content/personalityQuiz.ts`'s archetype recommendations were both
+cross-checked against the new restriction — one mismatch found and fixed
+(the Rebel archetype recommended `barbells` for its first location,
+`septum`, which only allows `septum`/`hoops`; changed to `septum`).
+
 ## 5. Naming Notes
 
 **Decision (2026-07-24):** the public-facing name is **"Face Reader - AI

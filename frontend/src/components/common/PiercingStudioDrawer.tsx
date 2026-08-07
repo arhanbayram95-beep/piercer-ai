@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { validJewelryTypesFor } from '../../content/locationJewelryTypes';
 import { useTranslation } from '../../i18n/useTranslation';
 import {
   JewelryFinish,
   JEWELRY_FINISHES,
   JewelryType,
-  JEWELRY_TYPES,
   MAX_STACKED_ITEMS,
 } from '../../state/slices/studioSlice';
 import { useAppStore } from '../../state/useAppStore';
@@ -68,6 +68,7 @@ function ChipRow<T extends string>({ options, labelKeys, selected, onSelect, tes
 // without any prop plumbing.
 export default function PiercingStudioDrawer() {
   const t = useTranslation();
+  const selectedLocation = useAppStore((s) => s.selectedLocation);
   const selectedJewelryType = useAppStore((s) => s.selectedJewelryType);
   const setJewelryType = useAppStore((s) => s.setJewelryType);
   const selectedFinish = useAppStore((s) => s.selectedFinish);
@@ -77,6 +78,26 @@ export default function PiercingStudioDrawer() {
   const removeStackedItem = useAppStore((s) => s.removeStackedItem);
   const isProActive = useAppStore((s) => s.isProActive);
   const goToScreen = useAppStore((s) => s.goToScreen);
+
+  // Only offer jewelry types that anatomically fit the picked location
+  // (content/locationJewelryTypes.ts) — falls back to every type if
+  // somehow no location is selected, same defensive pattern
+  // CaptureScreen's guide copy already uses.
+  const validJewelryTypes = validJewelryTypesFor(selectedLocation);
+
+  // If the location changes to one where the currently-selected jewelry
+  // type is no longer valid (or a location with no prior selection at all
+  // narrows the options), auto-correct to the first valid type rather than
+  // leaving an invalid type selected with no chip showing it as selected.
+  useEffect(() => {
+    if (!validJewelryTypes.includes(selectedJewelryType)) {
+      setJewelryType(validJewelryTypes[0]);
+    }
+    // Deliberately keyed only on selectedLocation, not selectedJewelryType
+    // or validJewelryTypes — re-running this on every jewelry-type change
+    // would fight a user's own in-place selection instead of only reacting
+    // to a location change.
+  }, [selectedLocation]);
 
   // "Multi-piercing stacking" is a piercer_pro_access-gated capability
   // (entitlementSlice.ts) — a non-Pro user tapping this is routed straight
@@ -95,7 +116,7 @@ export default function PiercingStudioDrawer() {
     <GlassCard style={styles.drawer} testID="piercing-studio-drawer">
       <Text style={styles.sectionHeading}>{t('studio.jewelryType.heading')}</Text>
       <ChipRow
-        options={JEWELRY_TYPES}
+        options={validJewelryTypes}
         labelKeys={JEWELRY_TYPE_LABEL_KEYS}
         selected={selectedJewelryType}
         onSelect={setJewelryType}
