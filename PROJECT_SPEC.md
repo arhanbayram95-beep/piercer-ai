@@ -325,6 +325,27 @@ condition for missing secrets) — `renderService.test.ts`/`render.route.test.ts
 exercise it against a mocked client only; confirm the model name/response
 shape against a real key before shipping.
 
+**Paywall/entitlement pivot (added 2026-08-07):** the old face-reading app
+had no free tier at all — the paywall gated every screen past onboarding,
+so `aura_pro_access` was an all-or-nothing gate. piercer.ai's product brief
+calls for a freemium model instead: `piercer_pro_access` (renamed
+identifier, `frontend/src/utils/purchases.ts`) now specifically gates
+**unlimited renders** (free users get `FREE_RENDER_LIMIT` — currently 1 —
+renders per session before `StudioScreen` routes them to the paywall
+instead of calling the render API) and **multi-piercing stacking**
+(`PiercingStudioDrawer`'s "Add Another Piece" routes a non-Pro user to the
+paywall instead of adding a second jewelry item; capped at
+`MAX_STACKED_ITEMS` = 3 even for Pro users). Both counters are in-memory-
+only session state (`entitlementSlice.freeRendersUsed`,
+`studioSlice.stackedItems`), same lifetime as every other piece of session
+state per the Privacy Architecture. The backend's `additionalItems` field
+on `POST /api/v1/render/preview` (`renderSchema.ts`) is validated (right
+shape, within the count cap) but not separately entitlement-checked beyond
+the route's existing `requireActiveEntitlement` preHandler, which is still
+a permissive stub pending real RevenueCat server-side verification (Phase
+5.1) — so today, nothing server-side stops a client from sending
+`additionalItems` without being Pro; the gate is UI-only until 5.1 lands.
+
 ## 5. Naming Notes
 
 **Decision (2026-07-24):** the public-facing name is **"Face Reader - AI

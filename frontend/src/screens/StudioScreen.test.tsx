@@ -25,7 +25,10 @@ describe('StudioScreen', () => {
       images: ['AQID'],
       selectedJewelryType: 'hoops',
       selectedFinish: 'silver',
+      stackedItems: [],
       renderResult: null,
+      isProActive: false,
+      freeRendersUsed: 0,
     });
   });
 
@@ -63,7 +66,12 @@ describe('StudioScreen', () => {
     fireEvent.press(screen.getByTestId('studio-continue-button'));
 
     await waitFor(() => expect(useAppStore.getState().screen).toBe('preview'));
-    expect(mockRenderPreview).toHaveBeenCalledWith({ photo: 'AQID', jewelryType: 'septum', finish: 'gold' });
+    expect(mockRenderPreview).toHaveBeenCalledWith({
+      photo: 'AQID',
+      jewelryType: 'septum',
+      finish: 'gold',
+      additionalItems: undefined,
+    });
     expect(useAppStore.getState().renderResult).toEqual({ renderedImage: 'cmVuZGVyZWQ=', mimeType: 'image/png' });
   });
 
@@ -76,5 +84,49 @@ describe('StudioScreen', () => {
     await waitFor(() => expect(Alert.alert).toHaveBeenCalled());
     expect(useAppStore.getState().screen).toBe('studio');
     expect(useAppStore.getState().renderResult).toBeNull();
+  });
+
+  it('passes stacked jewelry items through as additionalItems', async () => {
+    useAppStore.setState({
+      isProActive: true,
+      stackedItems: [{ jewelryType: 'dermal', finish: 'gold' }],
+    });
+    render(<StudioScreen />);
+
+    fireEvent.press(screen.getByTestId('studio-continue-button'));
+
+    await waitFor(() => expect(useAppStore.getState().screen).toBe('preview'));
+    expect(mockRenderPreview).toHaveBeenCalledWith(
+      expect.objectContaining({ additionalItems: [{ jewelryType: 'dermal', finish: 'gold' }] })
+    );
+  });
+
+  it('lets a free user spend their one free render', async () => {
+    render(<StudioScreen />);
+    fireEvent.press(screen.getByTestId('studio-continue-button'));
+
+    await waitFor(() => expect(useAppStore.getState().screen).toBe('preview'));
+    expect(useAppStore.getState().freeRendersUsed).toBe(1);
+  });
+
+  it('routes a free user who has used up their free render to the paywall instead of calling the API', async () => {
+    useAppStore.setState({ freeRendersUsed: 1 });
+    render(<StudioScreen />);
+
+    fireEvent.press(screen.getByTestId('studio-continue-button'));
+
+    await waitFor(() => expect(useAppStore.getState().screen).toBe('paywall'));
+    expect(mockRenderPreview).not.toHaveBeenCalled();
+  });
+
+  it('never gates a Pro user on the free render limit', async () => {
+    useAppStore.setState({ isProActive: true, freeRendersUsed: 5 });
+    render(<StudioScreen />);
+
+    fireEvent.press(screen.getByTestId('studio-continue-button'));
+
+    await waitFor(() => expect(useAppStore.getState().screen).toBe('preview'));
+    expect(mockRenderPreview).toHaveBeenCalled();
+    expect(useAppStore.getState().freeRendersUsed).toBe(5);
   });
 });

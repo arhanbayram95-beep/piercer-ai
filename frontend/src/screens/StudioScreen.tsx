@@ -4,6 +4,7 @@ import { RenderApiError, renderPreview } from '../api/render';
 import PiercingStudioDrawer from '../components/common/PiercingStudioDrawer';
 import PrimaryButton from '../components/common/PrimaryButton';
 import { useTranslation } from '../i18n/useTranslation';
+import { FREE_RENDER_LIMIT } from '../state/slices/entitlementSlice';
 import { useAppStore } from '../state/useAppStore';
 import { Theme } from '../ui/theme';
 
@@ -18,16 +19,35 @@ export default function StudioScreen() {
   const goBack = useAppStore((s) => s.goBack);
   const selectedJewelryType = useAppStore((s) => s.selectedJewelryType);
   const selectedFinish = useAppStore((s) => s.selectedFinish);
+  const stackedItems = useAppStore((s) => s.stackedItems);
   const setRenderResult = useAppStore((s) => s.setRenderResult);
+  const isProActive = useAppStore((s) => s.isProActive);
+  const freeRendersUsed = useAppStore((s) => s.freeRendersUsed);
+  const incrementFreeRendersUsed = useAppStore((s) => s.incrementFreeRendersUsed);
   const [isRendering, setIsRendering] = useState(false);
   const photo = images[0];
 
+  // No free tier at all was the old face-reading app's model; piercer.ai's
+  // product brief calls for a freemium hook instead — FREE_RENDER_LIMIT
+  // free renders, then unlimited renders (and multi-piercing stacking,
+  // gated separately in PiercingStudioDrawer) behind piercer_pro_access.
   const handlePreview = async () => {
     if (!photo || isRendering) return;
+    if (!isProActive && freeRendersUsed >= FREE_RENDER_LIMIT) {
+      goToScreen('paywall');
+      return;
+    }
+
     setIsRendering(true);
     try {
-      const result = await renderPreview({ photo, jewelryType: selectedJewelryType, finish: selectedFinish });
+      const result = await renderPreview({
+        photo,
+        jewelryType: selectedJewelryType,
+        finish: selectedFinish,
+        additionalItems: stackedItems.length > 0 ? stackedItems : undefined,
+      });
       setRenderResult(result);
+      if (!isProActive) incrementFreeRendersUsed();
       goToScreen('preview');
     } catch (error) {
       const message = error instanceof RenderApiError ? error.message : t('studio.renderError.body');

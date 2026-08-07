@@ -168,10 +168,10 @@ export const translations = {
     pt: 'Cancelar', ru: 'Отмена', ur: 'منسوخ کریں',
   },
   'paywall.headline': {
-    en: 'Unlock Full AI Face Insights', zh: '解锁完整 AI 面部洞察', hi: 'पूर्ण AI फेस इनसाइट्स अनलॉक करें',
-    es: 'Desbloquea todos los análisis faciales con IA', fr: 'Débloquez toutes les analyses faciales par IA',
-    ar: 'افتح رؤى الوجه الكاملة بالذكاء الاصطناعي', bn: 'সম্পূর্ণ AI ফেস ইনসাইট আনলক করুন', pt: 'Desbloqueie todas as análises faciais com IA',
-    ru: 'Откройте полный ИИ-анализ лица', ur: 'مکمل AI فیس بصیرت اَن لاک کریں',
+    en: 'Unlock piercer.ai Pro', zh: '解锁 piercer.ai Pro', hi: 'piercer.ai Pro अनलॉक करें',
+    es: 'Desbloquea piercer.ai Pro', fr: 'Débloquez piercer.ai Pro',
+    ar: 'افتح piercer.ai Pro', bn: 'piercer.ai Pro আনলক করুন', pt: 'Desbloqueie o piercer.ai Pro',
+    ru: 'Откройте piercer.ai Pro', ur: 'piercer.ai Pro اَن لاک کریں',
   },
   'paywall.subtitle': {
     en: 'Experience unlimited AI piercing renders and jewelry previews, unlocked instantly.',
@@ -191,17 +191,17 @@ export const translations = {
     ru: 'Всё, что вы получите', ur: 'وہ سب کچھ جو آپ کو ملے گا',
   },
   'paywall.feature1': {
-    en: 'Unlimited AI Readings — Character, Relationship & Career', zh: '无限次 AI 解读——性格、关系与职业',
-    hi: 'असीमित AI रीडिंग — कैरेक्टर, रिलेशनशिप और करियर', es: 'Lecturas con IA ilimitadas: carácter, relación y carrera',
-    fr: 'Lectures par IA illimitées : caractère, relation et carrière', ar: 'قراءات غير محدودة بالذكاء الاصطناعي — الشخصية والعلاقة والمسار المهني',
-    bn: 'সীমাহীন AI রিডিং — ক্যারেক্টার, রিলেশনশিপ ও ক্যারিয়ার', pt: 'Leituras com IA ilimitadas: caráter, relacionamento e carreira',
-    ru: 'Неограниченные ИИ-анализы — характер, отношения и карьера', ur: 'لامحدود AI ریڈنگز — کریکٹر، ریلیشن شپ اور کیریئر',
+    en: 'Unlimited AI Piercing Renders', zh: '无限次 AI 穿孔渲染',
+    hi: 'असीमित AI पियर्सिंग रेंडर', es: 'Renderizados de piercing con IA ilimitados',
+    fr: 'Rendus de piercing par IA illimités', ar: 'عمليات محاكاة ثقب غير محدودة بالذكاء الاصطناعي',
+    bn: 'সীমাহীন AI পিয়ার্সিং রেন্ডার', pt: 'Renderizações de piercing com IA ilimitadas',
+    ru: 'Неограниченный ИИ-рендеринг пирсинга', ur: 'لامحدود AI پیئرسنگ رینڈرز',
   },
   'paywall.feature2': {
-    en: 'Rich Personality & Vibe Reports, Every Time', zh: '每次都有丰富的性格与氛围报告', hi: 'हर बार समृद्ध व्यक्तित्व और वाइब रिपोर्ट',
-    es: 'Informes ricos de personalidad y vibra en cada lectura', fr: 'Des rapports riches de personnalité et de vibe à chaque fois',
-    ar: 'تقارير غنية عن الشخصية والطاقة في كل مرة', bn: 'প্রতিবারই সমৃদ্ধ ব্যক্তিত্ব ও ভাইব রিপোর্ট', pt: 'Relatórios ricos de personalidade e vibe, sempre',
-    ru: 'Насыщенные отчёты о личности и атмосфере — каждый раз', ur: 'ہر بار بھرپور شخصیت اور وائب رپورٹس',
+    en: 'Multi-Piercing Stacking Previews', zh: '多处穿孔叠加预览', hi: 'मल्टी-पियर्सिंग स्टैकिंग प्रीव्यू',
+    es: 'Vistas previas de piercings combinados', fr: 'Aperçus de piercings combinés',
+    ar: 'معاينات لعدة ثقوب مجمعة', bn: 'মাল্টি-পিয়ার্সিং স্ট্যাকিং প্রিভিউ', pt: 'Pré-visualizações de múltiplos piercings',
+    ru: 'Предпросмотр нескольких пирсингов сразу', ur: 'ملٹی پیئرسنگ اسٹیکنگ پریویوز',
   },
   'paywall.feature3': {
     en: 'Instant High-Res, Story-Ready Share Cards', zh: '即时生成高清故事分享卡',
@@ -433,6 +433,17 @@ export const translations = {
   'studio.finish.blackSteel': {
     en: 'Black Steel', zh: '黑钢', hi: 'ब्लैक स्टील', es: 'Acero negro', fr: 'Acier noir', ar: 'فولاذ أسود',
     bn: 'ব্ল্যাক স্টিল', pt: 'Aço preto', ru: 'Чёрная сталь', ur: 'بلیک اسٹیل',
+  },
+  'studio.addAnotherPiece': {
+    en: '+ Add Another Piece (Pro)', zh: '+ 添加另一件饰品（Pro）', hi: '+ एक और पीस जोड़ें (Pro)',
+    es: '+ Añadir otra pieza (Pro)', fr: '+ Ajouter une autre pièce (Pro)', ar: '+ إضافة قطعة أخرى (Pro)',
+    bn: '+ আরেকটি পিস যোগ করুন (Pro)', pt: '+ Adicionar outra peça (Pro)', ru: '+ Добавить ещё украшение (Pro)',
+    ur: '+ ایک اور پیس شامل کریں (Pro)',
+  },
+  'studio.stackedPieces.heading': {
+    en: 'Stacked Pieces', zh: '叠加饰品', hi: 'स्टैक्ड पीसेस', es: 'Piezas combinadas', fr: 'Pièces combinées',
+    ar: 'القطع المجمعة', bn: 'স্ট্যাকড পিস', pt: 'Peças combinadas', ru: 'Добавленные украшения',
+    ur: 'اسٹیکڈ پیسز',
   },
   'studio.continue': {
     en: 'Preview Jewelry', zh: '预览首饰', hi: 'ज्वेलरी प्रीव्यू करें', es: 'Previsualizar joyería',

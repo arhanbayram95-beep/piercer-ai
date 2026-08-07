@@ -1,7 +1,13 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from '../../i18n/useTranslation';
-import { JewelryFinish, JEWELRY_FINISHES, JewelryType, JEWELRY_TYPES } from '../../state/slices/studioSlice';
+import {
+  JewelryFinish,
+  JEWELRY_FINISHES,
+  JewelryType,
+  JEWELRY_TYPES,
+  MAX_STACKED_ITEMS,
+} from '../../state/slices/studioSlice';
 import { useAppStore } from '../../state/useAppStore';
 import { TranslationKey } from '../../i18n/translations';
 import { Theme } from '../../ui/theme';
@@ -66,6 +72,24 @@ export default function PiercingStudioDrawer() {
   const setJewelryType = useAppStore((s) => s.setJewelryType);
   const selectedFinish = useAppStore((s) => s.selectedFinish);
   const setFinish = useAppStore((s) => s.setFinish);
+  const stackedItems = useAppStore((s) => s.stackedItems);
+  const addStackedItem = useAppStore((s) => s.addStackedItem);
+  const removeStackedItem = useAppStore((s) => s.removeStackedItem);
+  const isProActive = useAppStore((s) => s.isProActive);
+  const goToScreen = useAppStore((s) => s.goToScreen);
+
+  // "Multi-piercing stacking" is a piercer_pro_access-gated capability
+  // (entitlementSlice.ts) — a non-Pro user tapping this is routed straight
+  // to the paywall, same pattern SettingsScreen's "Manage Subscription" row
+  // already uses for a Pro-gated action.
+  const handleAddAnotherPiece = () => {
+    if (!isProActive) {
+      goToScreen('paywall');
+      return;
+    }
+    if (stackedItems.length >= MAX_STACKED_ITEMS) return;
+    addStackedItem({ jewelryType: selectedJewelryType, finish: selectedFinish });
+  };
 
   return (
     <GlassCard style={styles.drawer} testID="piercing-studio-drawer">
@@ -86,6 +110,38 @@ export default function PiercingStudioDrawer() {
         onSelect={setFinish}
         testIDPrefix="jewelry-finish-chip"
       />
+
+      {stackedItems.length > 0 && (
+        <>
+          <Text style={[styles.sectionHeading, styles.finishHeading]}>{t('studio.stackedPieces.heading')}</Text>
+          <View style={styles.stackedRow} testID="stacked-items-row">
+            {stackedItems.map((item, index) => (
+              <View key={`${item.jewelryType}-${item.finish}-${index}`} style={styles.stackedChip}>
+                <Text style={styles.stackedChipText}>
+                  {t(JEWELRY_TYPE_LABEL_KEYS[item.jewelryType])} · {t(FINISH_LABEL_KEYS[item.finish])}
+                </Text>
+                <Pressable
+                  onPress={() => removeStackedItem(index)}
+                  accessibilityRole="button"
+                  accessibilityLabel="Remove"
+                  testID={`stacked-item-remove-${index}`}
+                >
+                  <Text style={styles.stackedChipRemove}>×</Text>
+                </Pressable>
+              </View>
+            ))}
+          </View>
+        </>
+      )}
+
+      <Pressable
+        onPress={handleAddAnotherPiece}
+        accessibilityRole="button"
+        testID="add-another-piece-button"
+        style={styles.addAnotherButton}
+      >
+        <Text style={styles.addAnotherText}>{t('studio.addAnotherPiece')}</Text>
+      </Pressable>
     </GlassCard>
   );
 }
@@ -121,6 +177,41 @@ const styles = StyleSheet.create({
     color: Theme.colors.text.primary,
     backgroundColor: Theme.colors.accent.electricPurple,
     borderColor: Theme.colors.accent.electricPurple,
+    fontWeight: '600',
+  },
+  stackedRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: Theme.spacing.xs,
+  },
+  stackedChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    borderWidth: 1,
+    borderColor: Theme.colors.accent.electricPurple,
+    borderRadius: Theme.radius.full,
+    paddingHorizontal: Theme.spacing.sm,
+    paddingVertical: 6,
+  },
+  stackedChipText: {
+    ...Theme.typography.bodyMd,
+    fontSize: 12,
+    color: Theme.colors.text.primary,
+  },
+  stackedChipRemove: {
+    color: Theme.colors.text.secondary,
+    fontSize: 16,
+    lineHeight: 16,
+  },
+  addAnotherButton: {
+    marginTop: Theme.spacing.xs,
+    alignSelf: 'flex-start',
+  },
+  addAnotherText: {
+    ...Theme.typography.bodyMd,
+    fontSize: 13,
+    color: Theme.colors.accent.electricPurple,
     fontWeight: '600',
   },
 });

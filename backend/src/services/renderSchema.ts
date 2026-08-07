@@ -23,12 +23,39 @@ export function isJewelryFinish(value: unknown): value is JewelryFinish {
   return typeof value === 'string' && (JEWELRY_FINISHES as readonly string[]).includes(value);
 }
 
+export interface JewelryItem {
+  jewelryType: JewelryType;
+  finish: JewelryFinish;
+}
+
+export function isJewelryItem(value: unknown): value is JewelryItem {
+  if (typeof value !== 'object' || value === null) return false;
+  const candidate = value as Record<string, unknown>;
+  return isJewelryType(candidate.jewelryType) && isJewelryFinish(candidate.finish);
+}
+
+const MAX_ADDITIONAL_ITEMS = 3;
+
 export interface RenderRequest {
   // Base64-encoded JPEG, no data-URL prefix — same convention CaptureScreen
   // already uses for its image cache.
   photo: string;
   jewelryType: JewelryType;
   finish: JewelryFinish;
+  // "Multi-piercing stacking" — a piercer_pro_access-gated capability
+  // (frontend/src/state/slices/entitlementSlice.ts) letting a Pro user
+  // preview more than one jewelry piece in the same render, on top of the
+  // primary jewelryType/finish above. This route currently enforces entry
+  // via the same requireActiveEntitlement preHandler as the rest of the
+  // endpoint (still a permissive stub pending real RevenueCat server-side
+  // verification, see middleware/entitlement.ts) — there is no additional,
+  // stacking-specific server check beyond that shared gate and
+  // MAX_ADDITIONAL_ITEMS below.
+  additionalItems?: JewelryItem[];
+}
+
+export function isValidAdditionalItems(value: unknown): value is JewelryItem[] {
+  return Array.isArray(value) && value.length <= MAX_ADDITIONAL_ITEMS && value.every(isJewelryItem);
 }
 
 export interface RenderResult {

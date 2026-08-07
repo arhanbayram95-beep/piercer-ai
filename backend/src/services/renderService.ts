@@ -27,7 +27,8 @@ async function callGeminiForRender(
   client: VisionModelClient,
   request: RenderRequest
 ): Promise<{ data: string; mimeType: string } | null> {
-  const prompt = assembleRenderPrompt(request.jewelryType, request.finish);
+  const items = [{ jewelryType: request.jewelryType, finish: request.finish }, ...(request.additionalItems ?? [])];
+  const prompt = assembleRenderPrompt(items);
 
   const response = await client.models.generateContent({
     model: IMAGE_MODEL,

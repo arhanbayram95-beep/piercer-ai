@@ -1,4 +1,4 @@
-import { JewelryFinish, JewelryType } from '../state/slices/studioSlice';
+import { JewelryFinish, JewelryItem, JewelryType } from '../state/slices/studioSlice';
 import { API_BASE_URL, USE_MOCK_API } from './config';
 
 // The only file allowed to talk to the backend for the piercing render flow
@@ -10,6 +10,9 @@ export interface RenderPreviewRequest {
   photo: string;
   jewelryType: JewelryType;
   finish: JewelryFinish;
+  // Pro-only "multi-piercing stacking" (studioSlice.ts) — additional pieces
+  // rendered alongside the primary jewelryType/finish selection above.
+  additionalItems?: JewelryItem[];
 }
 
 export interface RenderPreviewResult {

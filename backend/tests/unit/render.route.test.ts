@@ -65,6 +65,43 @@ describe('POST /api/v1/render/preview', () => {
     expect(response.json().error).toContain('rose-gold');
   });
 
+  it('accepts a request with stacked additionalItems', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/render/preview',
+      payload: buildValidBody({ additionalItems: [{ jewelryType: 'dermal', finish: 'gold' }] }),
+    });
+
+    expect(response.statusCode).toBe(200);
+  });
+
+  it('rejects additionalItems containing an unsupported jewelryType', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/render/preview',
+      payload: buildValidBody({ additionalItems: [{ jewelryType: 'crown', finish: 'gold' }] }),
+    });
+
+    expect(response.statusCode).toBe(400);
+  });
+
+  it('rejects additionalItems beyond the stacking limit', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/render/preview',
+      payload: buildValidBody({
+        additionalItems: [
+          { jewelryType: 'dermal', finish: 'gold' },
+          { jewelryType: 'studs', finish: 'silver' },
+          { jewelryType: 'barbells', finish: 'titanium' },
+          { jewelryType: 'septum', finish: 'blackSteel' },
+        ],
+      }),
+    });
+
+    expect(response.statusCode).toBe(400);
+  });
+
   it('returns 502 when the AI model fails to return an image', async () => {
     generateContent.mockResolvedValue({ candidates: [{ content: { parts: [{ text: 'no image' }] } }] });
 

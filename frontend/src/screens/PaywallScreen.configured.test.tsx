@@ -104,7 +104,7 @@ describe('PaywallScreen with RevenueCat configured', () => {
   });
 
   // A completed purchase whose entitlement isn't active means the store
-  // product isn't attached to aura_pro_access in the RevenueCat dashboard —
+  // product isn't attached to piercer_pro_access in the RevenueCat dashboard —
   // the user must not be left on a silently unchanged screen.
   it('reports an error when a completed purchase grants no entitlement', async () => {
     mockHasActiveEntitlement.mockReturnValue(false);

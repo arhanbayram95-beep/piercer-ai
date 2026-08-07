@@ -112,7 +112,7 @@ export default function PaywallScreen() {
         goToScreen('welcome');
       } else {
         // Purchase completed but the entitlement isn't active — e.g. the
-        // store product isn't attached to aura_pro_access in the RevenueCat
+        // store product isn't attached to piercer_pro_access in the RevenueCat
         // dashboard yet. Surface it rather than leaving the screen stuck
         // with no feedback.
         Alert.alert(t('paywall.purchaseError.title'), t('paywall.purchaseError.body'));

@@ -57,6 +57,27 @@ describe('useAppStore', () => {
     expect(useAppStore.getState().isProActive).toBe(true);
   });
 
+  it('tracks how many free renders have been used', () => {
+    expect(useAppStore.getState().freeRendersUsed).toBe(0);
+    useAppStore.getState().incrementFreeRendersUsed();
+    expect(useAppStore.getState().freeRendersUsed).toBe(1);
+  });
+
+  it('tracks stacked jewelry items, capped at MAX_STACKED_ITEMS', () => {
+    useAppStore.setState({ stackedItems: [] });
+    useAppStore.getState().addStackedItem({ jewelryType: 'hoops', finish: 'silver' });
+    useAppStore.getState().addStackedItem({ jewelryType: 'studs', finish: 'gold' });
+    useAppStore.getState().addStackedItem({ jewelryType: 'dermal', finish: 'titanium' });
+    useAppStore.getState().addStackedItem({ jewelryType: 'septum', finish: 'blackSteel' });
+    expect(useAppStore.getState().stackedItems).toHaveLength(3);
+
+    useAppStore.getState().removeStackedItem(0);
+    expect(useAppStore.getState().stackedItems).toEqual([
+      { jewelryType: 'studs', finish: 'gold' },
+      { jewelryType: 'dermal', finish: 'titanium' },
+    ]);
+  });
+
   it('defaults to English and can switch language', () => {
     expect(useAppStore.getState().languageCode).toBe('en');
     useAppStore.getState().setLanguageCode('es');

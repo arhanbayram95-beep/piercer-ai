@@ -2,12 +2,19 @@ import { FastifyInstance } from 'fastify';
 import { requireActiveEntitlement } from '../middleware/entitlement';
 import { VisionModelClient } from '../services/geminiClient';
 import { generateRender, RenderGenerationError } from '../services/renderService';
-import { isJewelryFinish, isJewelryType, RenderRequest } from '../services/renderSchema';
+import {
+  isJewelryFinish,
+  isJewelryType,
+  isValidAdditionalItems,
+  JewelryItem,
+  RenderRequest,
+} from '../services/renderSchema';
 
 interface RenderPreviewBody {
   photo: string;
   jewelryType: string;
   finish: string;
+  additionalItems?: unknown;
 }
 
 const RENDER_PREVIEW_SCHEMA = {
@@ -18,6 +25,17 @@ const RENDER_PREVIEW_SCHEMA = {
       photo: { type: 'string', minLength: 1 },
       jewelryType: { type: 'string' },
       finish: { type: 'string' },
+      additionalItems: {
+        type: 'array',
+        items: {
+          type: 'object',
+          required: ['jewelryType', 'finish'],
+          properties: {
+            jewelryType: { type: 'string' },
+            finish: { type: 'string' },
+          },
+        },
+      },
     },
   },
 } as const;
@@ -33,7 +51,7 @@ export function registerRenderRoutes(app: FastifyInstance, visionModelClient: Vi
     '/api/v1/render/preview',
     { schema: RENDER_PREVIEW_SCHEMA, preHandler: requireActiveEntitlement },
     async (request, reply) => {
-      const { photo, jewelryType, finish } = request.body;
+      const { photo, jewelryType, finish, additionalItems } = request.body;
 
       if (!isJewelryType(jewelryType)) {
         reply.status(400).send({ error: `Unsupported jewelryType: ${jewelryType}` });
@@ -44,7 +62,21 @@ export function registerRenderRoutes(app: FastifyInstance, visionModelClient: Vi
         return;
       }
 
-      const renderRequest: RenderRequest = { photo, jewelryType, finish };
+      let validatedAdditionalItems: JewelryItem[] | undefined;
+      if (additionalItems !== undefined) {
+        if (!isValidAdditionalItems(additionalItems)) {
+          reply.status(400).send({ error: 'Invalid additionalItems: each entry needs a supported jewelryType/finish, up to the stacking limit.' });
+          return;
+        }
+        validatedAdditionalItems = additionalItems;
+      }
+
+      const renderRequest: RenderRequest = {
+        photo,
+        jewelryType,
+        finish,
+        additionalItems: validatedAdditionalItems,
+      };
 
       try {
         const result = await generateRender(visionModelClient, renderRequest);

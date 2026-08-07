@@ -23,9 +23,12 @@ export function ensurePurchasesConfigured(): void {
 }
 
 // Must match the entitlement identifier configured in the RevenueCat
-// dashboard for "Aura Pro Access" (PROJECT_SPEC.md §6) once a real project
-// exists — nothing on this end besides the string needs to change.
-const ENTITLEMENT_ID = 'aura_pro_access';
+// dashboard for "piercer.ai Pro" (PROJECT_SPEC.md §6) once a real project
+// exists — nothing on this end besides the string needs to change. Renamed
+// from the old face-reading app's `aura_pro_access` during the piercer.ai
+// pivot (2026-08-07) — gates unlimited renders and multi-piercing stacking,
+// see studioSlice.ts / entitlementSlice.ts.
+const ENTITLEMENT_ID = 'piercer_pro_access';
 
 export function hasActiveEntitlement(customerInfo: CustomerInfo): boolean {
   return Boolean(customerInfo.entitlements.active[ENTITLEMENT_ID]);

@@ -44,6 +44,24 @@ describe('generateRender', () => {
     expect(parts[1].text).toContain('gold');
   });
 
+  it('includes stacked additionalItems in the assembled prompt', async () => {
+    const generateContent = jest.fn().mockResolvedValue({
+      candidates: [{ content: { parts: [{ inlineData: { data: 'YWJj', mimeType: 'image/png' } }] } }],
+    });
+    const client: VisionModelClient = { models: { generateContent } };
+
+    await generateRender(
+      client,
+      buildRequest({ additionalItems: [{ jewelryType: 'dermal', finish: 'blackSteel' }] })
+    );
+
+    const call = generateContent.mock.calls[0][0];
+    const promptText = call.contents[0].parts[1].text;
+    expect(promptText).toContain('hoop');
+    expect(promptText).toContain('dermal');
+    expect(promptText).toContain('black steel');
+  });
+
   it('throws RenderGenerationError when the model returns no image part', async () => {
     const generateContent = jest.fn().mockResolvedValue({
       candidates: [{ content: { parts: [{ text: 'Sorry, I cannot do that.' }] } }],

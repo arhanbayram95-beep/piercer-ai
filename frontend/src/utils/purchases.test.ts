@@ -91,9 +91,9 @@ describe('purchases utility', () => {
     expect(result).toEqual({ weekly: null, monthly: null });
   });
 
-  it('hasActiveEntitlement is true when the aura_pro_access entitlement is active', () => {
+  it('hasActiveEntitlement is true when the piercer_pro_access entitlement is active', () => {
     const { hasActiveEntitlement } = require('./purchases');
-    expect(hasActiveEntitlement(customerInfoWith(['aura_pro_access']))).toBe(true);
+    expect(hasActiveEntitlement(customerInfoWith(['piercer_pro_access']))).toBe(true);
   });
 
   it('hasActiveEntitlement is false when no matching entitlement is active', () => {
@@ -103,7 +103,7 @@ describe('purchases utility', () => {
   });
 
   it('purchasePackage resolves with the customer info on success', async () => {
-    const customerInfo = customerInfoWith(['aura_pro_access']);
+    const customerInfo = customerInfoWith(['piercer_pro_access']);
     mockPurchasePackage.mockResolvedValue({ customerInfo });
 
     const { purchasePackage } = require('./purchases');
@@ -126,7 +126,7 @@ describe('purchases utility', () => {
   });
 
   it('restorePurchases resolves with the customer info', async () => {
-    const customerInfo = customerInfoWith(['aura_pro_access']);
+    const customerInfo = customerInfoWith(['piercer_pro_access']);
     mockRestorePurchases.mockResolvedValue(customerInfo);
 
     const { restorePurchases } = require('./purchases');
