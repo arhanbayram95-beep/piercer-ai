@@ -210,6 +210,15 @@ these surprise a future reader:
 Expo SDK module, same category as `expo-haptics`/`expo-crypto` already in
 use, no config plugin or `app.json` changes needed.
 
+**New dependency (2026-08-07, piercer.ai pivot):** `expo-image-picker`
+(`~57.0.8`, installed via `npx expo install`) — `CaptureScreen`'s gallery
+fallback ("Choose from Library"), so users with an existing photo of the
+body part they want to preview jewelry on (or a denied camera permission)
+aren't stuck. A first-party Expo SDK module, same category as
+`expo-haptics`/`expo-crypto`; needed `app.json`'s `expo-image-picker` plugin
+entry (`photosPermission` string) plus `ios.infoPlist.NSPhotoLibraryUsageDescription`
+for the iOS permission prompt copy.
+
 **New dependency (2026-08-05):** `react-native-safe-area-context`
 (`~5.7.0`, installed via `npx expo install`), Expo's standard package for
 system-bar insets. Added after on-device testing (Galaxy A06, Android 14)
