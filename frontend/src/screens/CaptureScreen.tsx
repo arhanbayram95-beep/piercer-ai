@@ -1,5 +1,6 @@
 import { fromByteArray } from 'base64-js';
 import * as Haptics from 'expo-haptics';
+import * as ImagePicker from 'expo-image-picker';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Camera, useCameraPermission, usePhotoOutput } from 'react-native-vision-camera';
@@ -35,11 +36,16 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   });
 }
 
-// Placeholder single-photo capture flow — piercing-specific multi-step
-// capture (body part selection, guide overlays, etc.) is a later phase.
+// Single-photo capture of whatever body part the user wants to preview
+// jewelry on (ears, nose, brow, navel, etc.) — the guide overlay below is
+// deliberately a neutral framing box, not a face-shaped ring, since this app
+// isn't limited to faces. A gallery-upload fallback exists alongside the
+// live camera for users who'd rather use an existing photo, or whose device
+// camera permission is denied.
 export default function CaptureScreen() {
   const { hasPermission, requestPermission } = useCameraPermission();
   const [isCapturing, setIsCapturing] = useState(false);
+  const [isPickingFromLibrary, setIsPickingFromLibrary] = useState(false);
   // usePhotoOutput/outputs must stay reference-stable across renders — a
   // fresh options object or array literal here reconfigures (unbinds and
   // rebinds) the native camera session on every re-render, including the
@@ -142,6 +148,45 @@ export default function CaptureScreen() {
     goToScreen('settings');
   };
 
+  // Alternative to the live camera — lets a user with an existing photo (or
+  // a denied camera permission) proceed anyway. base64: true avoids a
+  // separate file-read step; the picker's own compression keeps this well
+  // under the backend's body-size limit without an extra encode pass here.
+  const handlePickFromLibrary = async () => {
+    if (isPickingFromLibrary || isCapturing) return;
+    setIsPickingFromLibrary(true);
+    try {
+      const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (!permission.granted) {
+        Alert.alert(t('capture.libraryPermission.title'), t('capture.libraryPermission.body'));
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'],
+        quality: 0.6,
+        base64: true,
+        allowsEditing: false,
+      });
+
+      if (result.canceled) return;
+
+      const base64 = result.assets[0]?.base64;
+      if (!base64) {
+        Alert.alert(t('capture.error.title'), t('capture.error.body'));
+        return;
+      }
+
+      addImage(base64);
+      goToScreen('settings');
+    } catch (error) {
+      console.error('Photo library selection failed:', error);
+      Alert.alert(t('capture.error.title'), t('capture.error.body'));
+    } finally {
+      setIsPickingFromLibrary(false);
+    }
+  };
+
   if (!hasPermission) {
     return (
       <View style={[styles.container, styles.permissionContainer]} testID="capture-screen">
@@ -157,6 +202,13 @@ export default function CaptureScreen() {
         <Text style={styles.headline}>{t('capture.permission.headline')}</Text>
         <Text style={styles.body}>{t('capture.permission.body')}</Text>
         <PrimaryButton label={t('capture.permission.button')} onPress={requestPermission} />
+        <PrimaryButton
+          label={t('capture.chooseFromLibrary')}
+          variant="secondary"
+          onPress={handlePickFromLibrary}
+          disabled={isPickingFromLibrary}
+          testID="capture-library-button"
+        />
       </View>
     );
   }
@@ -198,6 +250,15 @@ export default function CaptureScreen() {
             style={styles.shutterOuter}
           >
             <View style={styles.shutterInner} />
+          </Pressable>
+          <Pressable
+            onPress={handlePickFromLibrary}
+            disabled={isCapturing || isPickingFromLibrary}
+            accessibilityRole="button"
+            accessibilityLabel={t('capture.chooseFromLibrary')}
+            testID="capture-library-button"
+          >
+            <Text style={styles.libraryLink}>{t('capture.chooseFromLibrary')}</Text>
           </Pressable>
         </View>
       </View>
@@ -255,10 +316,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  // A neutral framing box rather than a face-shaped oval — this app frames
+  // any body part (ear, nose, brow, navel, etc.), not just faces.
   guideRing: {
     width: 300,
-    height: 370,
-    borderRadius: 170,
+    height: 300,
+    borderRadius: Theme.radius.lg,
     borderWidth: 2,
     borderColor: Theme.colors.accent.goldSecondary,
     shadowColor: Theme.colors.accent.goldSecondary,
@@ -268,9 +331,15 @@ const styles = StyleSheet.create({
   },
   footer: {
     alignItems: 'center',
-    gap: Theme.spacing.xs,
+    gap: Theme.spacing.sm,
     paddingBottom: Theme.spacing.xl,
     paddingHorizontal: Theme.spacing.containerPadding,
+  },
+  libraryLink: {
+    ...Theme.typography.bodyMd,
+    fontSize: 14,
+    color: Theme.colors.text.secondary,
+    textDecorationLine: 'underline',
   },
   shutterOuter: {
     width: 76,

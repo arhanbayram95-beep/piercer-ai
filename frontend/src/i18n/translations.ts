@@ -141,6 +141,28 @@ export const translations = {
     ru: 'При съёмке этого фото что-то пошло не так. Пожалуйста, попробуйте ещё раз.',
     ur: 'وہ تصویر لینے میں کچھ گڑبڑ ہوئی۔ براہ کرم دوبارہ کوشش کریں۔',
   },
+  'capture.chooseFromLibrary': {
+    en: 'Choose from Library', zh: '从相册选择', hi: 'लाइब्रेरी से चुनें', es: 'Elegir de la galería',
+    fr: 'Choisir depuis la galerie', ar: 'اختر من المكتبة', bn: 'লাইব্রেরি থেকে বেছে নিন', pt: 'Escolher da galeria',
+    ru: 'Выбрать из галереи', ur: 'لائبریری سے منتخب کریں',
+  },
+  'capture.libraryPermission.title': {
+    en: 'Photo Access Needed', zh: '需要相册权限', hi: 'फ़ोटो एक्सेस आवश्यक है', es: 'Se necesita acceso a las fotos',
+    fr: 'Accès aux photos requis', ar: 'يلزم الوصول إلى الصور', bn: 'ফটো অ্যাক্সেস প্রয়োজন', pt: 'Acesso a fotos necessário',
+    ru: 'Требуется доступ к фото', ur: 'تصاویر تک رسائی درکار ہے',
+  },
+  'capture.libraryPermission.body': {
+    en: 'piercer.ai needs access to your photo library to use an existing photo. Photos are processed in memory and never stored.',
+    zh: 'piercer.ai needs access to your photo library to use an existing photo. Photos are processed in memory and never stored.',
+    hi: 'piercer.ai needs access to your photo library to use an existing photo. Photos are processed in memory and never stored.',
+    es: 'piercer.ai needs access to your photo library to use an existing photo. Photos are processed in memory and never stored.',
+    fr: 'piercer.ai needs access to your photo library to use an existing photo. Photos are processed in memory and never stored.',
+    ar: 'piercer.ai needs access to your photo library to use an existing photo. Photos are processed in memory and never stored.',
+    bn: 'piercer.ai needs access to your photo library to use an existing photo. Photos are processed in memory and never stored.',
+    pt: 'piercer.ai needs access to your photo library to use an existing photo. Photos are processed in memory and never stored.',
+    ru: 'piercer.ai needs access to your photo library to use an existing photo. Photos are processed in memory and never stored.',
+    ur: 'piercer.ai needs access to your photo library to use an existing photo. Photos are processed in memory and never stored.',
+  },
   'capture.cancelButton': {
     en: 'Cancel', zh: '取消', hi: 'रद्द करें', es: 'Cancelar', fr: 'Annuler', ar: 'إلغاء', bn: 'বাতিল করুন',
     pt: 'Cancelar', ru: 'Отмена', ur: 'منسوخ کریں',

@@ -30,6 +30,17 @@ jest.mock('expo-haptics', () => ({
   ImpactFeedbackStyle: { Light: 'light' },
 }));
 
+const mockRequestMediaLibraryPermissions = jest.fn().mockResolvedValue({ granted: true });
+const mockLaunchImageLibrary = jest.fn().mockResolvedValue({
+  canceled: false,
+  assets: [{ base64: 'R0lGOD' }],
+});
+
+jest.mock('expo-image-picker', () => ({
+  requestMediaLibraryPermissionsAsync: () => mockRequestMediaLibraryPermissions(),
+  launchImageLibraryAsync: (...args: unknown[]) => mockLaunchImageLibrary(...args),
+}));
+
 const mockPlayCaptureChime = jest.fn().mockResolvedValue(undefined);
 
 jest.mock('../utils/sound', () => ({
@@ -43,6 +54,10 @@ describe('CaptureScreen', () => {
     mockDispose.mockClear();
     mockRequestPermission.mockClear();
     mockPlayCaptureChime.mockClear();
+    mockRequestMediaLibraryPermissions.mockClear();
+    mockRequestMediaLibraryPermissions.mockResolvedValue({ granted: true });
+    mockLaunchImageLibrary.mockClear();
+    mockLaunchImageLibrary.mockResolvedValue({ canceled: false, assets: [{ base64: 'R0lGOD' }] });
     mockHasPermission = true;
     useAppStore.setState({ screen: 'capture', images: [] });
   });
@@ -89,5 +104,36 @@ describe('CaptureScreen', () => {
     expect(mockCapturePhoto).toHaveBeenCalledTimes(1);
     expect(mockDispose).toHaveBeenCalledTimes(1);
     expect(mockPlayCaptureChime).toHaveBeenCalledTimes(1);
+  });
+
+  it('lets the user pick an existing photo from their library instead of the live camera', async () => {
+    render(<CaptureScreen />);
+
+    fireEvent.press(screen.getByTestId('capture-library-button'));
+
+    await waitFor(() => expect(useAppStore.getState().images).toEqual(['R0lGOD']));
+    await waitFor(() => expect(useAppStore.getState().screen).toBe('settings'));
+    expect(mockCapturePhoto).not.toHaveBeenCalled();
+  });
+
+  it('does nothing if the user cancels the library picker', async () => {
+    mockLaunchImageLibrary.mockResolvedValueOnce({ canceled: true, assets: null });
+    render(<CaptureScreen />);
+
+    fireEvent.press(screen.getByTestId('capture-library-button'));
+
+    await waitFor(() => expect(mockLaunchImageLibrary).toHaveBeenCalledTimes(1));
+    expect(useAppStore.getState().images).toEqual([]);
+    expect(useAppStore.getState().screen).toBe('capture');
+  });
+
+  it('offers the library picker as a fallback when camera permission is denied', async () => {
+    mockHasPermission = false;
+    render(<CaptureScreen />);
+
+    fireEvent.press(screen.getByTestId('capture-library-button'));
+
+    await waitFor(() => expect(useAppStore.getState().images).toEqual(['R0lGOD']));
+    expect(useAppStore.getState().screen).toBe('settings');
   });
 });
