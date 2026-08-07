@@ -416,3 +416,54 @@ relationship/career-specific content a generic reading wouldn't deliver.
   Next/Get Started footer, PaywallScreen's Subscribe footer. Verified live
   on-device (uiautomator dump confirmed the button bounds, then confirmed
   the fixed build's builder flow reaches the native share sheet).
+
+---
+
+## Phase 9: piercer.ai Core Flow (2026-08-07 pivot)
+Everything above this line describes the pre-pivot `Ilm-i Sima` face-reading
+app (kept for history — Phase 1-8 code was scrubbed in the piercer.ai pivot,
+see `chore(pivot)` commit). This phase is the new product's core loop:
+Capture → Piercing Studio → AI Render → Preview → Paywall.
+- [x] **9.1 Body Part Capture** — `CaptureScreen` generalized off the old
+  face-shaped oval guide overlay to a neutral framing box; added a gallery-
+  upload fallback (`expo-image-picker`, new dependency — see PROJECT_SPEC.md)
+  alongside the live camera and as a non-dead-end option when camera
+  permission is denied.
+- [x] **9.2 Piercing Studio Drawer** — new `studioSlice` (selected jewelry
+  type/finish: hoops/studs/barbells/industrial/septum/dermal x silver/gold/
+  titanium/blackSteel), `PiercingStudioDrawer` component, `StudioScreen`.
+  `'studio'` added to `AppScreen`; `CaptureScreen` now routes there instead
+  of the old `'settings'` placeholder.
+- [x] **9.3 AI Render Backend** — `backend/src/services/{renderSchema,
+  renderPrompt,renderService}.ts` + `POST /api/v1/render/preview`
+  (`routes/render.ts`, its first real usage of `requireActiveEntitlement`).
+  Uses `gemini-2.5-flash-image` (image generation/editing), deliberately
+  distinct from the reading-era `gemini-flash-latest` (text/vision-in,
+  text-out only) — verified against `@google/genai`'s own type definitions
+  before picking a model rather than guessing; not live-tested against a
+  real key (none in this environment). `frontend/src/api/render.ts` is the
+  only file allowed to call it, with a mock mode for testing without a
+  backend/key.
+- [x] **9.4 Preview & Tweaks** — `PreviewScreen`: before/after toggle,
+  four placement steppers (position X/Y, rotation, scale — pure client
+  state, no new slider dependency), share/export via the existing
+  `react-native-view-shot` + native `Share` pattern, persistent
+  `DisclaimerFooter`. `'preview'` added to `AppScreen`.
+- [x] **9.5 Paywall Integration** — RevenueCat entitlement renamed
+  `aura_pro_access` → `piercer_pro_access`. Unlike the pre-pivot app (no
+  free tier at all), piercer.ai gates two specific capabilities behind it:
+  unlimited renders (`entitlementSlice.freeRendersUsed` vs.
+  `FREE_RENDER_LIMIT`) and multi-piercing stacking
+  (`studioSlice.stackedItems`, capped at `MAX_STACKED_ITEMS`). Backend
+  accepts stacked items (`RenderRequest.additionalItems`) but does not yet
+  separately entitlement-check them server-side beyond the route's existing
+  (still-stub) `requireActiveEntitlement` — flagged explicitly, not silently
+  assumed enforced.
+
+Outstanding for a future pass: real end-to-end testing against a live
+`GEMINI_API_KEY` (not present in this environment, per CLAUDE.md's pause
+condition for missing secrets — every AI-calling test here uses a mocked
+client); real server-side RevenueCat verification (Phase 5.1, still
+blocked on an account/webhook setup); on-device verification of the new
+camera guide overlay and gallery picker (no device/emulator in this
+environment, same constraint noted throughout the pre-pivot phases above).
