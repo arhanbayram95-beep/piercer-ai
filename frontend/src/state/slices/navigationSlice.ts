@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand';
 
-export type AppScreen = 'loading' | 'onboarding' | 'paywall' | 'welcome' | 'capture' | 'settings';
+export type AppScreen = 'loading' | 'onboarding' | 'paywall' | 'welcome' | 'capture' | 'studio' | 'settings';
 
 // Transient, forward-only screens — never a sensible place for goBack() to
 // land on (you never want to "go back" into the camera or a loading

@@ -369,6 +369,88 @@ export const translations = {
   'common.close': {
     en: 'Close', zh: '关闭', hi: 'बंद करें', es: 'Cerrar', fr: 'Fermer', ar: 'إغلاق', bn: 'বন্ধ করুন', pt: 'Fechar', ru: 'Закрыть', ur: 'بند کریں',
   },
+  'studio.title': {
+    en: 'Piercing Studio', zh: '穿孔工作室', hi: 'पियर्सिंग स्टूडियो', es: 'Estudio de piercing',
+    fr: 'Studio de piercing', ar: 'استوديو الثقب', bn: 'পিয়ার্সিং স্টুডিও', pt: 'Estúdio de piercing',
+    ru: 'Студия пирсинга', ur: 'پیئرسنگ اسٹوڈیو',
+  },
+  'studio.subtitle': {
+    en: 'Pick a jewelry style and finish to preview on your photo.',
+    zh: 'Pick a jewelry style and finish to preview on your photo.',
+    hi: 'Pick a jewelry style and finish to preview on your photo.',
+    es: 'Pick a jewelry style and finish to preview on your photo.',
+    fr: 'Pick a jewelry style and finish to preview on your photo.',
+    ar: 'Pick a jewelry style and finish to preview on your photo.',
+    bn: 'Pick a jewelry style and finish to preview on your photo.',
+    pt: 'Pick a jewelry style and finish to preview on your photo.',
+    ru: 'Pick a jewelry style and finish to preview on your photo.',
+    ur: 'Pick a jewelry style and finish to preview on your photo.',
+  },
+  'studio.jewelryType.heading': {
+    en: 'Jewelry Type', zh: '首饰类型', hi: 'ज्वेलरी प्रकार', es: 'Tipo de joyería', fr: 'Type de bijou',
+    ar: 'نوع المجوهرات', bn: 'জুয়েলারি ধরন', pt: 'Tipo de joia', ru: 'Тип украшения', ur: 'زیورات کی قسم',
+  },
+  'studio.finish.heading': {
+    en: 'Finish', zh: '材质', hi: 'फिनिश', es: 'Acabado', fr: 'Finition', ar: 'التشطيب', bn: 'ফিনিশ',
+    pt: 'Acabamento', ru: 'Отделка', ur: 'فنش',
+  },
+  'studio.jewelry.hoops': {
+    en: 'Hoops', zh: '圈环', hi: 'हूप्स', es: 'Aros', fr: 'Anneaux', ar: 'حلقات', bn: 'হুপস',
+    pt: 'Argolas', ru: 'Кольца', ur: 'ہوپس',
+  },
+  'studio.jewelry.studs': {
+    en: 'Studs', zh: '钉饰', hi: 'स्टड्स', es: 'Tachuelas', fr: 'Puces', ar: 'أقراط ثابتة', bn: 'স্টাডস',
+    pt: 'Brincos de pressão', ru: 'Гвоздики', ur: 'اسٹڈز',
+  },
+  'studio.jewelry.barbells': {
+    en: 'Barbells', zh: '哑铃钉', hi: 'बारबेल्स', es: 'Barras', fr: 'Barbells', ar: 'بارابل', bn: 'বারবেল',
+    pt: 'Barbells', ru: 'Штанги', ur: 'باربیلز',
+  },
+  'studio.jewelry.industrial': {
+    en: 'Industrial', zh: '工业钉', hi: 'इंडस्ट्रियल', es: 'Industrial', fr: 'Industriel', ar: 'صناعي',
+    bn: 'ইন্ডাস্ট্রিয়াল', pt: 'Industrial', ru: 'Индастриал', ur: 'انڈسٹریل',
+  },
+  'studio.jewelry.septum': {
+    en: 'Septum', zh: '鼻中隔环', hi: 'सेप्टम', es: 'Septum', fr: 'Septum', ar: 'حاجز الأنف', bn: 'সেপটাম',
+    pt: 'Septo', ru: 'Септум', ur: 'سیپٹم',
+  },
+  'studio.jewelry.dermal': {
+    en: 'Dermal', zh: '真皮钉', hi: 'डर्मल', es: 'Dérmico', fr: 'Dermal', ar: 'جلدي', bn: 'ডার্মাল',
+    pt: 'Dérmico', ru: 'Дермал', ur: 'ڈرمل',
+  },
+  'studio.finish.silver': {
+    en: 'Silver', zh: '银色', hi: 'सिल्वर', es: 'Plata', fr: 'Argent', ar: 'فضي', bn: 'সিলভার',
+    pt: 'Prateado', ru: 'Серебро', ur: 'چاندی',
+  },
+  'studio.finish.gold': {
+    en: 'Gold', zh: '金色', hi: 'गोल्ड', es: 'Oro', fr: 'Or', ar: 'ذهبي', bn: 'গোল্ড', pt: 'Dourado',
+    ru: 'Золото', ur: 'سونا',
+  },
+  'studio.finish.titanium': {
+    en: 'Titanium', zh: '钛金属', hi: 'टाइटेनियम', es: 'Titanio', fr: 'Titane', ar: 'تيتانيوم', bn: 'টাইটানিয়াম',
+    pt: 'Titânio', ru: 'Титан', ur: 'ٹائٹینیم',
+  },
+  'studio.finish.blackSteel': {
+    en: 'Black Steel', zh: '黑钢', hi: 'ब्लैक स्टील', es: 'Acero negro', fr: 'Acier noir', ar: 'فولاذ أسود',
+    bn: 'ব্ল্যাক স্টিল', pt: 'Aço preto', ru: 'Чёрная сталь', ur: 'بلیک اسٹیل',
+  },
+  'studio.continue': {
+    en: 'Preview Jewelry', zh: '预览首饰', hi: 'ज्वेलरी प्रीव्यू करें', es: 'Previsualizar joyería',
+    fr: 'Aperçu du bijou', ar: 'معاينة المجوهرات', bn: 'জুয়েলারি প্রিভিউ করুন', pt: 'Pré-visualizar joia',
+    ru: 'Предпросмотр украшения', ur: 'جیولری پریویو کریں',
+  },
+  'studio.noPhoto': {
+    en: 'No photo captured yet — go back and take one first.',
+    zh: 'No photo captured yet — go back and take one first.',
+    hi: 'No photo captured yet — go back and take one first.',
+    es: 'No photo captured yet — go back and take one first.',
+    fr: 'No photo captured yet — go back and take one first.',
+    ar: 'No photo captured yet — go back and take one first.',
+    bn: 'No photo captured yet — go back and take one first.',
+    pt: 'No photo captured yet — go back and take one first.',
+    ru: 'No photo captured yet — go back and take one first.',
+    ur: 'No photo captured yet — go back and take one first.',
+  },
   'restorePurchases.alertBody': {
     en: 'No previous purchases were found for this device.',
     zh: '未在此设备上找到先前的购买记录。',

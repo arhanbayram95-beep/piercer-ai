@@ -22,11 +22,22 @@ jest.mock('react-native-vision-camera', () => {
   };
 });
 
+jest.mock('expo-image-picker', () => ({
+  requestMediaLibraryPermissionsAsync: jest.fn(),
+  launchImageLibraryAsync: jest.fn(),
+}));
+
 describe('AppNavigator', () => {
   it('renders the settings screen when routed there', () => {
     useAppStore.setState({ screen: 'settings' });
     render(<AppNavigator />);
     expect(screen.getByTestId('settings-screen')).toBeTruthy();
+  });
+
+  it('renders the studio screen when routed there', () => {
+    useAppStore.setState({ screen: 'studio', images: [] });
+    render(<AppNavigator />);
+    expect(screen.getByTestId('studio-screen')).toBeTruthy();
   });
 
   it('renders the welcome screen when routed there', () => {

@@ -5,6 +5,7 @@ import LoadingScreen from '../screens/LoadingScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import PaywallScreen from '../screens/PaywallScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import StudioScreen from '../screens/StudioScreen';
 import WelcomeScreen from '../screens/WelcomeScreen';
 import { AppScreen } from '../state/slices/navigationSlice';
 import { useAppStore } from '../state/useAppStore';
@@ -15,6 +16,7 @@ const SCREENS: Record<AppScreen, React.ComponentType> = {
   paywall: PaywallScreen,
   welcome: WelcomeScreen,
   capture: CaptureScreen,
+  studio: StudioScreen,
   settings: SettingsScreen,
 };
 

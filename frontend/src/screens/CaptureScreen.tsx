@@ -144,8 +144,7 @@ export default function CaptureScreen() {
     }
 
     setIsCapturing(false);
-    // Placeholder destination — piercing preview flow is a later phase.
-    goToScreen('settings');
+    goToScreen('studio');
   };
 
   // Alternative to the live camera — lets a user with an existing photo (or
@@ -178,7 +177,7 @@ export default function CaptureScreen() {
       }
 
       addImage(base64);
-      goToScreen('settings');
+      goToScreen('studio');
     } catch (error) {
       console.error('Photo library selection failed:', error);
       Alert.alert(t('capture.error.title'), t('capture.error.body'));

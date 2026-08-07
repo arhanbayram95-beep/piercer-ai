@@ -100,7 +100,7 @@ describe('CaptureScreen', () => {
     fireEvent.press(screen.getByTestId('shutter-button'));
     await waitFor(() => expect(useAppStore.getState().images).toEqual(['AQID']));
 
-    await waitFor(() => expect(useAppStore.getState().screen).toBe('settings'));
+    await waitFor(() => expect(useAppStore.getState().screen).toBe('studio'));
     expect(mockCapturePhoto).toHaveBeenCalledTimes(1);
     expect(mockDispose).toHaveBeenCalledTimes(1);
     expect(mockPlayCaptureChime).toHaveBeenCalledTimes(1);
@@ -112,7 +112,7 @@ describe('CaptureScreen', () => {
     fireEvent.press(screen.getByTestId('capture-library-button'));
 
     await waitFor(() => expect(useAppStore.getState().images).toEqual(['R0lGOD']));
-    await waitFor(() => expect(useAppStore.getState().screen).toBe('settings'));
+    await waitFor(() => expect(useAppStore.getState().screen).toBe('studio'));
     expect(mockCapturePhoto).not.toHaveBeenCalled();
   });
 
@@ -134,6 +134,6 @@ describe('CaptureScreen', () => {
     fireEvent.press(screen.getByTestId('capture-library-button'));
 
     await waitFor(() => expect(useAppStore.getState().images).toEqual(['R0lGOD']));
-    expect(useAppStore.getState().screen).toBe('settings');
+    expect(useAppStore.getState().screen).toBe('studio');
   });
 });
