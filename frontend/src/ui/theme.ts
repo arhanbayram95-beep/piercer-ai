@@ -3,30 +3,38 @@
 export const Theme = {
   colors: {
     background: {
-      start: '#1A050B', // Deep Obsidian Crimson
-      middle: '#2D0A12', // Dark Burgundy
-      end: '#0A071B', // Midnight Violet Tint
+      start: '#16161A', // Matte Charcoal
+      middle: '#131316', // Studio Slate
+      end: '#0F0F12', // Deep Matte Slate
     },
     surface: {
-      glassBackground: 'rgba(255, 255, 255, 0.05)',
-      glassBorder: 'rgba(158, 41, 65, 0.35)',
-      glassOverlay: 'rgba(26, 5, 11, 0.75)',
+      glassBackground: 'rgba(203, 213, 225, 0.05)', // chrome-tinted tray panel fill
+      glassBorder: 'rgba(148, 163, 184, 0.35)', // steel border glow
+      glassOverlay: 'rgba(15, 15, 18, 0.75)',
+      metallicBorder: 'rgba(203, 213, 225, 0.45)', // brighter chrome edge highlight for flash-sheet cards
     },
     accent: {
-      crimsonPrimary: '#9E2941',
-      goldSecondary: '#EBC983',
-      iridescentShimmer: '#C792EA',
+      crimsonPrimary: '#E11D48', // neon crimson glow
+      goldSecondary: '#CBD5E1', // polished chrome/silver
+      iridescentShimmer: '#A855F7', // electric purple, primary CTA / active state
+      electricPurple: '#A855F7',
+      chromeSteel: '#94A3B8',
     },
     text: {
-      primary: '#F5F3FF',
-      secondary: '#B3B0CD',
-      accentGold: '#EBC983',
-      muted: '#6E6A8A',
+      primary: '#F1F5F9',
+      secondary: '#94A3B8',
+      accentGold: '#CBD5E1', // chrome/silver accent text
+      muted: '#52525B',
     },
     status: {
-      error: '#E57373',
-      success: '#81C784',
+      error: '#E11D48',
+      success: '#4ADE80',
     },
+  },
+  gradients: {
+    // For LinearGradient-style surfaces on flash-sheet / metal-tray cards.
+    trayPanel: ['#1C1C21', '#0F0F12'] as const,
+    neonEdge: ['#E11D48', '#A855F7'] as const,
   },
   spacing: {
     xs: 8,
