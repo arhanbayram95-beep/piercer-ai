@@ -299,6 +299,32 @@ package with a fixed zero-inset object than fight that self-reference.
 
 ---
 
+**Piercing render pipeline (added 2026-08-07, piercer.ai pivot):**
+`POST /api/v1/render/preview` (`backend/src/routes/render.ts`) accepts a
+single base64 photo + `jewelryType`/`finish` and returns a rendered preview
+image. This is a materially different AI call than the old face-reading
+feature's: that used `gemini-flash-latest` (a text/vision-in, text-out
+model) with `config.responseSchema` for structured JSON output. Image
+generation/editing is a distinct capability — `responseSchema` (JSON
+structured output) and `responseModalities` (image output) are mutually
+exclusive per `@google/genai`'s own `GenerateContentConfig` type, and
+`gemini-flash-latest` is not documented as an image-output-capable model.
+Verified against the installed `@google/genai@2.13.0` type definitions
+(`Modality.IMAGE` in `GenerateContentConfig.responseModalities: Modality[]`)
+and Google's current model docs before picking a model, rather than
+guessing: **`gemini-2.5-flash-image`** ("nano banana") is the production
+image generation/editing model as of 2026-08-07 — see
+`backend/src/services/renderService.ts` for the exact call shape
+(`config.responseModalities: [Modality.TEXT, Modality.IMAGE]`, image bytes
+read back from `response.candidates[0].content.parts[].inlineData`). Unlike
+`gemini-flash-latest`, there's no publicly documented auto-updating alias
+for the image model as of this writing — pinned the dated name, revisit if
+Google introduces one. Not live-tested against the real API in this pass
+(no `GEMINI_API_KEY` in this environment, per CLAUDE.md's pause-and-ask
+condition for missing secrets) — `renderService.test.ts`/`render.route.test.ts`
+exercise it against a mocked client only; confirm the model name/response
+shape against a real key before shipping.
+
 ## 5. Naming Notes
 
 **Decision (2026-07-24):** the public-facing name is **"Face Reader - AI

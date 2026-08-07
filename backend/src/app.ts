@@ -3,6 +3,7 @@ import { VisionModelClient } from './services/geminiClient';
 import { registerCors } from './middleware/cors';
 import { registerRateLimit } from './middleware/rateLimit';
 import { registerLegalRoutes } from './routes/legal';
+import { registerRenderRoutes } from './routes/render';
 
 // Generous enough for several full-resolution phone photos (uncapped
 // resolution capture, quality 0.6 JPEG) plus JSON overhead, with headroom —
@@ -10,16 +11,14 @@ import { registerLegalRoutes } from './routes/legal';
 // small for even one such photo field.
 const BODY_LIMIT_BYTES = 25 * 1024 * 1024;
 
-// readingModelClient is threaded through but unused until the piercing
-// preview route lands in a later phase — kept here so callers (server.ts,
-// tests) don't need to change again once it does.
-export async function buildApp(_readingModelClient: VisionModelClient): Promise<FastifyInstance> {
+export async function buildApp(visionModelClient: VisionModelClient): Promise<FastifyInstance> {
   const app = Fastify({ logger: false, bodyLimit: BODY_LIMIT_BYTES });
   // Must complete before any route is registered — see the comment on
   // registerRateLimit for why an unawaited call silently no-ops.
   await registerCors(app);
   await registerRateLimit(app);
   registerLegalRoutes(app);
+  registerRenderRoutes(app, visionModelClient);
 
   // Defense-in-depth: every expected failure path already responds with a
   // sanitized message; Fastify's own schema-validation errors, passed
