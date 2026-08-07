@@ -1,5 +1,5 @@
 import Fastify, { FastifyError, FastifyInstance } from 'fastify';
-import { ReadingModelClient } from './services/geminiClient';
+import { VisionModelClient } from './services/geminiClient';
 import { registerCors } from './middleware/cors';
 import { registerRateLimit } from './middleware/rateLimit';
 import { registerLegalRoutes } from './routes/legal';
@@ -13,7 +13,7 @@ const BODY_LIMIT_BYTES = 25 * 1024 * 1024;
 // readingModelClient is threaded through but unused until the piercing
 // preview route lands in a later phase — kept here so callers (server.ts,
 // tests) don't need to change again once it does.
-export async function buildApp(_readingModelClient: ReadingModelClient): Promise<FastifyInstance> {
+export async function buildApp(_readingModelClient: VisionModelClient): Promise<FastifyInstance> {
   const app = Fastify({ logger: false, bodyLimit: BODY_LIMIT_BYTES });
   // Must complete before any route is registered — see the comment on
   // registerRateLimit for why an unawaited call silently no-ops.

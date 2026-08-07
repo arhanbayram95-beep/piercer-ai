@@ -1,12 +1,12 @@
 import { FastifyInstance } from 'fastify';
 import { buildApp } from '../../src/app';
-import { ReadingModelClient } from '../../src/services/geminiClient';
+import { VisionModelClient } from '../../src/services/geminiClient';
 
 describe('global rate limiting', () => {
   let app: FastifyInstance;
 
   beforeEach(async () => {
-    const readingModelClient: ReadingModelClient = { models: { generateContent: jest.fn() } };
+    const readingModelClient: VisionModelClient = { models: { generateContent: jest.fn() } };
     app = await buildApp(readingModelClient);
     // Legal routes are deliberately exempt from rate limiting (see
     // routes/legal.ts), so a throwaway route stands in for whatever

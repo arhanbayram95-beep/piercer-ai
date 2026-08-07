@@ -1,12 +1,12 @@
 import { FastifyInstance } from 'fastify';
 import { buildApp } from '../../src/app';
-import { ReadingModelClient } from '../../src/services/geminiClient';
+import { VisionModelClient } from '../../src/services/geminiClient';
 
 describe('legal document routes', () => {
   let app: FastifyInstance;
 
   beforeEach(async () => {
-    const readingModelClient: ReadingModelClient = { models: { generateContent: jest.fn() } };
+    const readingModelClient: VisionModelClient = { models: { generateContent: jest.fn() } };
     app = await buildApp(readingModelClient);
   });
 
@@ -20,7 +20,7 @@ describe('legal document routes', () => {
     expect(response.statusCode).toBe(200);
     expect(response.headers['content-type']).toMatch(/text\/html/);
     expect(response.body).toContain('Privacy Policy');
-    expect(response.body).toContain('Face Data (User Photos)');
+    expect(response.body).toContain('Body Part Photos');
   });
 
   it('serves the terms & conditions as HTML', async () => {
