@@ -439,6 +439,27 @@ export const translations = {
     fr: 'Aperçu du bijou', ar: 'معاينة المجوهرات', bn: 'জুয়েলারি প্রিভিউ করুন', pt: 'Pré-visualizar joia',
     ru: 'Предпросмотр украшения', ur: 'جیولری پریویو کریں',
   },
+  'studio.rendering': {
+    en: 'Rendering...', zh: '渲染中...', hi: 'रेंडर हो रहा है...', es: 'Renderizando...', fr: 'Rendu en cours...',
+    ar: 'جارٍ التصيير...', bn: 'রেন্ডারিং...', pt: 'A renderizar...', ru: 'Рендеринг...', ur: 'رینڈرنگ...',
+  },
+  'studio.renderError.title': {
+    en: 'Render Failed', zh: '渲染失败', hi: 'रेंडर विफल', es: 'Error al renderizar', fr: 'Échec du rendu',
+    ar: 'فشل التصيير', bn: 'রেন্ডার ব্যর্থ হয়েছে', pt: 'Falha na renderização', ru: 'Ошибка рендеринга',
+    ur: 'رینڈر ناکام ہوگیا',
+  },
+  'studio.renderError.body': {
+    en: 'Something went wrong generating your preview. Please try again.',
+    zh: 'Something went wrong generating your preview. Please try again.',
+    hi: 'Something went wrong generating your preview. Please try again.',
+    es: 'Something went wrong generating your preview. Please try again.',
+    fr: 'Something went wrong generating your preview. Please try again.',
+    ar: 'Something went wrong generating your preview. Please try again.',
+    bn: 'Something went wrong generating your preview. Please try again.',
+    pt: 'Something went wrong generating your preview. Please try again.',
+    ru: 'Something went wrong generating your preview. Please try again.',
+    ur: 'Something went wrong generating your preview. Please try again.',
+  },
   'studio.noPhoto': {
     en: 'No photo captured yet — go back and take one first.',
     zh: 'No photo captured yet — go back and take one first.',
@@ -450,6 +471,54 @@ export const translations = {
     pt: 'No photo captured yet — go back and take one first.',
     ru: 'No photo captured yet — go back and take one first.',
     ur: 'No photo captured yet — go back and take one first.',
+  },
+  'preview.title': {
+    en: 'Your Preview', zh: '您的预览', hi: 'आपका प्रीव्यू', es: 'Tu vista previa', fr: 'Votre aperçu',
+    ar: 'معاينتك', bn: 'আপনার প্রিভিউ', pt: 'A sua pré-visualização', ru: 'Ваш предпросмотр', ur: 'آپ کا پریویو',
+  },
+  'preview.before': {
+    en: 'Before', zh: '之前', hi: 'पहले', es: 'Antes', fr: 'Avant', ar: 'قبل', bn: 'আগে', pt: 'Antes',
+    ru: 'До', ur: 'پہلے',
+  },
+  'preview.after': {
+    en: 'After', zh: '之后', hi: 'बाद में', es: 'Después', fr: 'Après', ar: 'بعد', bn: 'পরে', pt: 'Depois',
+    ru: 'После', ur: 'بعد',
+  },
+  'preview.share': {
+    en: 'Share', zh: '分享', hi: 'शेयर करें', es: 'Compartir', fr: 'Partager', ar: 'مشاركة', bn: 'শেয়ার করুন',
+    pt: 'Partilhar', ru: 'Поделиться', ur: 'شیئر کریں',
+  },
+  'preview.done': {
+    en: 'Done', zh: '完成', hi: 'हो गया', es: 'Listo', fr: 'Terminé', ar: 'تم', bn: 'সম্পন্ন', pt: 'Concluído',
+    ru: 'Готово', ur: 'مکمل',
+  },
+  'preview.noResult': {
+    en: 'No preview available — go back and generate one first.',
+    zh: 'No preview available — go back and generate one first.',
+    hi: 'No preview available — go back and generate one first.',
+    es: 'No preview available — go back and generate one first.',
+    fr: 'No preview available — go back and generate one first.',
+    ar: 'No preview available — go back and generate one first.',
+    bn: 'No preview available — go back and generate one first.',
+    pt: 'No preview available — go back and generate one first.',
+    ru: 'No preview available — go back and generate one first.',
+    ur: 'No preview available — go back and generate one first.',
+  },
+  'preview.slider.positionX': {
+    en: 'Position X', zh: 'X 位置', hi: 'पोज़िशन X', es: 'Posición X', fr: 'Position X', ar: 'الموضع الأفقي',
+    bn: 'পজিশন X', pt: 'Posição X', ru: 'Позиция X', ur: 'پوزیشن X',
+  },
+  'preview.slider.positionY': {
+    en: 'Position Y', zh: 'Y 位置', hi: 'पोज़िशन Y', es: 'Posición Y', fr: 'Position Y', ar: 'الموضع الرأسي',
+    bn: 'পজিশন Y', pt: 'Posição Y', ru: 'Позиция Y', ur: 'پوزیشن Y',
+  },
+  'preview.slider.rotation': {
+    en: 'Rotation', zh: '旋转', hi: 'रोटेशन', es: 'Rotación', fr: 'Rotation', ar: 'الدوران', bn: 'ঘূর্ণন',
+    pt: 'Rotação', ru: 'Поворот', ur: 'گردش',
+  },
+  'preview.slider.scale': {
+    en: 'Scale', zh: '缩放', hi: 'स्केल', es: 'Escala', fr: 'Échelle', ar: 'الحجم', bn: 'স্কেল', pt: 'Escala',
+    ru: 'Масштаб', ur: 'اسکیل',
   },
   'restorePurchases.alertBody': {
     en: 'No previous purchases were found for this device.',

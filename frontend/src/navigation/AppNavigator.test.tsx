@@ -40,6 +40,12 @@ describe('AppNavigator', () => {
     expect(screen.getByTestId('studio-screen')).toBeTruthy();
   });
 
+  it('renders the preview screen when routed there', () => {
+    useAppStore.setState({ screen: 'preview', images: [], renderResult: null });
+    render(<AppNavigator />);
+    expect(screen.getByTestId('preview-screen')).toBeTruthy();
+  });
+
   it('renders the welcome screen when routed there', () => {
     useAppStore.setState({ screen: 'welcome' });
     render(<AppNavigator />);

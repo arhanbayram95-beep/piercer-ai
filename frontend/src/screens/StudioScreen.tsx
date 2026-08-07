@@ -1,5 +1,6 @@
-import React from 'react';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { RenderApiError, renderPreview } from '../api/render';
 import PiercingStudioDrawer from '../components/common/PiercingStudioDrawer';
 import PrimaryButton from '../components/common/PrimaryButton';
 import { useTranslation } from '../i18n/useTranslation';
@@ -7,16 +8,34 @@ import { useAppStore } from '../state/useAppStore';
 import { Theme } from '../ui/theme';
 
 // Hosts the captured/uploaded photo alongside PiercingStudioDrawer's
-// jewelry-type/finish picker. "Preview Jewelry" is a placeholder
-// destination until the AI render backend + PreviewScreen land (see
-// IMPLEMENTATION_PLAN.md piece 3/4) — kept as 'settings' the same way
-// CaptureScreen's own placeholder worked before this screen existed.
+// jewelry-type/finish picker. "Preview Jewelry" calls the render backend
+// (api/render.ts) with the photo + current selection and, on success, hands
+// the result to PreviewScreen via studioSlice.setRenderResult.
 export default function StudioScreen() {
   const t = useTranslation();
   const images = useAppStore((s) => s.images);
   const goToScreen = useAppStore((s) => s.goToScreen);
   const goBack = useAppStore((s) => s.goBack);
+  const selectedJewelryType = useAppStore((s) => s.selectedJewelryType);
+  const selectedFinish = useAppStore((s) => s.selectedFinish);
+  const setRenderResult = useAppStore((s) => s.setRenderResult);
+  const [isRendering, setIsRendering] = useState(false);
   const photo = images[0];
+
+  const handlePreview = async () => {
+    if (!photo || isRendering) return;
+    setIsRendering(true);
+    try {
+      const result = await renderPreview({ photo, jewelryType: selectedJewelryType, finish: selectedFinish });
+      setRenderResult(result);
+      goToScreen('preview');
+    } catch (error) {
+      const message = error instanceof RenderApiError ? error.message : t('studio.renderError.body');
+      Alert.alert(t('studio.renderError.title'), message);
+    } finally {
+      setIsRendering(false);
+    }
+  };
 
   return (
     <View style={styles.container} testID="studio-screen">
@@ -47,9 +66,9 @@ export default function StudioScreen() {
       <View style={styles.footer}>
         <PiercingStudioDrawer />
         <PrimaryButton
-          label={t('studio.continue')}
-          onPress={() => goToScreen('settings')}
-          disabled={!photo}
+          label={isRendering ? t('studio.rendering') : t('studio.continue')}
+          onPress={handlePreview}
+          disabled={!photo || isRendering}
           testID="studio-continue-button"
         />
       </View>
