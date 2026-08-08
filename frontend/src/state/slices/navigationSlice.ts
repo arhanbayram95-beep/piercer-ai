@@ -18,8 +18,10 @@ export type AppScreen =
 
 // Transient, forward-only screens — never a sensible place for goBack() to
 // land on (you never want to "go back" into the camera or a loading
-// spinner).
-const NON_RETURNABLE_SCREENS = new Set<AppScreen>(['loading', 'capture']);
+// spinner, or back into the onboarding age-gate/consent flow once past
+// it — dismissing Paywall on a first launch should land on Home, not
+// bounce back into Onboarding).
+const NON_RETURNABLE_SCREENS = new Set<AppScreen>(['loading', 'capture', 'onboarding']);
 
 // HomeHubScreen is the app's persistent home base — reached once per
 // session via the one-time Loading -> Onboarding -> Paywall -> Welcome

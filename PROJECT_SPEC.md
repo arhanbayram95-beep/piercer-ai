@@ -516,6 +516,23 @@ migration story for the existing in-memory-only Zustand store, and a
 product decision on what "returning user" should skip) — out of scope
 here per explicit instruction not to build it speculatively.
 
+**Paywall made skippable on first launch (added 2026-08-08):** follow-up to
+the Home hub change — the paywall's close button was gated behind
+`isProActive`, so a first-time free user hit a hard, undismissable wall
+right after onboarding even though the rest of the flow no longer forces
+them anywhere specific. The gate is removed; the close button now always
+renders. Dismissing routes through the existing `goBack()`, which required
+one more fix to actually land somewhere sensible: `'onboarding'` is now in
+`navigationSlice.ts`'s `NON_RETURNABLE_SCREENS` (alongside `loading`/
+`capture`) so dismissing Paywall on a first launch (`previousScreen ===
+'onboarding'`) falls through to `DEFAULT_SCREEN` (`'home'`) instead of
+bouncing back into the age-gate/consent flow — the same non-returnable
+reasoning already applied to Loading and Capture. The Settings-reopened
+case (`previousScreen === 'settings'`, still returnable) is unaffected and
+still closes back to Settings specifically. The subscribe/pricing flow
+itself (plans, Subscribe Now, Restore Purchases) is untouched — this is
+purely about making dismissal possible.
+
 ## 5. Naming Notes
 
 **Decision (2026-07-24):** the public-facing name is **"Face Reader - AI

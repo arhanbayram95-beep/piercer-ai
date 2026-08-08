@@ -68,7 +68,6 @@ export default function PaywallScreen() {
   const [purchasing, setPurchasing] = useState(false);
   const goToScreen = useAppStore((s) => s.goToScreen);
   const goBack = useAppStore((s) => s.goBack);
-  const isProActive = useAppStore((s) => s.isProActive);
   const setProActive = useAppStore((s) => s.setProActive);
   const t = useTranslation();
 
@@ -150,17 +149,20 @@ export default function PaywallScreen() {
   return (
     <View style={styles.container} testID="paywall-screen">
       <View style={styles.header}>
-        {isProActive && (
-          <Pressable
-            onPress={goBack}
-            accessibilityRole="button"
-            accessibilityLabel="Close"
-            style={styles.closeButton}
-            testID="paywall-close-button"
-          >
-            <Text style={styles.closeIcon}>✕</Text>
-          </Pressable>
-        )}
+        {/* Dismissible for everyone, not just users with an active
+            entitlement — the app's freemium model (FREE_RENDER_LIMIT,
+            entitlementSlice.ts) means a first-time free user should be able
+            to skip straight to Home rather than hit a hard, undismissable
+            wall right after onboarding. */}
+        <Pressable
+          onPress={goBack}
+          accessibilityRole="button"
+          accessibilityLabel="Close"
+          style={styles.closeButton}
+          testID="paywall-close-button"
+        >
+          <Text style={styles.closeIcon}>✕</Text>
+        </Pressable>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>

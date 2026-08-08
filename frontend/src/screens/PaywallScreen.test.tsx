@@ -41,12 +41,22 @@ describe('PaywallScreen', () => {
     (Linking.openURL as jest.Mock).mockRestore();
   });
 
-  it('is not skippable on first launch — no close button until entitlement is active', () => {
+  it('is skippable on first launch — the freemium model means Paywall must not be a hard wall', () => {
+    // Reflects the real first-run navigation path (Onboarding -> Paywall),
+    // not just a bare screen: 'onboarding' is a non-returnable screen (see
+    // navigationSlice.ts), so dismissing here falls through to Home rather
+    // than bouncing back into the age-gate/consent flow.
+    useAppStore.getState().goToScreen('onboarding');
+    useAppStore.getState().goToScreen('paywall');
+
     render(<PaywallScreen />);
-    expect(screen.queryByTestId('paywall-close-button')).toBeNull();
+    expect(screen.getByTestId('paywall-close-button')).toBeTruthy();
+
+    fireEvent.press(screen.getByTestId('paywall-close-button'));
+    expect(useAppStore.getState().screen).toBe('home');
   });
 
-  it('shows a close button once the user already has an active entitlement', () => {
+  it('also shows a close button once the user already has an active entitlement', () => {
     useAppStore.setState({ isProActive: true });
     render(<PaywallScreen />);
     expect(screen.getByTestId('paywall-close-button')).toBeTruthy();
