@@ -1,17 +1,22 @@
 import React from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import BottomNavBar from '../components/common/BottomNavBar';
 import GlassCard from '../components/common/GlassCard';
+import PiercingDiagram from '../components/common/PiercingDiagram';
 import { PIERCING_CATEGORIES, PIERCING_CATEGORY_LABEL_KEYS, piercingLocationsByCategory } from '../content/piercingLocations';
 import { useTranslation } from '../i18n/useTranslation';
 import { useAppStore } from '../state/useAppStore';
 import { Theme } from '../ui/theme';
 
-// Read-only terminology + pain-scale reference, reachable from Settings —
-// not part of the main Capture flow. No capture/AI/entitlement logic here.
-// The disclaimer below is deliberately rendered as visible on-page copy,
-// not just a code comment — pain ratings are a claim a user could otherwise
-// mistake for medical guidance, so the "general estimate, not medical
-// advice" framing needs to be something they actually read.
+// Read-only terminology + pain-scale reference — one of the app's 3
+// top-level modules, so it carries BottomNavBar (active="reference") the
+// same as HomeHubScreen/MatchHubScreen/SettingsScreen, letting a user jump
+// straight to another module without routing back through Home first. No
+// capture/AI/entitlement logic here. The disclaimer below is deliberately
+// rendered as visible on-page copy, not just a code comment — pain ratings
+// are a claim a user could otherwise mistake for medical guidance, so the
+// "general estimate, not medical advice" framing needs to be something
+// they actually read.
 export default function PiercingReferenceScreen() {
   const t = useTranslation();
   const goBack = useAppStore((s) => s.goBack);
@@ -38,19 +43,34 @@ export default function PiercingReferenceScreen() {
 
         {PIERCING_CATEGORIES.map((category) => (
           <View key={category} style={styles.categorySection}>
-            <Text style={styles.categoryHeading}>{t(PIERCING_CATEGORY_LABEL_KEYS[category])}</Text>
+            <View style={styles.categoryHeadingRow}>
+              <Text style={styles.categoryHeading}>{t(PIERCING_CATEGORY_LABEL_KEYS[category])}</Text>
+              <View style={styles.categoryHeadingRule} />
+            </View>
             {piercingLocationsByCategory(category).map((location) => (
               <GlassCard key={location.id} style={styles.locationCard} testID={`reference-card-${location.id}`}>
-                <View style={styles.locationHeaderRow}>
-                  <Text style={styles.locationName}>{t(location.labelKey)}</Text>
-                  <Text style={styles.painBadge}>{t('reference.painLabel', { rating: location.painRating })}</Text>
+                <View style={styles.locationRow}>
+                  <PiercingDiagram
+                    locationId={location.id}
+                    size={72}
+                    style={styles.locationDiagram}
+                    testID={`reference-diagram-${location.id}`}
+                  />
+                  <View style={styles.locationTextCol}>
+                    <View style={styles.locationHeaderRow}>
+                      <Text style={styles.locationName}>{t(location.labelKey)}</Text>
+                      <Text style={styles.painBadge}>{t('reference.painLabel', { rating: location.painRating })}</Text>
+                    </View>
+                    <Text style={styles.locationDescription}>{t(location.descriptionKey)}</Text>
+                  </View>
                 </View>
-                <Text style={styles.locationDescription}>{t(location.descriptionKey)}</Text>
               </GlassCard>
             ))}
           </View>
         ))}
       </ScrollView>
+
+      <BottomNavBar active="reference" />
     </View>
   );
 }
@@ -87,7 +107,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: Theme.spacing.containerPadding,
-    paddingBottom: Theme.spacing.lg,
+    paddingBottom: 120,
     gap: Theme.spacing.md,
   },
   disclaimer: {
@@ -99,13 +119,35 @@ const styles = StyleSheet.create({
   categorySection: {
     gap: Theme.spacing.xs,
   },
-  categoryHeading: {
-    ...Theme.typography.labelSm,
-    color: Theme.colors.text.muted,
-    textTransform: 'uppercase',
+  categoryHeadingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Theme.spacing.xs,
     marginBottom: 2,
   },
+  categoryHeading: {
+    ...Theme.typography.labelSm,
+    color: Theme.colors.accent.chromeSteel,
+    textTransform: 'uppercase',
+  },
+  categoryHeadingRule: {
+    flex: 1,
+    height: 1,
+    backgroundColor: Theme.colors.surface.glassBorder,
+  },
   locationCard: {
+    gap: 4,
+  },
+  locationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Theme.spacing.sm,
+  },
+  locationDiagram: {
+    flexShrink: 0,
+  },
+  locationTextCol: {
+    flex: 1,
     gap: 4,
   },
   locationHeaderRow: {

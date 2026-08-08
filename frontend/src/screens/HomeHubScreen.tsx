@@ -29,22 +29,25 @@ export default function HomeHubScreen() {
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <Pressable onPress={() => goToScreen('location')} testID="home-hub-try-on-option">
-          <GlassCard style={styles.optionCard}>
+          <GlassCard variant="module" style={styles.optionCard}>
             <Text style={styles.optionTitle}>{t('home.tryOn.title')}</Text>
+            <View style={styles.titleUnderline} />
             <Text style={styles.optionSubtitle}>{t('home.tryOn.subtitle')}</Text>
           </GlassCard>
         </Pressable>
 
         <Pressable onPress={() => goToScreen('reference')} testID="home-hub-reference-option">
-          <GlassCard style={styles.optionCard}>
+          <GlassCard variant="module" style={styles.optionCard}>
             <Text style={styles.optionTitle}>{t('home.reference.title')}</Text>
+            <View style={styles.titleUnderline} />
             <Text style={styles.optionSubtitle}>{t('home.reference.subtitle')}</Text>
           </GlassCard>
         </Pressable>
 
         <Pressable onPress={() => goToScreen('match')} testID="home-hub-match-option">
-          <GlassCard style={styles.optionCard}>
+          <GlassCard variant="module" style={styles.optionCard}>
             <Text style={styles.optionTitle}>{t('home.match.title')}</Text>
+            <View style={styles.titleUnderline} />
             <Text style={styles.optionSubtitle}>{t('home.match.subtitle')}</Text>
           </GlassCard>
         </Pressable>
@@ -87,6 +90,13 @@ const styles = StyleSheet.create({
     ...Theme.typography.headlineMd,
     fontSize: 18,
     color: Theme.colors.text.primary,
+  },
+  titleUnderline: {
+    width: 28,
+    height: 2,
+    borderRadius: Theme.radius.sm,
+    backgroundColor: Theme.colors.accent.crimsonPrimary,
+    marginBottom: 2,
   },
   optionSubtitle: {
     ...Theme.typography.bodyMd,
