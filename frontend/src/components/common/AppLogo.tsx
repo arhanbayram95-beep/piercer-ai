@@ -22,13 +22,11 @@ export default function AppLogo({ size = 'sm', showWordmark = false, layout = 'r
   const isStacked = layout === 'stacked';
   return (
     <View style={[styles.container, isStacked && styles.containerStacked]}>
-      <View style={[styles.glow, isLarge && styles.glowLg]}>
-        <Image
-          source={require('../../../assets/logo-badge-transparent.png')}
-          style={[styles.badge, isLarge && styles.badgeLg]}
-          resizeMode="contain"
-        />
-      </View>
+      <Image
+        source={require('../../../assets/logo-badge-transparent.png')}
+        style={[styles.badge, isLarge && styles.badgeLg]}
+        resizeMode="contain"
+      />
       {showWordmark && (
         <Text style={[styles.wordmark, isLarge && styles.wordmarkLg, isStacked && styles.wordmarkStacked]}>
           {isStacked ? 'piercer\n.ai' : 'piercer.ai'}
@@ -48,22 +46,15 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     gap: 12,
   },
-  glow: {
-    shadowColor: Theme.colors.accent.goldSecondary,
-    shadowOpacity: 0.6,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 0 },
-  },
-  glowLg: {
-    shadowRadius: 24,
-  },
   badge: {
     width: 60,
     height: 60,
   },
+  // Kept smaller than LoadingScreen's ripple rings (128px at rest) so the
+  // expanding "waves" animation doesn't visually collide with the icon.
   badgeLg: {
-    width: 168,
-    height: 168,
+    width: 108,
+    height: 108,
   },
   wordmark: {
     ...Theme.typography.headlineMd,
