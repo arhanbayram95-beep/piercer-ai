@@ -8,9 +8,14 @@ https://docs.expo.dev/versions/v57.0.0/ before writing any code, and check
 
 Two consequences of that upgrade worth knowing before you touch anything:
 
-* **`expo-camera` is gone.** Capture runs on
-  `react-native-vision-camera-face-detector`'s `<Camera>` + `usePhotoOutput`
-  (`src/screens/CaptureScreen.tsx`).
+* **`expo-camera` is gone.** Capture runs on `react-native-vision-camera`'s
+  `<Camera>` + `usePhotoOutput` (`src/screens/CaptureScreen.tsx`) —
+  `react-native-vision-camera-face-detector` was removed entirely (5bf3d5d),
+  this app never does on-device face detection. Web builds resolve to
+  `CaptureScreen.web.tsx` instead (Metro's platform extension), since
+  vision-camera is native-only and crashes the whole web bundle at
+  module-evaluation time if imported at all — the web variant drops the
+  camera and keeps only the gallery-upload path.
 * **`expo-av` is gone**, replaced by `expo-audio`'s imperative
   `createAudioPlayer` API (`src/utils/sound.ts`).
 
