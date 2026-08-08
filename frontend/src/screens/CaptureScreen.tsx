@@ -4,6 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Camera, useCameraPermission, usePhotoOutput } from 'react-native-vision-camera';
+import BottomNavBar from '../components/common/BottomNavBar';
 import PrimaryButton from '../components/common/PrimaryButton';
 import { PIERCING_LOCATIONS } from '../content/piercingLocations';
 import { useTranslation } from '../i18n/useTranslation';
@@ -46,6 +47,12 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
 // helix") instead of staying generic. A gallery-upload fallback exists
 // alongside the live camera for users who'd rather use an existing photo,
 // or whose device camera permission is denied.
+//
+// Carries BottomNavBar (active="tryOn") per explicit user feedback that the
+// nav bar should be universal. Tapping another module mid-capture does NOT
+// call clearImages() — only the explicit Cancel/X button does — so an
+// in-progress capture silently survives a detour to another module instead
+// of being discarded as a surprise side effect of navigation.
 export default function CaptureScreen() {
   const { hasPermission, requestPermission } = useCameraPermission();
   const [isCapturing, setIsCapturing] = useState(false);
@@ -222,6 +229,7 @@ export default function CaptureScreen() {
           disabled={isPickingFromLibrary}
           testID="capture-library-button"
         />
+        <BottomNavBar active="tryOn" />
       </View>
     );
   }
@@ -280,6 +288,8 @@ export default function CaptureScreen() {
           </Pressable>
         </View>
       </View>
+
+      <BottomNavBar active="tryOn" />
     </View>
   );
 }
@@ -294,6 +304,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: Theme.spacing.sm,
     paddingHorizontal: Theme.spacing.containerPadding,
+    paddingBottom: 120,
   },
   closeButton: {
     position: 'absolute',
@@ -361,7 +372,10 @@ const styles = StyleSheet.create({
   footer: {
     alignItems: 'center',
     gap: Theme.spacing.sm,
-    paddingBottom: Theme.spacing.xl,
+    // Generous — BottomNavBar now floats over the bottom of this screen
+    // too, and its pill needs clearance below the shutter button so the two
+    // don't visually collide.
+    paddingBottom: 140,
     paddingHorizontal: Theme.spacing.containerPadding,
   },
   libraryLink: {

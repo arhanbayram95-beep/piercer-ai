@@ -2,6 +2,7 @@ import * as ImagePicker from 'expo-image-picker';
 import React, { useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { MatchApiError, matchPhoto, MatchPhotoResult } from '../api/match';
+import BottomNavBar from '../components/common/BottomNavBar';
 import GlassCard from '../components/common/GlassCard';
 import PrimaryButton from '../components/common/PrimaryButton';
 import { recommendedJewelryFor } from '../content/locationJewelryRecommendations';
@@ -22,7 +23,11 @@ import { Theme } from '../ui/theme';
 // rule, confirmed by the product owner specifically for this module — not
 // an oversight. Same transparency pattern as the BIPA flag in
 // backend/src/routes/legal.ts and the matching note in
-// PersonalityQuizScreen.tsx.
+// PersonalityQuizScreen.tsx. Carries BottomNavBar (active="match") per
+// explicit user feedback that the nav bar should be universal. Tapping
+// another module mid-flow does NOT clear any in-progress state here (there
+// is none to clear — a match result is either shown or it isn't; nothing
+// is captured/staged that could be silently lost).
 export default function PersonalityPhotoScreen() {
   const t = useTranslation();
   const goBack = useAppStore((s) => s.goBack);
@@ -127,6 +132,8 @@ export default function PersonalityPhotoScreen() {
             );
           })}
         </ScrollView>
+
+        <BottomNavBar active="match" />
       </View>
     );
   }
@@ -164,6 +171,8 @@ export default function PersonalityPhotoScreen() {
           </>
         )}
       </View>
+
+      <BottomNavBar active="match" />
     </View>
   );
 }
@@ -207,6 +216,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: Theme.spacing.containerPadding,
+    paddingBottom: 120,
     gap: Theme.spacing.sm,
   },
   analyzingText: {
@@ -217,7 +227,7 @@ const styles = StyleSheet.create({
   resultContent: {
     paddingHorizontal: Theme.spacing.containerPadding,
     paddingTop: Theme.spacing.sm,
-    paddingBottom: Theme.spacing.lg,
+    paddingBottom: 120,
     gap: Theme.spacing.sm,
   },
   resultCard: {

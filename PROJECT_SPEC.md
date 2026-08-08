@@ -562,6 +562,45 @@ generally plain. Three follow-ups:
   medically precise anatomy map, same illustration-only framing as the
   diagram component's own header comment states.
 
+**Nav bar made universal (added 2026-08-08):** reverses the "linear
+sub-flows don't get the nav bar" call made two entries above. User feedback:
+the nav bar was missing from `PiercingLocationScreen` ("choose a piercing")
+and the quiz shouldn't be a dead end the user can't escape without
+abandoning it. `BottomNavBar` is now rendered on every post-onboarding
+screen: `PiercingLocationScreen`, `CaptureScreen` (native + `.web.tsx`),
+`StudioScreen`, `PreviewScreen`, `PersonalityQuizScreen`,
+`PersonalityPhotoScreen`, in addition to the hub-style screens it already
+had. `OnboardingScreen`/`WelcomeScreen`/`PaywallScreen`/`LoadingScreen` still
+don't carry it — those are pre-entitlement/first-run screens the user isn't
+meant to jump away from yet, and no feedback asked for it there.
+
+Design decision on state: tapping a nav item mid-flow does NOT forcibly
+discard in-progress state. `goToScreen()` itself never touches
+`captureSlice`/`studioSlice` — only the screens' own explicit actions do
+(`CaptureScreen`'s Cancel calls `clearImages()`; `PreviewScreen`'s Done calls
+`clearImages()`/`setRenderResult(null)`/`clearStackedItems()`/
+`setLocation(null)`). Since a captured photo, jewelry selection, and render
+result all live in the global Zustand store, they survive a nav-bar detour
+by construction — the screen can unmount and remount later with that state
+intact. This is safe for Capture/Studio/Preview without any slice changes.
+
+It is **not** equally true for `PersonalityQuizScreen`: `answers` and
+`stepIndex` are local `useState`, not global store state. Navigating away
+via the nav bar unmounts the screen, so coming back via the nav bar restarts
+the quiz from question 1 — in-progress answers are lost, unlike
+Capture/Studio/Preview. The nav bar was added anyway per the explicit
+request ("users should be able to jump to Reference or Try On mid-quiz"),
+and the quiz already has its own Retake affordance, but this asymmetry is
+real and flagged here rather than silently implied away by the presence of
+the nav bar. Promoting quiz progress into the global store (or a dedicated
+persisted slice) would close the gap, but that's a larger change than "add
+the nav bar" and was intentionally left out of this pass.
+
+`CaptureScreen`'s footer padding needed the largest bump (`120` → `140`) of
+the affected screens, since the 76px shutter button sits lower than other
+screens' primary actions and needs clearance above the nav pill so the two
+don't visually collide.
+
 ## 5. Naming Notes
 
 **Decision (2026-07-24):** the public-facing name is **"Face Reader - AI

@@ -46,4 +46,14 @@ describe('PiercingLocationScreen', () => {
     fireEvent.press(screen.getByTestId('location-close-button'));
     expect(useAppStore.getState().screen).toBe('welcome');
   });
+
+  it('carries the bottom nav bar and does not clear the selection when jumping to another module', () => {
+    render(<PiercingLocationScreen />);
+    fireEvent.press(screen.getByTestId('location-chip-tragus'));
+
+    fireEvent.press(screen.getByLabelText('Reference'));
+
+    expect(useAppStore.getState().screen).toBe('reference');
+    expect(useAppStore.getState().selectedLocation).toBe('tragus');
+  });
 });

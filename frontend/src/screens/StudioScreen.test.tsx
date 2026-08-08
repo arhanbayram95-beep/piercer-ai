@@ -161,4 +161,16 @@ describe('StudioScreen', () => {
 
     expect(screen.queryByTestId('studio-recommendation-banner')).toBeNull();
   });
+
+  it('carries the bottom nav bar, and jumping to another module does not discard the captured photo or jewelry selection', () => {
+    useAppStore.setState({ selectedJewelryType: 'septum', selectedFinish: 'gold' });
+    render(<StudioScreen />);
+
+    fireEvent.press(screen.getByLabelText('Match'));
+
+    expect(useAppStore.getState().screen).toBe('match');
+    expect(useAppStore.getState().images).toEqual(['AQID']);
+    expect(useAppStore.getState().selectedJewelryType).toBe('septum');
+    expect(useAppStore.getState().selectedFinish).toBe('gold');
+  });
 });

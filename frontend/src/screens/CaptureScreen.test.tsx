@@ -152,4 +152,23 @@ describe('CaptureScreen', () => {
     await waitFor(() => expect(useAppStore.getState().images).toEqual(['R0lGOD']));
     expect(useAppStore.getState().screen).toBe('studio');
   });
+
+  it('carries the bottom nav bar, and jumping to another module mid-capture does not discard the in-progress photo', async () => {
+    render(<CaptureScreen />);
+    fireEvent.press(screen.getByTestId('shutter-button'));
+    await waitFor(() => expect(useAppStore.getState().images).toEqual(['AQID']));
+
+    fireEvent.press(screen.getByLabelText('Reference'));
+
+    expect(useAppStore.getState().screen).toBe('reference');
+    // Unlike the explicit Cancel/X button, the nav bar must not call
+    // clearImages() — an in-progress capture should survive a detour.
+    expect(useAppStore.getState().images).toEqual(['AQID']);
+  });
+
+  it('shows the bottom nav bar even when camera permission is denied', () => {
+    mockHasPermission = false;
+    render(<CaptureScreen />);
+    expect(screen.getByLabelText('Home')).toBeTruthy();
+  });
 });

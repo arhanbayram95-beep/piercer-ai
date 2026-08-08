@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import BottomNavBar from '../components/common/BottomNavBar';
 import PrimaryButton from '../components/common/PrimaryButton';
 import { PIERCING_LOCATIONS } from '../content/piercingLocations';
 import { useTranslation } from '../i18n/useTranslation';
@@ -14,7 +15,9 @@ import { Theme } from '../ui/theme';
 // this one ("Your web project is importing a module from 'react-native'
 // instead of 'react-native-web'"). Native builds are untouched; this file
 // is dead code there. Gallery upload already works on web via
-// expo-image-picker, so that's the only capture path offered here.
+// expo-image-picker, so that's the only capture path offered here. Carries
+// BottomNavBar (active="tryOn") same as the native CaptureScreen, per
+// explicit user feedback that the nav bar should be universal.
 export default function CaptureScreen() {
   const [isPickingFromLibrary, setIsPickingFromLibrary] = useState(false);
   const selectedLocation = useAppStore((s) => s.selectedLocation);
@@ -92,6 +95,8 @@ export default function CaptureScreen() {
           testID="capture-library-button"
         />
       </View>
+
+      <BottomNavBar active="tryOn" />
     </View>
   );
 }
@@ -102,6 +107,7 @@ const styles = StyleSheet.create({
     backgroundColor: Theme.colors.background.start,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingBottom: 120,
   },
   closeButton: {
     position: 'absolute',

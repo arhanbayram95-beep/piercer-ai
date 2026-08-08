@@ -113,4 +113,33 @@ describe('PersonalityQuizScreen', () => {
     fireEvent.press(screen.getByTestId('quiz-close-button'));
     expect(useAppStore.getState().screen).toBe('match');
   });
+
+  it('carries the bottom nav bar, and tapping it mid-quiz does not touch any global app state', () => {
+    // NOTE: unlike Capture/Studio/Preview (where in-progress state —
+    // images, jewelry selection, render result — lives in the global
+    // Zustand store and survives a nav-bar detour by construction, since
+    // the store isn't touched by navigation itself), this quiz's answers/
+    // stepIndex are local component `useState`, not global. Navigating away
+    // via the nav bar unmounts PersonalityQuizScreen, and remounting it
+    // (coming back later) starts the quiz over from question 1 — this is a
+    // real, more-nuanced-than-"just add the nav bar" gap, flagged to the
+    // product owner rather than silently shipped as if answers persisted.
+    render(<PersonalityQuizScreen />);
+    fireEvent.press(screen.getByTestId(`quiz-option-${QUIZ_QUESTIONS[0].id}-rebel`));
+    fireEvent.press(screen.getByTestId('quiz-next-button'));
+
+    fireEvent.press(screen.getByLabelText('Try On'));
+
+    expect(useAppStore.getState().screen).toBe('location');
+    // Confirms the nav bar tap itself doesn't reach into
+    // studio/capture/entitlement state — it's a pure navigation action.
+    expect(useAppStore.getState().selectedJewelryType).toBe('hoops');
+    expect(useAppStore.getState().selectedFinish).toBe('silver');
+  });
+
+  it('carries the bottom nav bar on the result view too', () => {
+    render(<PersonalityQuizScreen />);
+    answerAllAs('freeSpirit');
+    expect(screen.getByLabelText('Home')).toBeTruthy();
+  });
 });

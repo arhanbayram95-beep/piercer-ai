@@ -1,5 +1,6 @@
 import React from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import BottomNavBar from '../components/common/BottomNavBar';
 import PrimaryButton from '../components/common/PrimaryButton';
 import {
   PIERCING_CATEGORIES,
@@ -16,6 +17,13 @@ import { Theme } from '../ui/theme';
 // see your helix") instead of the old generic body-part framing copy.
 // Locations come from content/piercingLocations.ts, shared with a future
 // piercing-reference page per the product brief.
+//
+// Carries BottomNavBar (active="tryOn") per explicit user feedback that the
+// nav bar should be universal, not just on hub-style screens — tapping
+// another module here does NOT clear selectedLocation/images/studio state;
+// only the explicit Close (X) button does, via goBack(). See
+// navigationSlice.ts / BottomNavBar.tsx for the same reasoning applied
+// across every screen that got this treatment.
 export default function PiercingLocationScreen() {
   const t = useTranslation();
   const selectedLocation = useAppStore((s) => s.selectedLocation);
@@ -74,6 +82,8 @@ export default function PiercingLocationScreen() {
           testID="location-continue-button"
         />
       </View>
+
+      <BottomNavBar active="tryOn" />
     </View>
   );
 }
@@ -155,6 +165,6 @@ const styles = StyleSheet.create({
   footer: {
     paddingHorizontal: Theme.spacing.containerPadding,
     paddingTop: Theme.spacing.sm,
-    paddingBottom: Theme.spacing.lg,
+    paddingBottom: 120,
   },
 });

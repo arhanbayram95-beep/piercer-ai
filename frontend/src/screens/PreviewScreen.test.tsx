@@ -73,4 +73,19 @@ describe('PreviewScreen', () => {
     fireEvent.press(screen.getByTestId('preview-done-button'));
     expect(useAppStore.getState().screen).toBe('home');
   });
+
+  it('carries the bottom nav bar, and jumping to another module does not discard the render result', () => {
+    render(<PreviewScreen />);
+    fireEvent.press(screen.getByLabelText('Reference'));
+
+    expect(useAppStore.getState().screen).toBe('reference');
+    expect(useAppStore.getState().renderResult).toEqual({ renderedImage: 'cmVuZGVyZWQ=', mimeType: 'image/png' });
+    expect(useAppStore.getState().images).toEqual(['b3JpZ2luYWw=']);
+  });
+
+  it('carries the bottom nav bar even in the no-render-result fallback state', () => {
+    useAppStore.setState({ renderResult: null, images: [] });
+    render(<PreviewScreen />);
+    expect(screen.getByLabelText('Home')).toBeTruthy();
+  });
 });

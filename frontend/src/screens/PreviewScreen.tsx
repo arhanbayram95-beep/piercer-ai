@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Image, Pressable, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
 import { captureRef } from 'react-native-view-shot';
+import BottomNavBar from '../components/common/BottomNavBar';
 import DisclaimerFooter from '../components/common/DisclaimerFooter';
 import PrimaryButton from '../components/common/PrimaryButton';
 import { TranslationKey } from '../i18n/translations';
@@ -54,6 +55,12 @@ function defaultAdjustments(): Record<SliderKey, number> {
 // result StudioScreen just produced (studioSlice.renderResult). Reuses the
 // react-native-view-shot + native Share pattern the old (deleted)
 // RevealScreen used for its share card.
+//
+// Carries BottomNavBar (active="tryOn") per explicit user feedback that the
+// nav bar should be universal. Tapping another module here does NOT clear
+// the render result or captured photo — only "Done" resets the session
+// (clearImages/setRenderResult(null)/clearStackedItems/setLocation(null))
+// once the flow is actually finished.
 export default function PreviewScreen() {
   const t = useTranslation();
   const images = useAppStore((s) => s.images);
@@ -104,6 +111,7 @@ export default function PreviewScreen() {
       <View style={[styles.container, styles.emptyContainer]} testID="preview-screen">
         <Text style={styles.noResultText}>{t('preview.noResult')}</Text>
         <PrimaryButton label={t('preview.done')} onPress={handleDone} testID="preview-done-button" />
+        <BottomNavBar active="tryOn" />
       </View>
     );
   }
@@ -184,6 +192,8 @@ export default function PreviewScreen() {
         />
         <DisclaimerFooter />
       </View>
+
+      <BottomNavBar active="tryOn" />
     </View>
   );
 }
@@ -198,6 +208,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: Theme.spacing.sm,
     paddingHorizontal: Theme.spacing.containerPadding,
+    paddingBottom: 120,
   },
   noResultText: {
     ...Theme.typography.bodyMd,
@@ -297,7 +308,7 @@ const styles = StyleSheet.create({
   footer: {
     paddingHorizontal: Theme.spacing.containerPadding,
     paddingTop: Theme.spacing.sm,
-    paddingBottom: Theme.spacing.md,
+    paddingBottom: 120,
     gap: Theme.spacing.xs,
   },
 });

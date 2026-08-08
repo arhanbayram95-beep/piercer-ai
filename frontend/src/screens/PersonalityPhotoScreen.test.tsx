@@ -99,4 +99,19 @@ describe('PersonalityPhotoScreen', () => {
     fireEvent.press(screen.getByTestId('match-photo-close-button'));
     expect(useAppStore.getState().screen).toBe('match');
   });
+
+  it('carries the bottom nav bar on both the initial and result views', async () => {
+    render(<PersonalityPhotoScreen />);
+    expect(screen.getByLabelText('Home')).toBeTruthy();
+
+    fireEvent.press(screen.getByTestId('match-photo-take-button'));
+    await waitFor(() => expect(screen.getByTestId('match-photo-result-helix')).toBeTruthy());
+    expect(screen.getByLabelText('Home')).toBeTruthy();
+  });
+
+  it('lets the user jump to another module via the nav bar', () => {
+    render(<PersonalityPhotoScreen />);
+    fireEvent.press(screen.getByLabelText('Reference'));
+    expect(useAppStore.getState().screen).toBe('reference');
+  });
 });

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import BottomNavBar from '../components/common/BottomNavBar';
 import FadeInView from '../components/common/FadeInView';
 import GlassCard from '../components/common/GlassCard';
 import PrimaryButton from '../components/common/PrimaryButton';
@@ -27,7 +28,18 @@ const JEWELRY_TYPE_LABEL_KEYS: Record<JewelryType, TranslationKey> = {
 // long scrollable list — that read as messy) with a dot progress indicator
 // (same visual language as OnboardingScreen's), a Next button gated on the
 // current question being answered, and a Back link to revisit a previous
-// answer without losing later ones.
+// answer without losing later ones. Carries BottomNavBar (active="match")
+// per explicit user feedback that the nav bar should be universal — the
+// quiz shouldn't be a dead-end sequential flow the user can't escape
+// without abandoning it. Tapping another module mid-quiz is a plain
+// navigation action — it never reaches into global store state. But unlike
+// Capture/Studio/Preview, this screen's `answers`/`stepIndex` are local
+// useState, not global store state, so navigating away unmounts the screen
+// and progress is NOT preserved: coming back via the nav bar restarts the
+// quiz at question 1. Flagged in PROJECT_SPEC.md rather than silently
+// shipped as if it persisted; the Retake button is the closest existing
+// affordance for "start over," which is what a nav-bar detour amounts to
+// today.
 //
 // DELIBERATE EXCEPTION: no DisclaimerFooter/entertainment disclaimer is
 // shown anywhere on this screen or its result view. This is an explicit,
@@ -145,6 +157,8 @@ export default function PersonalityQuizScreen() {
             testID="quiz-retake-button"
           />
         </ScrollView>
+
+        <BottomNavBar active="match" />
       </View>
     );
   }
@@ -211,6 +225,8 @@ export default function PersonalityQuizScreen() {
           testID="quiz-next-button"
         />
       </View>
+
+      <BottomNavBar active="match" />
     </View>
   );
 }
@@ -306,7 +322,7 @@ const styles = StyleSheet.create({
   footer: {
     paddingHorizontal: Theme.spacing.containerPadding,
     paddingTop: Theme.spacing.sm,
-    paddingBottom: Theme.spacing.lg,
+    paddingBottom: 120,
     gap: Theme.spacing.sm,
   },
   backLink: {
@@ -321,7 +337,7 @@ const styles = StyleSheet.create({
   },
   resultContent: {
     paddingHorizontal: Theme.spacing.containerPadding,
-    paddingBottom: Theme.spacing.lg,
+    paddingBottom: 120,
     gap: Theme.spacing.md,
   },
   resultCard: {

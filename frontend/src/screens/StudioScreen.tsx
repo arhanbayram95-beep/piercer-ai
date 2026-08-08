@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { RenderApiError, renderPreview } from '../api/render';
+import BottomNavBar from '../components/common/BottomNavBar';
 import PiercingStudioDrawer from '../components/common/PiercingStudioDrawer';
 import PrimaryButton from '../components/common/PrimaryButton';
 import { recommendedJewelryFor } from '../content/locationJewelryRecommendations';
@@ -39,6 +40,12 @@ const FINISH_LABEL_KEYS: Record<JewelryFinish, TranslationKey> = {
 // picked (chosen based on their own face/ear/body) and nudges them toward a
 // suited jewelry style in this same try-on flow, rather than a new
 // recommendation-output screen or AI call.
+//
+// Carries BottomNavBar (active="tryOn") per explicit user feedback that the
+// nav bar should be universal. Tapping another module mid-Studio does NOT
+// clear the captured photo or jewelry selection — nothing here calls
+// clearImages()/clearStackedItems() on nav-bar taps, only Preview's "Done"
+// button does that, once the flow is actually finished.
 export default function StudioScreen() {
   const t = useTranslation();
   const images = useAppStore((s) => s.images);
@@ -166,6 +173,8 @@ export default function StudioScreen() {
           testID="studio-continue-button"
         />
       </View>
+
+      <BottomNavBar active="tryOn" />
     </View>
   );
 }
@@ -233,7 +242,7 @@ const styles = StyleSheet.create({
   footer: {
     paddingHorizontal: Theme.spacing.containerPadding,
     paddingTop: Theme.spacing.sm,
-    paddingBottom: Theme.spacing.lg,
+    paddingBottom: 120,
     gap: Theme.spacing.sm,
   },
   recommendationBanner: {
