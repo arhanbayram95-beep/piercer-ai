@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import FadeInView from '../components/common/FadeInView';
 import GlassCard from '../components/common/GlassCard';
 import PrimaryButton from '../components/common/PrimaryButton';
 import { PIERCING_LOCATIONS } from '../content/piercingLocations';
@@ -22,7 +23,11 @@ const JEWELRY_TYPE_LABEL_KEYS: Record<JewelryType, TranslationKey> = {
 // Quiz entry point of the personality-matching module — pure client-side
 // logic, no AI/backend call (see content/personalityQuiz.ts). Genuinely
 // separate flow from PersonalityPhotoScreen, not a tab on a shared form,
-// per the product brief.
+// per the product brief. One question at a time (not the original single
+// long scrollable list — that read as messy) with a dot progress indicator
+// (same visual language as OnboardingScreen's), a Next button gated on the
+// current question being answered, and a Back link to revisit a previous
+// answer without losing later ones.
 //
 // DELIBERATE EXCEPTION: no DisclaimerFooter/entertainment disclaimer is
 // shown anywhere on this screen or its result view. This is an explicit,
@@ -38,21 +43,35 @@ export default function PersonalityQuizScreen() {
   const setJewelryType = useAppStore((s) => s.setJewelryType);
   const setFinish = useAppStore((s) => s.setFinish);
 
+  const [stepIndex, setStepIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, PersonalityArchetype>>({});
   const [result, setResult] = useState<PersonalityArchetype | null>(null);
 
-  const allAnswered = QUIZ_QUESTIONS.every((question) => answers[question.id]);
+  const currentQuestion = QUIZ_QUESTIONS[stepIndex];
+  const currentAnswer = answers[currentQuestion.id];
+  const isLastQuestion = stepIndex === QUIZ_QUESTIONS.length - 1;
 
-  const handleSelect = (questionId: string, archetype: PersonalityArchetype) => {
-    setAnswers((prev) => ({ ...prev, [questionId]: archetype }));
+  const handleSelect = (archetype: PersonalityArchetype) => {
+    setAnswers((prev) => ({ ...prev, [currentQuestion.id]: archetype }));
   };
 
-  const handleSeeResult = () => {
-    setResult(computeArchetype(Object.values(answers)));
+  const handleNext = () => {
+    if (!currentAnswer) return;
+    if (isLastQuestion) {
+      setResult(computeArchetype(Object.values(answers)));
+      return;
+    }
+    setStepIndex((index) => index + 1);
+  };
+
+  const handleBack = () => {
+    if (stepIndex === 0) return;
+    setStepIndex((index) => index - 1);
   };
 
   const handleRetake = () => {
     setAnswers({});
+    setStepIndex(0);
     setResult(null);
   };
 
@@ -143,41 +162,53 @@ export default function PersonalityQuizScreen() {
           <Text style={styles.closeIcon}>✕</Text>
         </Pressable>
         <Text style={styles.title}>{t('quiz.title')}</Text>
+
+        <View style={styles.dots} accessibilityLabel="Quiz progress">
+          {QUIZ_QUESTIONS.map((question, index) => (
+            <View key={question.id} style={[styles.dot, index === stepIndex && styles.dotActive]} />
+          ))}
+        </View>
+        <Text style={styles.progressText} testID="quiz-progress-text">
+          {t('quiz.progress', { current: stepIndex + 1, total: QUIZ_QUESTIONS.length })}
+        </Text>
       </View>
 
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {QUIZ_QUESTIONS.map((question) => (
-          <View key={question.id} style={styles.questionSection}>
-            <Text style={styles.questionText}>{t(question.questionKey)}</Text>
-            <View style={styles.optionsGrid}>
-              {question.options.map((option) => {
-                const isSelected = answers[question.id] === option.archetype;
-                return (
-                  <Pressable
-                    key={option.archetype}
-                    onPress={() => handleSelect(question.id, option.archetype)}
-                    accessibilityRole="button"
-                    accessibilityState={{ selected: isSelected }}
-                    testID={`quiz-option-${question.id}-${option.archetype}`}
-                    style={[styles.optionChip, isSelected && styles.optionChipSelected]}
-                  >
-                    <Text style={[styles.optionText, isSelected && styles.optionTextSelected]}>
-                      {t(option.labelKey)}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
+      <View style={styles.content}>
+        <FadeInView key={currentQuestion.id} style={styles.questionSection}>
+          <Text style={styles.questionText}>{t(currentQuestion.questionKey)}</Text>
+          <View style={styles.optionsGrid}>
+            {currentQuestion.options.map((option) => {
+              const isSelected = currentAnswer === option.archetype;
+              return (
+                <Pressable
+                  key={option.archetype}
+                  onPress={() => handleSelect(option.archetype)}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: isSelected }}
+                  testID={`quiz-option-${currentQuestion.id}-${option.archetype}`}
+                  style={[styles.optionChip, isSelected && styles.optionChipSelected]}
+                >
+                  <Text style={[styles.optionText, isSelected && styles.optionTextSelected]}>
+                    {t(option.labelKey)}
+                  </Text>
+                </Pressable>
+              );
+            })}
           </View>
-        ))}
-      </ScrollView>
+        </FadeInView>
+      </View>
 
       <View style={styles.footer}>
+        {stepIndex > 0 && (
+          <Pressable onPress={handleBack} accessibilityRole="button" testID="quiz-back-button" style={styles.backLink}>
+            <Text style={styles.backLinkText}>{t('quiz.back')}</Text>
+          </Pressable>
+        )}
         <PrimaryButton
-          label={t('quiz.continue')}
-          onPress={handleSeeResult}
-          disabled={!allAnswered}
-          testID="quiz-continue-button"
+          label={isLastQuestion ? t('quiz.continue') : t('quiz.next')}
+          onPress={handleNext}
+          disabled={!currentAnswer}
+          testID="quiz-next-button"
         />
       </View>
     </View>
@@ -193,6 +224,7 @@ const styles = StyleSheet.create({
     paddingTop: Theme.spacing.xl,
     paddingHorizontal: Theme.spacing.containerPadding,
     paddingBottom: Theme.spacing.sm,
+    gap: Theme.spacing.xs,
   },
   closeButton: {
     position: 'absolute',
@@ -214,28 +246,49 @@ const styles = StyleSheet.create({
     ...Theme.typography.headlineLg,
     color: Theme.colors.accent.goldSecondary,
   },
-  scrollContent: {
+  dots: {
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: Theme.spacing.xs,
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: Theme.radius.full,
+    backgroundColor: 'rgba(255, 223, 158, 0.25)',
+  },
+  dotActive: {
+    width: 20,
+    backgroundColor: Theme.colors.accent.crimsonPrimary,
+  },
+  progressText: {
+    ...Theme.typography.labelSm,
+    fontSize: 11,
+    color: Theme.colors.text.muted,
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
     paddingHorizontal: Theme.spacing.containerPadding,
-    paddingBottom: Theme.spacing.lg,
-    gap: Theme.spacing.md,
   },
   questionSection: {
-    gap: Theme.spacing.xs,
+    gap: Theme.spacing.sm,
   },
   questionText: {
-    ...Theme.typography.bodyMd,
-    fontSize: 15,
+    ...Theme.typography.headlineMd,
+    fontSize: 20,
     color: Theme.colors.text.primary,
   },
   optionsGrid: {
     gap: Theme.spacing.xs,
+    marginTop: Theme.spacing.xs,
   },
   optionChip: {
     borderWidth: 1,
     borderColor: Theme.colors.surface.metallicBorder,
     borderRadius: Theme.radius.md,
     paddingHorizontal: Theme.spacing.sm,
-    paddingVertical: 10,
+    paddingVertical: 14,
   },
   optionChipSelected: {
     backgroundColor: Theme.colors.accent.electricPurple,
@@ -243,7 +296,7 @@ const styles = StyleSheet.create({
   },
   optionText: {
     ...Theme.typography.bodyMd,
-    fontSize: 14,
+    fontSize: 15,
     color: Theme.colors.text.secondary,
   },
   optionTextSelected: {
@@ -254,6 +307,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: Theme.spacing.containerPadding,
     paddingTop: Theme.spacing.sm,
     paddingBottom: Theme.spacing.lg,
+    gap: Theme.spacing.sm,
+  },
+  backLink: {
+    alignSelf: 'center',
+    paddingVertical: 4,
+  },
+  backLinkText: {
+    ...Theme.typography.bodyMd,
+    fontSize: 14,
+    color: Theme.colors.text.secondary,
+    textDecorationLine: 'underline',
   },
   resultContent: {
     paddingHorizontal: Theme.spacing.containerPadding,

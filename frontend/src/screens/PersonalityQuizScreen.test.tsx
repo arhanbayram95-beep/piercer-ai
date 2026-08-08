@@ -4,9 +4,14 @@ import { QUIZ_QUESTIONS } from '../content/personalityQuiz';
 import { useAppStore } from '../state/useAppStore';
 import PersonalityQuizScreen from './PersonalityQuizScreen';
 
+// Answers every question as the given archetype, one step at a time —
+// pressing the option then Next, mirroring how a real user moves through
+// the one-question-per-screen flow.
 function answerAllAs(archetype: string) {
-  for (const question of QUIZ_QUESTIONS) {
+  for (let i = 0; i < QUIZ_QUESTIONS.length; i++) {
+    const question = QUIZ_QUESTIONS[i];
     fireEvent.press(screen.getByTestId(`quiz-option-${question.id}-${archetype}`));
+    fireEvent.press(screen.getByTestId('quiz-next-button'));
   }
 }
 
@@ -21,18 +26,50 @@ describe('PersonalityQuizScreen', () => {
     });
   });
 
-  it('disables Continue until every question is answered', () => {
+  it('shows one question at a time with a progress indicator', () => {
     render(<PersonalityQuizScreen />);
-    expect(screen.getByTestId('quiz-continue-button').props.accessibilityState.disabled).toBe(true);
-
-    answerAllAs('minimalist');
-    expect(screen.getByTestId('quiz-continue-button').props.accessibilityState.disabled).toBe(false);
+    expect(screen.getByTestId('quiz-progress-text').props.children).toBe('Question 1 of 6');
+    // Only the first question's options are on screen.
+    expect(screen.getByTestId(`quiz-option-${QUIZ_QUESTIONS[0].id}-minimalist`)).toBeTruthy();
+    expect(screen.queryByTestId(`quiz-option-${QUIZ_QUESTIONS[1].id}-minimalist`)).toBeNull();
   });
 
-  it('shows the matching archetype result after answering', () => {
+  it('disables Next until the current question is answered', () => {
+    render(<PersonalityQuizScreen />);
+    expect(screen.getByTestId('quiz-next-button').props.accessibilityState.disabled).toBe(true);
+
+    fireEvent.press(screen.getByTestId(`quiz-option-${QUIZ_QUESTIONS[0].id}-minimalist`));
+    expect(screen.getByTestId('quiz-next-button').props.accessibilityState.disabled).toBe(false);
+  });
+
+  it('advances to the next question on Next, and the Back link is hidden on the first question', () => {
+    render(<PersonalityQuizScreen />);
+    expect(screen.queryByTestId('quiz-back-button')).toBeNull();
+
+    fireEvent.press(screen.getByTestId(`quiz-option-${QUIZ_QUESTIONS[0].id}-minimalist`));
+    fireEvent.press(screen.getByTestId('quiz-next-button'));
+
+    expect(screen.getByTestId('quiz-progress-text').props.children).toBe('Question 2 of 6');
+    expect(screen.getByTestId(`quiz-option-${QUIZ_QUESTIONS[1].id}-minimalist`)).toBeTruthy();
+    expect(screen.getByTestId('quiz-back-button')).toBeTruthy();
+  });
+
+  it('lets the user revisit a previous answer via Back without losing it', () => {
+    render(<PersonalityQuizScreen />);
+    fireEvent.press(screen.getByTestId(`quiz-option-${QUIZ_QUESTIONS[0].id}-rebel`));
+    fireEvent.press(screen.getByTestId('quiz-next-button'));
+
+    fireEvent.press(screen.getByTestId('quiz-back-button'));
+
+    expect(screen.getByTestId('quiz-progress-text').props.children).toBe('Question 1 of 6');
+    expect(screen.getByTestId(`quiz-option-${QUIZ_QUESTIONS[0].id}-rebel`).props.accessibilityState.selected).toBe(
+      true
+    );
+  });
+
+  it('shows the matching archetype result after the last question', () => {
     render(<PersonalityQuizScreen />);
     answerAllAs('minimalist');
-    fireEvent.press(screen.getByTestId('quiz-continue-button'));
 
     expect(screen.getByTestId('quiz-result-name').props.children).toBe('The Minimalist');
   });
@@ -40,7 +77,6 @@ describe('PersonalityQuizScreen', () => {
   it('pre-selects the recommended location and jewelry, then routes to Capture on Try It On', () => {
     render(<PersonalityQuizScreen />);
     answerAllAs('rebel');
-    fireEvent.press(screen.getByTestId('quiz-continue-button'));
     fireEvent.press(screen.getByTestId('quiz-try-on-button'));
 
     expect(useAppStore.getState().selectedLocation).toBe('septum');
@@ -52,7 +88,6 @@ describe('PersonalityQuizScreen', () => {
   it('displays each recommended location paired with its own compatible jewelry type', () => {
     render(<PersonalityQuizScreen />);
     answerAllAs('rebel');
-    fireEvent.press(screen.getByTestId('quiz-continue-button'));
 
     // Regression coverage for the content bug where Rebel's display text
     // paired Industrial and Snug with "septum" jewelry, which neither
@@ -62,14 +97,15 @@ describe('PersonalityQuizScreen', () => {
     expect(screen.getByText('Snug · Barbells')).toBeTruthy();
   });
 
-  it('lets the user retake the quiz from the result view', () => {
+  it('lets the user retake the quiz from the result view, back at question 1', () => {
     render(<PersonalityQuizScreen />);
     answerAllAs('romantic');
-    fireEvent.press(screen.getByTestId('quiz-continue-button'));
     expect(screen.getByTestId('quiz-result-name')).toBeTruthy();
 
     fireEvent.press(screen.getByTestId('quiz-retake-button'));
-    expect(screen.getByTestId('quiz-continue-button').props.accessibilityState.disabled).toBe(true);
+
+    expect(screen.getByTestId('quiz-progress-text').props.children).toBe('Question 1 of 6');
+    expect(screen.getByTestId('quiz-next-button').props.accessibilityState.disabled).toBe(true);
   });
 
   it('lets the user close back out', () => {
