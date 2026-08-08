@@ -5,6 +5,7 @@ export type AppScreen =
   | 'onboarding'
   | 'paywall'
   | 'welcome'
+  | 'home'
   | 'location'
   | 'capture'
   | 'studio'
@@ -20,9 +21,14 @@ export type AppScreen =
 // spinner).
 const NON_RETURNABLE_SCREENS = new Set<AppScreen>(['loading', 'capture']);
 
-// The Welcome screen is the app's home base — there is no separate "main
-// menu" screen.
-const DEFAULT_SCREEN: AppScreen = 'welcome';
+// HomeHubScreen is the app's persistent home base — reached once per
+// session via the one-time Loading -> Onboarding -> Paywall -> Welcome
+// intro sequence, then landed on again by goBack()'s fallback and by
+// Welcome/Paywall's own CTAs. Welcome itself is meant to be seen only once
+// per session (there's no persisted "onboarding already completed" state
+// yet — every cold start replays the full intro; see PROJECT_SPEC.md for
+// that as a flagged, not-yet-built, follow-up).
+const DEFAULT_SCREEN: AppScreen = 'home';
 
 export interface NavigationSlice {
   screen: AppScreen;

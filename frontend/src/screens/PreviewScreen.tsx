@@ -93,7 +93,10 @@ export default function PreviewScreen() {
     setRenderResult(null);
     clearStackedItems();
     setLocation(null);
-    goToScreen('welcome');
+    // Home, not Welcome — Welcome is a once-per-session intro screen, not a
+    // destination to revisit after finishing a flow (see
+    // navigationSlice.ts's DEFAULT_SCREEN comment).
+    goToScreen('home');
   };
 
   if (!renderResult || !originalPhoto) {

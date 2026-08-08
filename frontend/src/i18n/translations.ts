@@ -18,9 +18,9 @@ export type LanguageCode = 'en' | 'zh' | 'hi' | 'es' | 'fr' | 'ar' | 'bn' | 'pt'
 type TranslationKey = keyof typeof translations;
 
 export const translations = {
-  'nav.capture': {
-    en: 'Capture', zh: '拍摄', hi: 'कैप्चर', es: 'Capturar', fr: 'Capturer',
-    ar: 'التقاط', bn: 'ক্যাপচার', pt: 'Capturar', ru: 'Съёмка', ur: 'کیپچر',
+  'nav.home': {
+    en: 'Home', zh: '首页', hi: 'होम', es: 'Inicio', fr: 'Accueil',
+    ar: 'الرئيسية', bn: 'হোম', pt: 'Início', ru: 'Главная', ur: 'ہوم',
   },
   'nav.settings': {
     en: 'Settings', zh: '设置', hi: 'सेटिंग्स', es: 'Ajustes', fr: 'Paramètres',
@@ -368,6 +368,75 @@ export const translations = {
   },
   'common.close': {
     en: 'Close', zh: '关闭', hi: 'बंद करें', es: 'Cerrar', fr: 'Fermer', ar: 'إغلاق', bn: 'বন্ধ করুন', pt: 'Fechar', ru: 'Закрыть', ur: 'بند کریں',
+  },
+  'home.headline': {
+    en: 'What would you like to do?', zh: '您想做什么？', hi: 'आप क्या करना चाहेंगे?',
+    es: '¿Qué te gustaría hacer?', fr: 'Que souhaitez-vous faire ?', ar: 'ماذا تود أن تفعل؟',
+    bn: 'আপনি কী করতে চান?', pt: 'O que gostaria de fazer?', ru: 'Что вы хотите сделать?',
+    ur: 'آپ کیا کرنا چاہیں گے؟',
+  },
+  'home.subtitle': {
+    en: 'Preview piercings, browse the reference guide, or find your match.',
+    zh: 'Preview piercings, browse the reference guide, or find your match.',
+    hi: 'Preview piercings, browse the reference guide, or find your match.',
+    es: 'Preview piercings, browse the reference guide, or find your match.',
+    fr: 'Preview piercings, browse the reference guide, or find your match.',
+    ar: 'Preview piercings, browse the reference guide, or find your match.',
+    bn: 'Preview piercings, browse the reference guide, or find your match.',
+    pt: 'Preview piercings, browse the reference guide, or find your match.',
+    ru: 'Preview piercings, browse the reference guide, or find your match.',
+    ur: 'Preview piercings, browse the reference guide, or find your match.',
+  },
+  'home.tryOn.title': {
+    en: 'Try On a Piercing', zh: '试戴穿孔饰品', hi: 'पियर्सिंग ट्राई करें', es: 'Prueba un piercing',
+    fr: 'Essayer un piercing', ar: 'جرب ثقبًا', bn: 'একটি পিয়ার্সিং ট্রাই করুন', pt: 'Experimente um piercing',
+    ru: 'Примерить пирсинг', ur: 'ایک پیئرسنگ آزمائیں',
+  },
+  'home.tryOn.subtitle': {
+    en: 'Pick a spot, capture a photo, and preview jewelry on it.',
+    zh: 'Pick a spot, capture a photo, and preview jewelry on it.',
+    hi: 'Pick a spot, capture a photo, and preview jewelry on it.',
+    es: 'Pick a spot, capture a photo, and preview jewelry on it.',
+    fr: 'Pick a spot, capture a photo, and preview jewelry on it.',
+    ar: 'Pick a spot, capture a photo, and preview jewelry on it.',
+    bn: 'Pick a spot, capture a photo, and preview jewelry on it.',
+    pt: 'Pick a spot, capture a photo, and preview jewelry on it.',
+    ru: 'Pick a spot, capture a photo, and preview jewelry on it.',
+    ur: 'Pick a spot, capture a photo, and preview jewelry on it.',
+  },
+  'home.reference.title': {
+    en: 'Piercing Reference', zh: '穿孔参考', hi: 'पियर्सिंग रेफरेंस', es: 'Referencia de piercings',
+    fr: 'Référence des piercings', ar: 'مرجع الثقوب', bn: 'পিয়ার্সিং রেফারেন্স', pt: 'Referência de piercings',
+    ru: 'Справочник по пирсингу', ur: 'پیئرسنگ ریفرنس',
+  },
+  'home.reference.subtitle': {
+    en: 'Browse locations, pain ratings, and terminology.',
+    zh: 'Browse locations, pain ratings, and terminology.',
+    hi: 'Browse locations, pain ratings, and terminology.',
+    es: 'Browse locations, pain ratings, and terminology.',
+    fr: 'Browse locations, pain ratings, and terminology.',
+    ar: 'Browse locations, pain ratings, and terminology.',
+    bn: 'Browse locations, pain ratings, and terminology.',
+    pt: 'Browse locations, pain ratings, and terminology.',
+    ru: 'Browse locations, pain ratings, and terminology.',
+    ur: 'Browse locations, pain ratings, and terminology.',
+  },
+  'home.match.title': {
+    en: 'Personality Match', zh: '性格匹配', hi: 'पर्सनैलिटी मैच', es: 'Coincidencia de personalidad',
+    fr: 'Correspondance de personnalité', ar: 'مطابقة الشخصية', bn: 'পার্সোনালিটি ম্যাচ',
+    pt: 'Compatibilidade de personalidade', ru: 'Подбор по личности', ur: 'پرسنیلٹی میچ',
+  },
+  'home.match.subtitle': {
+    en: 'Take the quiz or use a photo to find piercings that fit you.',
+    zh: 'Take the quiz or use a photo to find piercings that fit you.',
+    hi: 'Take the quiz or use a photo to find piercings that fit you.',
+    es: 'Take the quiz or use a photo to find piercings that fit you.',
+    fr: 'Take the quiz or use a photo to find piercings that fit you.',
+    ar: 'Take the quiz or use a photo to find piercings that fit you.',
+    bn: 'Take the quiz or use a photo to find piercings that fit you.',
+    pt: 'Take the quiz or use a photo to find piercings that fit you.',
+    ru: 'Take the quiz or use a photo to find piercings that fit you.',
+    ur: 'Take the quiz or use a photo to find piercings that fit you.',
   },
   'location.title': {
     en: 'Choose a Piercing', zh: '选择穿孔位置', hi: 'पियर्सिंग चुनें', es: 'Elige un piercing',

@@ -43,10 +43,10 @@ describe('StudioScreen', () => {
     expect(screen.getByTestId('piercing-studio-drawer')).toBeTruthy();
   });
 
-  it('lets the user close out — falls back to Welcome since capture is a non-returnable screen', () => {
+  it('lets the user close out — falls back to Home since capture is a non-returnable screen', () => {
     render(<StudioScreen />);
     fireEvent.press(screen.getByTestId('studio-close-button'));
-    expect(useAppStore.getState().screen).toBe('welcome');
+    expect(useAppStore.getState().screen).toBe('home');
   });
 
   it('disables the continue button when there is no captured photo', () => {

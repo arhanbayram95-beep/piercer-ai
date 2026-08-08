@@ -8,14 +8,14 @@ describe('BottomNavBar', () => {
     useAppStore.setState({ screen: 'settings' });
   });
 
-  it('navigates to capture when Capture is pressed', () => {
+  it('navigates to home when Home is pressed', () => {
     render(<BottomNavBar active="settings" />);
-    fireEvent.press(screen.getByLabelText('Capture'));
-    expect(useAppStore.getState().screen).toBe('capture');
+    fireEvent.press(screen.getByLabelText('Home'));
+    expect(useAppStore.getState().screen).toBe('home');
   });
 
   it('navigates to settings when Settings is pressed', () => {
-    render(<BottomNavBar active="capture" />);
+    render(<BottomNavBar active="home" />);
     fireEvent.press(screen.getByLabelText('Settings'));
     expect(useAppStore.getState().screen).toBe('settings');
   });
@@ -23,6 +23,6 @@ describe('BottomNavBar', () => {
   it('marks the given tab as selected and leaves the rest unselected', () => {
     render(<BottomNavBar active="settings" />);
     expect(screen.getByLabelText('Settings').props.accessibilityState.selected).toBe(true);
-    expect(screen.getByLabelText('Capture').props.accessibilityState.selected).toBe(false);
+    expect(screen.getByLabelText('Home').props.accessibilityState.selected).toBe(false);
   });
 });

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
 import CaptureScreen from '../screens/CaptureScreen';
+import HomeHubScreen from '../screens/HomeHubScreen';
 import LoadingScreen from '../screens/LoadingScreen';
 import MatchHubScreen from '../screens/MatchHubScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
@@ -21,6 +22,7 @@ const SCREENS: Record<AppScreen, React.ComponentType> = {
   onboarding: OnboardingScreen,
   paywall: PaywallScreen,
   welcome: WelcomeScreen,
+  home: HomeHubScreen,
   location: PiercingLocationScreen,
   capture: CaptureScreen,
   studio: StudioScreen,

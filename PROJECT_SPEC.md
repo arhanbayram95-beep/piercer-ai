@@ -479,6 +479,43 @@ so the visible copy can never imply an unbuildable pairing.
 archetype's every listed location/jewelryType pair is valid against
 `locationJewelryTypes.ts`.
 
+**Home hub (added 2026-08-08):** product decision — picking a piercing
+location shouldn't be forced immediately after onboarding. New
+`HomeHubScreen.tsx` is now the app's actual persistent home base
+(`'home'` in `AppScreen`), offering three entry points: Try On a Piercing
+(`goToScreen('location')`, kicking off the existing location → capture →
+studio → preview flow), Piercing Reference (`goToScreen('reference')`), and
+Personality/Body-Type Match (`goToScreen('match')`) — no new leaf screens
+needed, just a new entry point linking to the three that already existed.
+`WelcomeScreen`'s CTA and both of `PaywallScreen`'s post-subscribe/dismiss
+routes now land on `'home'` instead of `'welcome'`/`'location'`.
+`navigationSlice.ts`'s `DEFAULT_SCREEN` (what `goBack()` falls back to with
+nothing recorded to return to) changed from `'welcome'` to `'home'` to
+match — `'welcome'` is now meant to be seen only once per session, not
+revisited. `PreviewScreen`'s "Done" button, which previously hardcoded
+`goToScreen('welcome')`, was updated to `'home'` too for the same reason
+(pre-existing inconsistency, not something this task introduced, but it
+would have been a broken "return to the intro screen" regression if left
+as-is).
+
+`BottomNavBar`'s two tabs were Capture/Settings; Capture doesn't make sense
+as a standalone persistent nav target anymore (capture now requires a
+location first), so it's now Home/Settings — `HomeHubScreen` renders it
+(the settings entry point discovered while auditing this: `BottomNavBar`
+was previously only ever rendered *inside* `SettingsScreen` itself, meaning
+Settings had no real entry point before this change beyond that internal
+loop; it's now reachable from `HomeHubScreen`, `SettingsScreen`'s original
+self-referential tab, or anywhere else `BottomNavBar` gets added later).
+
+**Flagged, not built:** there's no persisted "onboarding already completed"
+state (no `AsyncStorage`/persist middleware anywhere in the store) — every
+cold app start replays the full Loading → Onboarding → Paywall → Welcome
+sequence before reaching Home, even for a returning user. Persisting that
+across restarts is a separate, larger feature (needs a storage layer, a
+migration story for the existing in-memory-only Zustand store, and a
+product decision on what "returning user" should skip) — out of scope
+here per explicit instruction not to build it speculatively.
+
 ## 5. Naming Notes
 
 **Decision (2026-07-24):** the public-facing name is **"Face Reader - AI

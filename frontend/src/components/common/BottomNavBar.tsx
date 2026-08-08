@@ -6,7 +6,7 @@ import { useAppStore } from '../../state/useAppStore';
 import { Theme } from '../../ui/theme';
 
 const NAV_ITEMS = [
-  { key: 'capture', labelKey: 'nav.capture', glyph: '◉' },
+  { key: 'home', labelKey: 'nav.home', glyph: '⌂' },
   { key: 'settings', labelKey: 'nav.settings', glyph: '⚙' },
 ] as const;
 
@@ -26,7 +26,7 @@ export default function BottomNavBar({ active }: BottomNavBarProps) {
   const insets = useSafeAreaInsets();
 
   const handlePress = (key: NavKey) => {
-    if (key === 'capture') goToScreen('capture');
+    if (key === 'home') goToScreen('home');
     if (key === 'settings') goToScreen('settings');
   };
 

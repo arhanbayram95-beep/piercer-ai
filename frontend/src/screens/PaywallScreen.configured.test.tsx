@@ -91,7 +91,7 @@ describe('PaywallScreen with RevenueCat configured', () => {
 
     await waitFor(() => expect(useAppStore.getState().isProActive).toBe(true));
     expect(mockPurchasePackage).toHaveBeenCalledWith(MONTHLY_PACKAGE);
-    expect(useAppStore.getState().screen).toBe('welcome');
+    expect(useAppStore.getState().screen).toBe('home');
   });
 
   it('defaults to the weekly package when no plan is tapped', async () => {

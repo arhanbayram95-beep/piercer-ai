@@ -101,7 +101,12 @@ describe('CaptureScreen', () => {
 
     fireEvent.press(screen.getByTestId('capture-cancel-button'));
 
-    expect(useAppStore.getState().screen).toBe('welcome');
+    // Not 'welcome' here: the shutter press just above already navigated to
+    // 'studio' (a returnable screen) which made 'capture' the recorded
+    // previousScreen — a non-returnable screen — so goBack() falls through
+    // to DEFAULT_SCREEN ('home'), same fallback path as the denied-
+    // permission test above, just exercised via a different route to it.
+    expect(useAppStore.getState().screen).toBe('home');
     expect(useAppStore.getState().images).toEqual([]);
   });
 

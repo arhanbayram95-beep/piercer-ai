@@ -31,9 +31,9 @@ describe('useAppStore', () => {
     expect(useAppStore.getState().screen).toBe('settings');
   });
 
-  it('goBack falls back to the Welcome home base when there is nothing recorded to return to', () => {
+  it('goBack falls back to the Home hub when there is nothing recorded to return to', () => {
     useAppStore.getState().goBack();
-    expect(useAppStore.getState().screen).toBe('welcome');
+    expect(useAppStore.getState().screen).toBe('home');
   });
 
   it('tracks age verification and image consent independently', () => {

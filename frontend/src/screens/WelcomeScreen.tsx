@@ -7,9 +7,12 @@ import { useTranslation } from '../i18n/useTranslation';
 import { useAppStore } from '../state/useAppStore';
 import { Theme } from '../ui/theme';
 
-// The dedicated first-time landing moment after the paywall, before
-// handing off to the capture flow (the app's actual home base — there is
-// no separate main-menu/dashboard screen).
+// The dedicated first-time landing moment after the paywall, before handing
+// off to HomeHubScreen — the app's actual persistent home base (see
+// navigationSlice.ts's DEFAULT_SCREEN comment). Meant to be seen once per
+// session; there's no persisted "already onboarded" state yet, so a cold
+// restart replays the full Loading -> Onboarding -> Paywall -> Welcome
+// sequence rather than skipping straight to Home.
 export default function WelcomeScreen() {
   const goToScreen = useAppStore((s) => s.goToScreen);
   const t = useTranslation();
@@ -35,7 +38,7 @@ export default function WelcomeScreen() {
       </FadeInView>
 
       <View style={styles.footer}>
-        <PrimaryButton label={t('welcome.cta')} onPress={() => goToScreen('location')} />
+        <PrimaryButton label={t('welcome.cta')} onPress={() => goToScreen('home')} />
       </View>
     </View>
   );

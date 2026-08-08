@@ -58,10 +58,10 @@ describe('PreviewScreen', () => {
     expect(Share.share).toHaveBeenCalledWith({ url: 'file:///tmp/preview.png' });
   });
 
-  it('clears the session and returns to Welcome on Done', () => {
+  it('clears the session and returns to Home on Done', () => {
     render(<PreviewScreen />);
     fireEvent.press(screen.getByTestId('preview-done-button'));
-    expect(useAppStore.getState().screen).toBe('welcome');
+    expect(useAppStore.getState().screen).toBe('home');
     expect(useAppStore.getState().images).toEqual([]);
     expect(useAppStore.getState().renderResult).toBeNull();
   });
@@ -71,6 +71,6 @@ describe('PreviewScreen', () => {
     render(<PreviewScreen />);
     expect(screen.getByTestId('preview-screen')).toBeTruthy();
     fireEvent.press(screen.getByTestId('preview-done-button'));
-    expect(useAppStore.getState().screen).toBe('welcome');
+    expect(useAppStore.getState().screen).toBe('home');
   });
 });

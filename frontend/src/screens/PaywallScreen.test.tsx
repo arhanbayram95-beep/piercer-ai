@@ -57,7 +57,7 @@ describe('PaywallScreen', () => {
 
     fireEvent.press(screen.getByText('Subscribe Now'));
     expect(useAppStore.getState().isProActive).toBe(true);
-    expect(useAppStore.getState().screen).toBe('welcome');
+    expect(useAppStore.getState().screen).toBe('home');
   });
 
   it('does not offer a free trial option', () => {
