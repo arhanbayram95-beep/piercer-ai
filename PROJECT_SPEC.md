@@ -239,6 +239,24 @@ context objects, which resolves back through the same `moduleNameMapper`
 entry instead of the real package, so it was simpler to mock the whole
 package with a fixed zero-inset object than fight that self-reference.
 
+**New dependency (2026-08-08, ear illustration accuracy):** `react-native-svg`
+(`15.15.4`, installed via `npx expo install`) — used specifically by
+`PiercingDiagram`'s `ear` category illustration
+(`frontend/src/components/common/PiercingDiagram.tsx`), for the Piercing
+Reference page. The first two passes drew every diagram (ear/face/body)
+with plain styled `View`s (border/borderRadius/rotation tricks); that held
+up for face and body, but real ear anatomy — the antihelix's Y-shaped fork
+into two crura, the helix's compound outer curve, the concha bowl — needs
+actual bezier paths, which border tricks can't produce convincingly. Face
+and body remain View-based; only `ear` uses `Svg`/`Path`. This IS a new
+native dependency (unlike the process-and-discard/thin-gateway pieces of
+the stack, it needs an EAS rebuild before it works on a real device; Expo
+web preview is unaffected) — confirmed with the user before adding, given
+this app already juggles several native modules. No Jest mock was needed;
+`jest.config.js`'s `transformIgnorePatterns` already allowed
+`react-native-svg` through, and it renders in the test environment without
+further setup.
+
 ---
 
 ## 4. AI Integration Notes (current: Google Gemini)

@@ -1,20 +1,24 @@
 import React from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
 import { PiercingCategory, PiercingLocationId } from '../../content/piercingLocations';
 import { Theme } from '../../ui/theme';
 
 // Vector-style line-art diagrams for the Piercing Reference page (see
-// PiercingReferenceScreen.tsx). Still no react-native-svg and no photos —
-// every shape is a plain styled View (border/borderRadius/rotation tricks,
-// the same technique as CaptureScreen's `guideRing`), just composed with
-// more layers than the first pass: a soft backdrop glow, a two-ring/lobe
-// ear silhouette, a face with eyebrow/eye/nose/lip detail, and a torso with
-// a shoulder-to-hip taper, so each shape reads as its body part rather than
-// two circles or a rounded rectangle. This is genuinely still code-drawn,
-// NOT an image file — see frontend/assets/piercing-diagrams/ (currently
-// empty) for where real exported artwork would go if/when it's produced;
-// that path needs either a new dependency or externally-sourced art, both
-// out of scope for a runtime-only pass.
+// PiercingReferenceScreen.tsx). Still no photos and no image files — see
+// frontend/assets/piercing-diagrams/ (currently empty) for where real
+// exported artwork would go if that's ever produced. Face and body are
+// still plain styled Views (border/borderRadius/rotation tricks, the same
+// technique as CaptureScreen's `guideRing`). The `ear` category is the one
+// exception: real ear anatomy (the antihelix's Y-shaped fork, the helix's
+// compound curvature) can't be faked convincingly with border tricks —
+// borders/rotation hit their ceiling there, per direct user feedback on
+// the first two passes — so `ear` is drawn with `react-native-svg`
+// (bezier `Path`s in a 0-100 viewBox) instead. That viewBox range is
+// deliberately the same 0-100 scale as MarkerPoint's percentages below, so
+// a path coordinate and a marker coordinate mean the same position on the
+// canvas — see PROJECT_SPEC.md's dependency list for why the package was
+// added (2026-08-08, "ear illustration accuracy").
 //
 // Each category shares one base silhouette; the marker (a halo + solid
 // dot, or a halo + square for dermal anchors) moves per location via
@@ -36,28 +40,28 @@ interface LocationVisual {
 }
 
 const LOCATION_VISUALS: Record<PiercingLocationId, LocationVisual> = {
-  lobe: { category: 'ear', marker: { left: 44, top: 81 } },
-  upperLobe: { category: 'ear', marker: { left: 33, top: 69 } },
-  helix: { category: 'ear', marker: { left: 63, top: 12 } },
-  forwardHelix: { category: 'ear', marker: { left: 24, top: 20 } },
-  tragus: { category: 'ear', marker: { left: 20, top: 52 } },
-  antiTragus: { category: 'ear', marker: { left: 24, top: 68 } },
-  rook: { category: 'ear', marker: { left: 54, top: 24 } },
-  daith: { category: 'ear', marker: { left: 40, top: 46 } },
-  conch: { category: 'ear', marker: { left: 50, top: 46 } },
-  snug: { category: 'ear', marker: { left: 66, top: 52 } },
+  lobe: { category: 'ear', marker: { left: 45, top: 85 } },
+  upperLobe: { category: 'ear', marker: { left: 33, top: 74 } },
+  helix: { category: 'ear', marker: { left: 85, top: 20 } },
+  forwardHelix: { category: 'ear', marker: { left: 30, top: 16 } },
+  tragus: { category: 'ear', marker: { left: 19, top: 52 } },
+  antiTragus: { category: 'ear', marker: { left: 25, top: 70 } },
+  rook: { category: 'ear', marker: { left: 63, top: 25 } },
+  daith: { category: 'ear', marker: { left: 41, top: 45 } },
+  conch: { category: 'ear', marker: { left: 46, top: 50 } },
+  snug: { category: 'ear', marker: { left: 35, top: 60 } },
   industrial: {
     category: 'ear',
-    marker: { left: 28, top: 18 },
-    secondaryMarker: { left: 66, top: 16 },
+    marker: { left: 38, top: 14 },
+    secondaryMarker: { left: 82, top: 12 },
   },
   orbital: {
     category: 'ear',
-    marker: { left: 54, top: 28 },
-    secondaryMarker: { left: 44, top: 78 },
+    marker: { left: 58, top: 25 },
+    secondaryMarker: { left: 46, top: 88 },
   },
-  flat: { category: 'ear', marker: { left: 46, top: 24 } },
-  auricle: { category: 'ear', marker: { left: 58, top: 14 } },
+  flat: { category: 'ear', marker: { left: 62, top: 8 } },
+  auricle: { category: 'ear', marker: { left: 50, top: 40 } },
   eyebrow: { category: 'face', marker: { left: 30, top: 24 } },
   bridge: { category: 'face', marker: { left: 50, top: 33 } },
   nostril: { category: 'face', marker: { left: 41, top: 54 } },
@@ -125,122 +129,79 @@ export default function PiercingDiagram({ locationId, size = 96, style, testID }
 
 function renderBaseShape(category: PiercingCategory, size: number) {
   if (category === 'ear') {
-    // Real-ear proportions, not a ring: the helix is an open "C" (the ear
-    // has no cartilage where it roots onto the head, at front-left here),
-    // the antihelix is a smaller, differently-angled open "C" nested inside
-    // it (the Y-shaped ridge that shelters the concha bowl), the tragus is
-    // a small forward-pointing flap guarding the canal, and the lobe is
-    // soft tissue that tapers narrow-at-top/round-at-bottom, not an oval
-    // blob. The open-ring look comes from a circular View with one side's
-    // border removed (borderLeftWidth: 0) then rotated so the gap lands at
-    // the ear's actual root instead of literally due-west.
-    const outerHelixSize = size * 0.72;
-    const antihelixSize = size * 0.4;
+    // Real ear anatomy, traced as bezier paths in a 0-100 viewBox (same
+    // scale as LOCATION_VISUALS' marker percentages, so a path coordinate
+    // and a marker coordinate are directly comparable):
+    //  - HELIX_PATH: the outer rim's compound curve, open (not a closed
+    //    ring) from where it roots at the temple, up over the top, down
+    //    the back, into the upper lobe — an ear has no cartilage at the
+    //    root, so a closed loop never reads as an ear.
+    //  - ANTIHELIX_PATH: three subpaths sharing one join point — the
+    //    superior and inferior crura forking up from (51,34), and the
+    //    single ridge they merge into, curving down around the concha to
+    //    the antitragus. This Y-fork is the anatomical detail borders
+    //    couldn't produce.
+    //  - CONCHA_PATH: the shadowed bowl the antihelix cradles.
+    //  - TRAGUS_PATH / ANTITRAGUS_PATH: the two small flaps guarding the
+    //    canal from front and back.
+    //  - LOBE_PATH: soft tissue, filled (unlike the stroked cartilage
+    //    paths above it) since it has no cartilage ridge of its own.
     return (
-      <>
-        {/* Outer helix rim — open toward the head at front-left */}
-        <View
-          style={[
-            styles.earOuterRing,
-            {
-              width: outerHelixSize,
-              height: outerHelixSize,
-              borderRadius: outerHelixSize / 2,
-              left: size * 0.15,
-              top: size * 0.06,
-              transform: [{ rotate: '-18deg' }],
-            },
-          ]}
+      <Svg width={size} height={size} viewBox="0 0 100 100" style={styles.earSvg}>
+        <Path
+          d="M33,23 C28,12 48,4 64,6 C81,8 94,23 95,41 C96,59 89,76 76,86 C67,92 56,93 47,90"
+          stroke={Theme.colors.accent.chromeSteel}
+          strokeWidth={2.6}
+          strokeLinecap="round"
+          fill="none"
+          opacity={0.9}
         />
-        {/* Chrome highlight catching the upper-outer curve */}
-        <View
-          style={[
-            styles.earHighlight,
-            {
-              width: outerHelixSize * 0.62,
-              height: outerHelixSize * 0.62,
-              borderRadius: (outerHelixSize * 0.62) / 2,
-              left: size * 0.22,
-              top: size * 0.09,
-              transform: [{ rotate: '-38deg' }],
-            },
-          ]}
+        <Path
+          d="M40,11 C50,6 61,5 71,9"
+          stroke={Theme.colors.text.primary}
+          strokeWidth={1.4}
+          strokeLinecap="round"
+          fill="none"
+          opacity={0.3}
         />
-        {/* Concha bowl shadow, cradled by the antihelix */}
-        <View
-          style={[
-            styles.earConcha,
-            {
-              width: size * 0.22,
-              height: size * 0.22,
-              borderRadius: size * 0.11,
-              left: size * 0.38,
-              top: size * 0.38,
-            },
-          ]}
+        <Path
+          d="M35,41 C31,50 33,61 44,66 C55,71 65,63 65,52 C65,41 56,33 46,33 C39,33 37,37 35,41 Z"
+          fill={Theme.colors.accent.chromeSteel}
+          opacity={0.1}
         />
-        {/* Antihelix — a smaller open "C" nested inside, angled apart from
-            the outer rim so the gap between them reads as the ear canal */}
-        <View
-          style={[
-            styles.earInnerRing,
-            {
-              width: antihelixSize,
-              height: antihelixSize,
-              borderRadius: antihelixSize / 2,
-              left: size * 0.32,
-              top: size * 0.22,
-              transform: [{ rotate: '-32deg' }],
-            },
-          ]}
+        <Path
+          d="M65,23 C59,25 54,28 51,34 M40,45 C44,41 47,37 51,34 M51,34 C45,43 40,54 38,62 C36,69 32,71 27,70"
+          stroke={Theme.colors.accent.chromeSteel}
+          strokeWidth={1.9}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+          opacity={0.75}
         />
-        {/* Tragus, guarding the canal from the front */}
-        <View
-          style={[
-            styles.earTragus,
-            {
-              width: size * 0.16,
-              height: size * 0.19,
-              left: size * 0.12,
-              top: size * 0.44,
-              borderTopLeftRadius: size * 0.09,
-              borderBottomLeftRadius: size * 0.09,
-              borderTopRightRadius: size * 0.03,
-              borderBottomRightRadius: size * 0.03,
-              transform: [{ rotate: '12deg' }],
-            },
-          ]}
+        <Path
+          d="M13,47 C19,43 27,45 29,51 C30,56 25,60 18,59 C12,58 9,52 13,47 Z"
+          stroke={Theme.colors.accent.chromeSteel}
+          strokeWidth={1.6}
+          fill={Theme.colors.accent.chromeSteel}
+          fillOpacity={0.14}
+          opacity={0.7}
         />
-        {/* Antitragus, the small bump opposite the tragus, just above the lobe */}
-        <View
-          style={[
-            styles.earAntiTragus,
-            {
-              width: size * 0.12,
-              height: size * 0.12,
-              borderRadius: size * 0.06,
-              left: size * 0.17,
-              top: size * 0.62,
-            },
-          ]}
+        <Path
+          d="M21,65 C26,62 32,65 32,70 C32,75 26,77 21,74 C18,71 18,67 21,65 Z"
+          stroke={Theme.colors.accent.chromeSteel}
+          strokeWidth={1.4}
+          fill="none"
+          opacity={0.55}
         />
-        {/* Lobe — narrow where it meets the antitragus, rounding out below */}
-        <View
-          style={[
-            styles.earLobe,
-            {
-              width: size * 0.38,
-              height: size * 0.3,
-              left: size * 0.25,
-              top: size * 0.63,
-              borderTopLeftRadius: size * 0.08,
-              borderTopRightRadius: size * 0.14,
-              borderBottomLeftRadius: size * 0.19,
-              borderBottomRightRadius: size * 0.19,
-            },
-          ]}
+        <Path
+          d="M33,71 C27,74 23,80 24,87 C25,94 35,98 47,97 C59,96 65,90 63,82 C61,75 51,71 41,70 C38,70 35,70 33,71 Z"
+          stroke={Theme.colors.accent.chromeSteel}
+          strokeWidth={1.9}
+          fill={Theme.colors.accent.chromeSteel}
+          fillOpacity={0.1}
+          opacity={0.8}
         />
-      </>
+      </Svg>
     );
   }
 
@@ -379,51 +340,10 @@ const styles = StyleSheet.create({
     backgroundColor: Theme.colors.accent.electricPurple,
     opacity: 0.05,
   },
-  earOuterRing: {
+  earSvg: {
     position: 'absolute',
-    borderWidth: 2.25,
-    borderLeftWidth: 0,
-    borderColor: Theme.colors.accent.chromeSteel,
-  },
-  earHighlight: {
-    position: 'absolute',
-    borderWidth: 1.5,
-    borderRightWidth: 0,
-    borderBottomWidth: 0,
-    borderLeftWidth: 0,
-    borderColor: Theme.colors.text.primary,
-    opacity: 0.3,
-  },
-  earConcha: {
-    position: 'absolute',
-    backgroundColor: Theme.colors.accent.chromeSteel,
-    opacity: 0.08,
-  },
-  earInnerRing: {
-    position: 'absolute',
-    borderWidth: 1.5,
-    borderLeftWidth: 0,
-    borderColor: Theme.colors.accent.chromeSteel,
-    opacity: 0.65,
-  },
-  earTragus: {
-    position: 'absolute',
-    borderWidth: 1.5,
-    borderRightWidth: 0,
-    borderColor: Theme.colors.accent.chromeSteel,
-    opacity: 0.6,
-  },
-  earAntiTragus: {
-    position: 'absolute',
-    borderWidth: 1.5,
-    borderColor: Theme.colors.accent.chromeSteel,
-    opacity: 0.5,
-  },
-  earLobe: {
-    position: 'absolute',
-    borderWidth: 1.75,
-    borderColor: Theme.colors.accent.chromeSteel,
-    opacity: 0.65,
+    top: 0,
+    left: 0,
   },
   faceOutline: {
     position: 'absolute',
