@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import BottomNavBar from '../components/common/BottomNavBar';
 import GlassCard from '../components/common/GlassCard';
-import PiercingDiagram from '../components/common/PiercingDiagram';
+import PiercingVisual from '../components/common/PiercingVisual';
 import {
   PIERCING_CATEGORIES,
   PIERCING_CATEGORY_LABEL_KEYS,
@@ -90,7 +90,7 @@ function LocationReferenceCard({ location }: { location: PiercingLocation }) {
     >
       <GlassCard style={styles.locationCard}>
         <View style={styles.locationRow}>
-          <PiercingDiagram
+          <PiercingVisual
             locationId={location.id}
             size={64}
             style={styles.locationDiagram}

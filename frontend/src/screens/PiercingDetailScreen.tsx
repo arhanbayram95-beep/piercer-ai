@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import BottomNavBar from '../components/common/BottomNavBar';
 import GlassCard from '../components/common/GlassCard';
-import PiercingDiagram from '../components/common/PiercingDiagram';
+import PiercingVisual from '../components/common/PiercingVisual';
 import { PIERCING_LOCATIONS } from '../content/piercingLocations';
 import { useTranslation } from '../i18n/useTranslation';
 import { useAppStore } from '../state/useAppStore';
@@ -46,7 +46,7 @@ export default function PiercingDetailScreen() {
       {location ? (
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           <GlassCard style={styles.card}>
-            <PiercingDiagram
+            <PiercingVisual
               locationId={location.id}
               size={140}
               style={styles.diagram}
