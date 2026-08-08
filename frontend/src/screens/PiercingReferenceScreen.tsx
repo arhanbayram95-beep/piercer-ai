@@ -62,7 +62,17 @@ export default function PiercingReferenceScreen() {
                       <Text style={styles.painBadge}>{t('reference.painLabel', { rating: location.painRating })}</Text>
                     </View>
                     <Text style={styles.locationDescription}>{t(location.descriptionKey)}</Text>
+                    <Text style={styles.healingLabel} testID={`reference-healing-${location.id}`}>
+                      {t('reference.healingLabel', { time: t(location.healingTimeKey) })}
+                    </Text>
                   </View>
+                </View>
+
+                <View style={styles.aftercareBlock}>
+                  <Text style={styles.aftercareHeading}>{t('reference.aftercareHeading')}</Text>
+                  <Text style={styles.aftercareText} testID={`reference-aftercare-${location.id}`}>
+                    {t(location.aftercareKey)}
+                  </Text>
                 </View>
               </GlassCard>
             ))}
@@ -168,6 +178,31 @@ const styles = StyleSheet.create({
   locationDescription: {
     ...Theme.typography.bodyMd,
     fontSize: 13,
+    color: Theme.colors.text.secondary,
+  },
+  healingLabel: {
+    ...Theme.typography.labelSm,
+    fontSize: 11,
+    color: Theme.colors.accent.chromeSteel,
+    marginTop: 2,
+  },
+  aftercareBlock: {
+    marginTop: Theme.spacing.xs,
+    paddingTop: Theme.spacing.xs,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: Theme.colors.surface.glassBorder,
+    gap: 2,
+  },
+  aftercareHeading: {
+    ...Theme.typography.labelSm,
+    fontSize: 10,
+    color: Theme.colors.text.muted,
+    textTransform: 'uppercase',
+  },
+  aftercareText: {
+    ...Theme.typography.bodyMd,
+    fontSize: 12,
+    lineHeight: 17,
     color: Theme.colors.text.secondary,
   },
 });

@@ -50,25 +50,51 @@ export interface PiercingLocation {
   // module comment above.
   painRating: number;
   descriptionKey: TranslationKey;
+  // Same "general estimate, not medical advice" framing extends to these
+  // two — a healing-time range and one aftercare tip, both generic
+  // industry-standard guidance, never personalized. See
+  // PiercingReferenceScreen's visible disclaimer copy.
+  healingTimeKey: TranslationKey;
+  aftercareKey: TranslationKey;
 }
 
 export const PIERCING_LOCATIONS: PiercingLocation[] = [
   // Ear
-  { id: 'lobe', category: 'ear', labelKey: 'location.lobe', painRating: 2, descriptionKey: 'location.desc.lobe' },
+  {
+    id: 'lobe',
+    category: 'ear',
+    labelKey: 'location.lobe',
+    painRating: 2,
+    descriptionKey: 'location.desc.lobe',
+    healingTimeKey: 'location.healing.lobe',
+    aftercareKey: 'location.aftercare.lobe',
+  },
   {
     id: 'upperLobe',
     category: 'ear',
     labelKey: 'location.upperLobe',
     painRating: 3,
     descriptionKey: 'location.desc.upperLobe',
+    healingTimeKey: 'location.healing.upperLobe',
+    aftercareKey: 'location.aftercare.upperLobe',
   },
-  { id: 'helix', category: 'ear', labelKey: 'location.helix', painRating: 5, descriptionKey: 'location.desc.helix' },
+  {
+    id: 'helix',
+    category: 'ear',
+    labelKey: 'location.helix',
+    painRating: 5,
+    descriptionKey: 'location.desc.helix',
+    healingTimeKey: 'location.healing.helix',
+    aftercareKey: 'location.aftercare.helix',
+  },
   {
     id: 'forwardHelix',
     category: 'ear',
     labelKey: 'location.forwardHelix',
     painRating: 5,
     descriptionKey: 'location.desc.forwardHelix',
+    healingTimeKey: 'location.healing.forwardHelix',
+    aftercareKey: 'location.aftercare.forwardHelix',
   },
   {
     id: 'tragus',
@@ -76,6 +102,8 @@ export const PIERCING_LOCATIONS: PiercingLocation[] = [
     labelKey: 'location.tragus',
     painRating: 5,
     descriptionKey: 'location.desc.tragus',
+    healingTimeKey: 'location.healing.tragus',
+    aftercareKey: 'location.aftercare.tragus',
   },
   {
     id: 'antiTragus',
@@ -83,17 +111,53 @@ export const PIERCING_LOCATIONS: PiercingLocation[] = [
     labelKey: 'location.antiTragus',
     painRating: 6,
     descriptionKey: 'location.desc.antiTragus',
+    healingTimeKey: 'location.healing.antiTragus',
+    aftercareKey: 'location.aftercare.antiTragus',
   },
-  { id: 'rook', category: 'ear', labelKey: 'location.rook', painRating: 6, descriptionKey: 'location.desc.rook' },
-  { id: 'daith', category: 'ear', labelKey: 'location.daith', painRating: 6, descriptionKey: 'location.desc.daith' },
-  { id: 'conch', category: 'ear', labelKey: 'location.conch', painRating: 5, descriptionKey: 'location.desc.conch' },
-  { id: 'snug', category: 'ear', labelKey: 'location.snug', painRating: 7, descriptionKey: 'location.desc.snug' },
+  {
+    id: 'rook',
+    category: 'ear',
+    labelKey: 'location.rook',
+    painRating: 6,
+    descriptionKey: 'location.desc.rook',
+    healingTimeKey: 'location.healing.rook',
+    aftercareKey: 'location.aftercare.rook',
+  },
+  {
+    id: 'daith',
+    category: 'ear',
+    labelKey: 'location.daith',
+    painRating: 6,
+    descriptionKey: 'location.desc.daith',
+    healingTimeKey: 'location.healing.daith',
+    aftercareKey: 'location.aftercare.daith',
+  },
+  {
+    id: 'conch',
+    category: 'ear',
+    labelKey: 'location.conch',
+    painRating: 5,
+    descriptionKey: 'location.desc.conch',
+    healingTimeKey: 'location.healing.conch',
+    aftercareKey: 'location.aftercare.conch',
+  },
+  {
+    id: 'snug',
+    category: 'ear',
+    labelKey: 'location.snug',
+    painRating: 7,
+    descriptionKey: 'location.desc.snug',
+    healingTimeKey: 'location.healing.snug',
+    aftercareKey: 'location.aftercare.snug',
+  },
   {
     id: 'industrial',
     category: 'ear',
     labelKey: 'location.industrial',
     painRating: 6,
     descriptionKey: 'location.desc.industrial',
+    healingTimeKey: 'location.healing.industrial',
+    aftercareKey: 'location.aftercare.industrial',
   },
   {
     id: 'orbital',
@@ -101,6 +165,8 @@ export const PIERCING_LOCATIONS: PiercingLocation[] = [
     labelKey: 'location.orbital',
     painRating: 5,
     descriptionKey: 'location.desc.orbital',
+    healingTimeKey: 'location.healing.orbital',
+    aftercareKey: 'location.aftercare.orbital',
   },
   // Face
   {
@@ -109,6 +175,8 @@ export const PIERCING_LOCATIONS: PiercingLocation[] = [
     labelKey: 'location.eyebrow',
     painRating: 4,
     descriptionKey: 'location.desc.eyebrow',
+    healingTimeKey: 'location.healing.eyebrow',
+    aftercareKey: 'location.aftercare.eyebrow',
   },
   {
     id: 'bridge',
@@ -116,6 +184,8 @@ export const PIERCING_LOCATIONS: PiercingLocation[] = [
     labelKey: 'location.bridge',
     painRating: 5,
     descriptionKey: 'location.desc.bridge',
+    healingTimeKey: 'location.healing.bridge',
+    aftercareKey: 'location.aftercare.bridge',
   },
   {
     id: 'nostril',
@@ -123,6 +193,8 @@ export const PIERCING_LOCATIONS: PiercingLocation[] = [
     labelKey: 'location.nostril',
     painRating: 4,
     descriptionKey: 'location.desc.nostril',
+    healingTimeKey: 'location.healing.nostril',
+    aftercareKey: 'location.aftercare.nostril',
   },
   {
     id: 'highNostril',
@@ -130,6 +202,8 @@ export const PIERCING_LOCATIONS: PiercingLocation[] = [
     labelKey: 'location.highNostril',
     painRating: 5,
     descriptionKey: 'location.desc.highNostril',
+    healingTimeKey: 'location.healing.highNostril',
+    aftercareKey: 'location.aftercare.highNostril',
   },
   {
     id: 'septum',
@@ -137,6 +211,8 @@ export const PIERCING_LOCATIONS: PiercingLocation[] = [
     labelKey: 'location.septum',
     painRating: 5,
     descriptionKey: 'location.desc.septum',
+    healingTimeKey: 'location.healing.septum',
+    aftercareKey: 'location.aftercare.septum',
   },
   {
     id: 'philtrumMedusa',
@@ -144,6 +220,8 @@ export const PIERCING_LOCATIONS: PiercingLocation[] = [
     labelKey: 'location.philtrumMedusa',
     painRating: 5,
     descriptionKey: 'location.desc.philtrumMedusa',
+    healingTimeKey: 'location.healing.philtrumMedusa',
+    aftercareKey: 'location.aftercare.philtrumMedusa',
   },
   {
     id: 'labret',
@@ -151,6 +229,8 @@ export const PIERCING_LOCATIONS: PiercingLocation[] = [
     labelKey: 'location.labret',
     painRating: 5,
     descriptionKey: 'location.desc.labret',
+    healingTimeKey: 'location.healing.labret',
+    aftercareKey: 'location.aftercare.labret',
   },
   {
     id: 'monroe',
@@ -158,6 +238,8 @@ export const PIERCING_LOCATIONS: PiercingLocation[] = [
     labelKey: 'location.monroe',
     painRating: 5,
     descriptionKey: 'location.desc.monroe',
+    healingTimeKey: 'location.healing.monroe',
+    aftercareKey: 'location.aftercare.monroe',
   },
   {
     id: 'tongue',
@@ -165,6 +247,8 @@ export const PIERCING_LOCATIONS: PiercingLocation[] = [
     labelKey: 'location.tongue',
     painRating: 5,
     descriptionKey: 'location.desc.tongue',
+    healingTimeKey: 'location.healing.tongue',
+    aftercareKey: 'location.aftercare.tongue',
   },
   {
     id: 'cheekDimple',
@@ -172,15 +256,27 @@ export const PIERCING_LOCATIONS: PiercingLocation[] = [
     labelKey: 'location.cheekDimple',
     painRating: 6,
     descriptionKey: 'location.desc.cheekDimple',
+    healingTimeKey: 'location.healing.cheekDimple',
+    aftercareKey: 'location.aftercare.cheekDimple',
   },
   // Body (non-genital scope only)
-  { id: 'navel', category: 'body', labelKey: 'location.navel', painRating: 4, descriptionKey: 'location.desc.navel' },
+  {
+    id: 'navel',
+    category: 'body',
+    labelKey: 'location.navel',
+    painRating: 4,
+    descriptionKey: 'location.desc.navel',
+    healingTimeKey: 'location.healing.navel',
+    aftercareKey: 'location.aftercare.navel',
+  },
   {
     id: 'nipple',
     category: 'body',
     labelKey: 'location.nipple',
     painRating: 6,
     descriptionKey: 'location.desc.nipple',
+    healingTimeKey: 'location.healing.nipple',
+    aftercareKey: 'location.aftercare.nipple',
   },
   {
     id: 'surface',
@@ -188,6 +284,8 @@ export const PIERCING_LOCATIONS: PiercingLocation[] = [
     labelKey: 'location.surface',
     painRating: 7,
     descriptionKey: 'location.desc.surface',
+    healingTimeKey: 'location.healing.surface',
+    aftercareKey: 'location.aftercare.surface',
   },
   {
     id: 'dermal',
@@ -195,6 +293,8 @@ export const PIERCING_LOCATIONS: PiercingLocation[] = [
     labelKey: 'location.dermal',
     painRating: 6,
     descriptionKey: 'location.desc.dermal',
+    healingTimeKey: 'location.healing.dermal',
+    aftercareKey: 'location.aftercare.dermal',
   },
 ];
 

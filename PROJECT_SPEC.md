@@ -533,6 +533,35 @@ still closes back to Settings specifically. The subscribe/pricing flow
 itself (plans, Subscribe Now, Restore Purchases) is untouched — this is
 purely about making dismissal possible.
 
+**Reference page depth + nav/quiz polish (added 2026-08-08):** user feedback
+called the reference page "too shallow," the quiz "messy," and the app
+generally plain. Three follow-ups:
+- `BottomNavBar` grew from Home/Settings to all 5 destinations (Home, Try
+  On, Reference, Match, Settings) — icon-only with the label shown only on
+  the active tab. `MatchHubScreen`/`PiercingReferenceScreen` now render it
+  too, alongside the existing `HomeHubScreen`/`SettingsScreen` usage;
+  Capture/Studio/Preview and the quiz/photo match sub-screens deliberately
+  do not, since those are linear sub-flows with their own close buttons.
+- `PersonalityQuizScreen` restructured from one long scrollable list of all
+  6 questions to one question per screen, with a dot progress indicator
+  (reusing `OnboardingScreen`'s pattern), a gated Next button, and a Back
+  link. All 6 questions' and 24 options' copy in `personalityQuiz.ts` was
+  rewritten to be more playful — the scoring logic and the
+  `recommendedLocations` location/jewelryType pairing data (from the
+  `009d76e` content-accuracy fix) were left untouched, only display text
+  changed.
+- `piercingLocations.ts`'s `PiercingLocation` gained `healingTimeKey` and
+  `aftercareKey` — a general healing-time range and one generic,
+  industry-standard aftercare tip per location (all 26), same "general
+  estimate, not medical advice" framing as `painRating`, extended
+  explicitly into the visible `reference.disclaimer` copy rather than left
+  implicit. `PiercingReferenceScreen` now also renders a per-location
+  `PiercingDiagram` (Designer's concurrent contribution, landed in
+  `6c0c11f`) — plain-View line-art silhouettes with a marker dot per
+  location, not real photos (no photo assets exist for this) and not a
+  medically precise anatomy map, same illustration-only framing as the
+  diagram component's own header comment states.
+
 ## 5. Naming Notes
 
 **Decision (2026-07-24):** the public-facing name is **"Face Reader - AI
