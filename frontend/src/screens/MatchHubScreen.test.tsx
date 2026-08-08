@@ -31,4 +31,10 @@ describe('MatchHubScreen', () => {
     fireEvent.press(screen.getByTestId('match-hub-close-button'));
     expect(useAppStore.getState().screen).toBe('settings');
   });
+
+  it('carries the bottom nav bar so other modules are reachable without going back through Home', () => {
+    render(<MatchHubScreen />);
+    fireEvent.press(screen.getByLabelText('Home'));
+    expect(useAppStore.getState().screen).toBe('home');
+  });
 });

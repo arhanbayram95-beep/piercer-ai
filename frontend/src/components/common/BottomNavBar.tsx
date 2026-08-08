@@ -5,9 +5,18 @@ import { useTranslation } from '../../i18n/useTranslation';
 import { useAppStore } from '../../state/useAppStore';
 import { Theme } from '../../ui/theme';
 
+// All 5 top-level destinations, not just Home/Settings — each of the app's
+// three modules gets its own tab so a user can jump between them without
+// routing back through Home every time. Icon-only by default, with the
+// label revealed only on the active tab (see styles.navLabel's display
+// toggle below) — 5 items with always-visible labels didn't fit cleanly at
+// normal phone widths.
 const NAV_ITEMS = [
-  { key: 'home', labelKey: 'nav.home', glyph: '⌂' },
-  { key: 'settings', labelKey: 'nav.settings', glyph: '⚙' },
+  { key: 'home', screen: 'home', labelKey: 'nav.home', glyph: '⌂' },
+  { key: 'tryOn', screen: 'location', labelKey: 'nav.tryOn', glyph: '💎' },
+  { key: 'reference', screen: 'reference', labelKey: 'nav.reference', glyph: '📖' },
+  { key: 'match', screen: 'match', labelKey: 'nav.match', glyph: '✨' },
+  { key: 'settings', screen: 'settings', labelKey: 'nav.settings', glyph: '⚙' },
 ] as const;
 
 type NavKey = (typeof NAV_ITEMS)[number]['key'];
@@ -25,11 +34,6 @@ export default function BottomNavBar({ active }: BottomNavBarProps) {
   // this bar before this fix).
   const insets = useSafeAreaInsets();
 
-  const handlePress = (key: NavKey) => {
-    if (key === 'home') goToScreen('home');
-    if (key === 'settings') goToScreen('settings');
-  };
-
   return (
     <View style={[styles.bottomNav, { bottom: insets.bottom + 16 }]}>
       {NAV_ITEMS.map((item) => {
@@ -38,14 +42,14 @@ export default function BottomNavBar({ active }: BottomNavBarProps) {
         return (
           <Pressable
             key={item.key}
-            onPress={() => handlePress(item.key)}
+            onPress={() => goToScreen(item.screen)}
             style={[styles.navItem, isActive && styles.navItemActive]}
             accessibilityRole="button"
             accessibilityLabel={label}
             accessibilityState={{ selected: isActive }}
           >
             <Text style={[styles.navGlyph, isActive && styles.navGlyphActive]}>{item.glyph}</Text>
-            <Text style={[styles.navLabel, isActive && styles.navLabelActive]}>{label}</Text>
+            {isActive && <Text style={styles.navLabel}>{label}</Text>}
           </Pressable>
         );
       })}
@@ -58,23 +62,27 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignSelf: 'center',
     flexDirection: 'row',
-    gap: Theme.spacing.xs,
+    gap: 2,
     backgroundColor: Theme.colors.surface.glassOverlay,
     borderWidth: 1,
     borderColor: Theme.colors.surface.glassBorder,
     borderRadius: Theme.radius.full,
-    paddingHorizontal: Theme.spacing.xs,
+    paddingHorizontal: 6,
     paddingVertical: 8,
+    maxWidth: '94%',
   },
   navItem: {
+    flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 18,
-    paddingVertical: 6,
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 8,
     borderRadius: Theme.radius.full,
-    gap: 2,
+    gap: 4,
   },
   navItemActive: {
     backgroundColor: Theme.colors.accent.crimsonPrimary,
+    paddingHorizontal: 14,
   },
   navGlyph: {
     color: Theme.colors.text.secondary,
@@ -86,9 +94,6 @@ const styles = StyleSheet.create({
   navLabel: {
     ...Theme.typography.labelSm,
     fontSize: 10,
-    color: Theme.colors.text.secondary,
-  },
-  navLabelActive: {
     color: Theme.colors.accent.goldSecondary,
   },
 });

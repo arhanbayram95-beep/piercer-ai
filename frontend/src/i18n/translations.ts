@@ -22,6 +22,18 @@ export const translations = {
     en: 'Home', zh: '首页', hi: 'होम', es: 'Inicio', fr: 'Accueil',
     ar: 'الرئيسية', bn: 'হোম', pt: 'Início', ru: 'Главная', ur: 'ہوم',
   },
+  'nav.tryOn': {
+    en: 'Try On', zh: '试戴', hi: 'ट्राई ऑन', es: 'Probar', fr: 'Essayer', ar: 'جرّب',
+    bn: 'ট্রাই অন', pt: 'Experimentar', ru: 'Примерить', ur: 'آزمائیں',
+  },
+  'nav.reference': {
+    en: 'Reference', zh: '参考', hi: 'रेफरेंस', es: 'Referencia', fr: 'Référence', ar: 'مرجع',
+    bn: 'রেফারেন্স', pt: 'Referência', ru: 'Справочник', ur: 'ریفرنس',
+  },
+  'nav.match': {
+    en: 'Match', zh: '匹配', hi: 'मैच', es: 'Match', fr: 'Match', ar: 'تطابق',
+    bn: 'ম্যাচ', pt: 'Combinação', ru: 'Подбор', ur: 'میچ',
+  },
   'nav.settings': {
     en: 'Settings', zh: '设置', hi: 'सेटिंग्स', es: 'Ajustes', fr: 'Paramètres',
     ar: 'الإعدادات', bn: 'সেটিংস', pt: 'Definições', ru: 'Настройки', ur: 'ترتیبات',

@@ -32,4 +32,10 @@ describe('PiercingReferenceScreen', () => {
     fireEvent.press(screen.getByTestId('reference-close-button'));
     expect(useAppStore.getState().screen).toBe('settings');
   });
+
+  it('carries the bottom nav bar so other modules are reachable without going back through Home', () => {
+    render(<PiercingReferenceScreen />);
+    fireEvent.press(screen.getByLabelText('Match'));
+    expect(useAppStore.getState().screen).toBe('match');
+  });
 });
