@@ -36,26 +36,28 @@ interface LocationVisual {
 }
 
 const LOCATION_VISUALS: Record<PiercingLocationId, LocationVisual> = {
-  lobe: { category: 'ear', marker: { left: 44, top: 85 } },
-  upperLobe: { category: 'ear', marker: { left: 40, top: 73 } },
-  helix: { category: 'ear', marker: { left: 66, top: 16 } },
-  forwardHelix: { category: 'ear', marker: { left: 27, top: 14 } },
-  tragus: { category: 'ear', marker: { left: 24, top: 52 } },
-  antiTragus: { category: 'ear', marker: { left: 30, top: 65 } },
-  rook: { category: 'ear', marker: { left: 52, top: 32 } },
-  daith: { category: 'ear', marker: { left: 42, top: 44 } },
-  conch: { category: 'ear', marker: { left: 46, top: 54 } },
-  snug: { category: 'ear', marker: { left: 58, top: 42 } },
+  lobe: { category: 'ear', marker: { left: 44, top: 81 } },
+  upperLobe: { category: 'ear', marker: { left: 33, top: 69 } },
+  helix: { category: 'ear', marker: { left: 63, top: 12 } },
+  forwardHelix: { category: 'ear', marker: { left: 24, top: 20 } },
+  tragus: { category: 'ear', marker: { left: 20, top: 52 } },
+  antiTragus: { category: 'ear', marker: { left: 24, top: 68 } },
+  rook: { category: 'ear', marker: { left: 54, top: 24 } },
+  daith: { category: 'ear', marker: { left: 40, top: 46 } },
+  conch: { category: 'ear', marker: { left: 50, top: 46 } },
+  snug: { category: 'ear', marker: { left: 66, top: 52 } },
   industrial: {
     category: 'ear',
-    marker: { left: 24, top: 18 },
-    secondaryMarker: { left: 72, top: 24 },
+    marker: { left: 28, top: 18 },
+    secondaryMarker: { left: 66, top: 16 },
   },
   orbital: {
     category: 'ear',
-    marker: { left: 48, top: 36 },
+    marker: { left: 54, top: 28 },
     secondaryMarker: { left: 44, top: 78 },
   },
+  flat: { category: 'ear', marker: { left: 46, top: 24 } },
+  auricle: { category: 'ear', marker: { left: 58, top: 14 } },
   eyebrow: { category: 'face', marker: { left: 30, top: 24 } },
   bridge: { category: 'face', marker: { left: 50, top: 33 } },
   nostril: { category: 'face', marker: { left: 41, top: 54 } },
@@ -66,6 +68,19 @@ const LOCATION_VISUALS: Record<PiercingLocationId, LocationVisual> = {
   monroe: { category: 'face', marker: { left: 61, top: 71 } },
   tongue: { category: 'face', marker: { left: 50, top: 86 } },
   cheekDimple: { category: 'face', marker: { left: 70, top: 66 } },
+  nefertiti: {
+    category: 'face',
+    marker: { left: 50, top: 36 },
+    secondaryMarker: { left: 50, top: 62 },
+  },
+  rhino: { category: 'face', marker: { left: 50, top: 57 } },
+  nasallang: {
+    category: 'face',
+    marker: { left: 41, top: 54 },
+    secondaryMarker: { left: 59, top: 54 },
+  },
+  verticalLabret: { category: 'face', marker: { left: 50, top: 82 } },
+  antiEyebrow: { category: 'face', marker: { left: 74, top: 46 } },
   navel: { category: 'body', marker: { left: 50, top: 68 } },
   nipple: { category: 'body', marker: { left: 31, top: 34 } },
   surface: {
@@ -74,6 +89,8 @@ const LOCATION_VISUALS: Record<PiercingLocationId, LocationVisual> = {
     secondaryMarker: { left: 67, top: 18 },
   },
   dermal: { category: 'body', marker: { left: 74, top: 44 }, shape: 'square' },
+  nape: { category: 'body', marker: { left: 50, top: 14 } },
+  hip: { category: 'body', marker: { left: 78, top: 58 } },
 };
 
 interface PiercingDiagramProps {
@@ -108,63 +125,118 @@ export default function PiercingDiagram({ locationId, size = 96, style, testID }
 
 function renderBaseShape(category: PiercingCategory, size: number) {
   if (category === 'ear') {
+    // Real-ear proportions, not a ring: the helix is an open "C" (the ear
+    // has no cartilage where it roots onto the head, at front-left here),
+    // the antihelix is a smaller, differently-angled open "C" nested inside
+    // it (the Y-shaped ridge that shelters the concha bowl), the tragus is
+    // a small forward-pointing flap guarding the canal, and the lobe is
+    // soft tissue that tapers narrow-at-top/round-at-bottom, not an oval
+    // blob. The open-ring look comes from a circular View with one side's
+    // border removed (borderLeftWidth: 0) then rotated so the gap lands at
+    // the ear's actual root instead of literally due-west.
+    const outerHelixSize = size * 0.72;
+    const antihelixSize = size * 0.4;
     return (
       <>
-        {/* Outer helix rim */}
+        {/* Outer helix rim — open toward the head at front-left */}
         <View
           style={[
             styles.earOuterRing,
             {
-              width: size * 0.62,
-              height: size * 0.72,
-              left: size * 0.22,
-              top: size * 0.08,
-              borderTopLeftRadius: size * 0.3,
-              borderTopRightRadius: size * 0.31,
-              borderBottomRightRadius: size * 0.24,
-              borderBottomLeftRadius: size * 0.1,
+              width: outerHelixSize,
+              height: outerHelixSize,
+              borderRadius: outerHelixSize / 2,
+              left: size * 0.15,
+              top: size * 0.06,
+              transform: [{ rotate: '-18deg' }],
             },
           ]}
         />
-        {/* Antihelix inner fold */}
+        {/* Chrome highlight catching the upper-outer curve */}
+        <View
+          style={[
+            styles.earHighlight,
+            {
+              width: outerHelixSize * 0.62,
+              height: outerHelixSize * 0.62,
+              borderRadius: (outerHelixSize * 0.62) / 2,
+              left: size * 0.22,
+              top: size * 0.09,
+              transform: [{ rotate: '-38deg' }],
+            },
+          ]}
+        />
+        {/* Concha bowl shadow, cradled by the antihelix */}
+        <View
+          style={[
+            styles.earConcha,
+            {
+              width: size * 0.22,
+              height: size * 0.22,
+              borderRadius: size * 0.11,
+              left: size * 0.38,
+              top: size * 0.38,
+            },
+          ]}
+        />
+        {/* Antihelix — a smaller open "C" nested inside, angled apart from
+            the outer rim so the gap between them reads as the ear canal */}
         <View
           style={[
             styles.earInnerRing,
             {
-              width: size * 0.32,
-              height: size * 0.36,
-              left: size * 0.34,
-              top: size * 0.24,
-              borderTopLeftRadius: size * 0.16,
-              borderTopRightRadius: size * 0.18,
-              borderBottomRightRadius: size * 0.14,
-              borderBottomLeftRadius: size * 0.06,
+              width: antihelixSize,
+              height: antihelixSize,
+              borderRadius: antihelixSize / 2,
+              left: size * 0.32,
+              top: size * 0.22,
+              transform: [{ rotate: '-32deg' }],
             },
           ]}
         />
-        {/* Tragus flap in front of the canal opening */}
+        {/* Tragus, guarding the canal from the front */}
         <View
           style={[
             styles.earTragus,
             {
-              width: size * 0.14,
-              height: size * 0.16,
-              left: size * 0.17,
+              width: size * 0.16,
+              height: size * 0.19,
+              left: size * 0.12,
               top: size * 0.44,
-              borderRadius: size * 0.07,
+              borderTopLeftRadius: size * 0.09,
+              borderBottomLeftRadius: size * 0.09,
+              borderTopRightRadius: size * 0.03,
+              borderBottomRightRadius: size * 0.03,
+              transform: [{ rotate: '12deg' }],
             },
           ]}
         />
-        {/* Lobe, merged onto the bottom of the helix */}
+        {/* Antitragus, the small bump opposite the tragus, just above the lobe */}
+        <View
+          style={[
+            styles.earAntiTragus,
+            {
+              width: size * 0.12,
+              height: size * 0.12,
+              borderRadius: size * 0.06,
+              left: size * 0.17,
+              top: size * 0.62,
+            },
+          ]}
+        />
+        {/* Lobe — narrow where it meets the antitragus, rounding out below */}
         <View
           style={[
             styles.earLobe,
             {
-              width: size * 0.28,
-              height: size * 0.24,
-              left: size * 0.28,
-              top: size * 0.62,
-              borderRadius: size * 0.14,
+              width: size * 0.38,
+              height: size * 0.3,
+              left: size * 0.25,
+              top: size * 0.63,
+              borderTopLeftRadius: size * 0.08,
+              borderTopRightRadius: size * 0.14,
+              borderBottomLeftRadius: size * 0.19,
+              borderBottomRightRadius: size * 0.19,
             },
           ]}
         />
@@ -309,26 +381,49 @@ const styles = StyleSheet.create({
   },
   earOuterRing: {
     position: 'absolute',
-    borderWidth: 2,
+    borderWidth: 2.25,
+    borderLeftWidth: 0,
     borderColor: Theme.colors.accent.chromeSteel,
+  },
+  earHighlight: {
+    position: 'absolute',
+    borderWidth: 1.5,
+    borderRightWidth: 0,
+    borderBottomWidth: 0,
+    borderLeftWidth: 0,
+    borderColor: Theme.colors.text.primary,
+    opacity: 0.3,
+  },
+  earConcha: {
+    position: 'absolute',
+    backgroundColor: Theme.colors.accent.chromeSteel,
+    opacity: 0.08,
   },
   earInnerRing: {
     position: 'absolute',
     borderWidth: 1.5,
+    borderLeftWidth: 0,
     borderColor: Theme.colors.accent.chromeSteel,
     opacity: 0.65,
   },
   earTragus: {
     position: 'absolute',
     borderWidth: 1.5,
+    borderRightWidth: 0,
     borderColor: Theme.colors.accent.chromeSteel,
-    opacity: 0.55,
+    opacity: 0.6,
   },
-  earLobe: {
+  earAntiTragus: {
     position: 'absolute',
     borderWidth: 1.5,
     borderColor: Theme.colors.accent.chromeSteel,
-    opacity: 0.6,
+    opacity: 0.5,
+  },
+  earLobe: {
+    position: 'absolute',
+    borderWidth: 1.75,
+    borderColor: Theme.colors.accent.chromeSteel,
+    opacity: 0.65,
   },
   faceOutline: {
     position: 'absolute',
