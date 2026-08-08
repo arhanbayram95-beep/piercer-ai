@@ -12,6 +12,7 @@ export type AppScreen =
   | 'preview'
   | 'settings'
   | 'reference'
+  | 'locationDetail'
   | 'match'
   | 'matchQuiz'
   | 'matchPhoto';

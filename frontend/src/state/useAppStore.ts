@@ -5,6 +5,7 @@ import { createDeviceSlice, DeviceSlice } from './slices/deviceSlice';
 import { createEntitlementSlice, EntitlementSlice } from './slices/entitlementSlice';
 import { createLocaleSlice, LocaleSlice } from './slices/localeSlice';
 import { NavigationSlice, createNavigationSlice } from './slices/navigationSlice';
+import { createReferenceSlice, ReferenceSlice } from './slices/referenceSlice';
 import { createStudioSlice, StudioSlice } from './slices/studioSlice';
 
 type AppStore = NavigationSlice &
@@ -13,7 +14,8 @@ type AppStore = NavigationSlice &
   EntitlementSlice &
   LocaleSlice &
   DeviceSlice &
-  StudioSlice;
+  StudioSlice &
+  ReferenceSlice;
 
 export const useAppStore = create<AppStore>()((...args) => ({
   ...createNavigationSlice(...args),
@@ -23,4 +25,5 @@ export const useAppStore = create<AppStore>()((...args) => ({
   ...createLocaleSlice(...args),
   ...createDeviceSlice(...args),
   ...createStudioSlice(...args),
+  ...createReferenceSlice(...args),
 }));

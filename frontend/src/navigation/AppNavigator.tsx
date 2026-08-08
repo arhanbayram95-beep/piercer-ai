@@ -8,6 +8,7 @@ import OnboardingScreen from '../screens/OnboardingScreen';
 import PaywallScreen from '../screens/PaywallScreen';
 import PersonalityPhotoScreen from '../screens/PersonalityPhotoScreen';
 import PersonalityQuizScreen from '../screens/PersonalityQuizScreen';
+import PiercingDetailScreen from '../screens/PiercingDetailScreen';
 import PiercingLocationScreen from '../screens/PiercingLocationScreen';
 import PiercingReferenceScreen from '../screens/PiercingReferenceScreen';
 import PreviewScreen from '../screens/PreviewScreen';
@@ -29,6 +30,7 @@ const SCREENS: Record<AppScreen, React.ComponentType> = {
   preview: PreviewScreen,
   settings: SettingsScreen,
   reference: PiercingReferenceScreen,
+  locationDetail: PiercingDetailScreen,
   match: MatchHubScreen,
   matchQuiz: PersonalityQuizScreen,
   matchPhoto: PersonalityPhotoScreen,

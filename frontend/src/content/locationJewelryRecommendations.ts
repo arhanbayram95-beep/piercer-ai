@@ -29,6 +29,8 @@ export const LOCATION_JEWELRY_RECOMMENDATIONS: Record<PiercingLocationId, Jewelr
   snug: { jewelryType: 'barbells', finish: 'blackSteel' },
   industrial: { jewelryType: 'industrial', finish: 'blackSteel' },
   orbital: { jewelryType: 'hoops', finish: 'silver' },
+  flat: { jewelryType: 'studs', finish: 'titanium' },
+  auricle: { jewelryType: 'studs', finish: 'gold' },
   eyebrow: { jewelryType: 'barbells', finish: 'titanium' },
   bridge: { jewelryType: 'barbells', finish: 'silver' },
   nostril: { jewelryType: 'studs', finish: 'gold' },
@@ -39,10 +41,17 @@ export const LOCATION_JEWELRY_RECOMMENDATIONS: Record<PiercingLocationId, Jewelr
   monroe: { jewelryType: 'studs', finish: 'gold' },
   tongue: { jewelryType: 'barbells', finish: 'titanium' },
   cheekDimple: { jewelryType: 'studs', finish: 'silver' },
+  nefertiti: { jewelryType: 'barbells', finish: 'silver' },
+  rhino: { jewelryType: 'barbells', finish: 'blackSteel' },
+  nasallang: { jewelryType: 'barbells', finish: 'blackSteel' },
+  verticalLabret: { jewelryType: 'barbells', finish: 'silver' },
+  antiEyebrow: { jewelryType: 'barbells', finish: 'titanium' },
   navel: { jewelryType: 'barbells', finish: 'gold' },
   nipple: { jewelryType: 'barbells', finish: 'silver' },
   surface: { jewelryType: 'barbells', finish: 'titanium' },
   dermal: { jewelryType: 'dermal', finish: 'silver' },
+  nape: { jewelryType: 'dermal', finish: 'blackSteel' },
+  hip: { jewelryType: 'dermal', finish: 'gold' },
 };
 
 export function recommendedJewelryFor(locationId: PiercingLocationId): JewelryRecommendation {

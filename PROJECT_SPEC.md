@@ -601,6 +601,61 @@ the affected screens, since the 76px shutter button sits lower than other
 screens' primary actions and needs clearance above the nav pill so the two
 don't visually collide.
 
+**Reference page: detail screen + catalog expansion (added 2026-08-08):**
+two more pieces of direct user feedback on the reference page.
+
+1. Cards on `PiercingReferenceScreen` now navigate to a new
+   `PiercingDetailScreen.tsx` on press instead of expanding in place — the
+   expand-on-press interaction from the previous entry (13316e2) is gone,
+   reverted per explicit feedback that a tap should open a dedicated page.
+   The description/healing/aftercare content itself is unchanged, only
+   where it renders. `viewedLocationId` lives in a new, deliberately tiny
+   `referenceSlice.ts` (`viewedLocationId` + `setViewedLocationId`) rather
+   than being folded into `studioSlice.ts` — "which card did the user tap
+   on the reference page" and "which location/jewelry is the user actively
+   trying on" are unrelated pieces of state, and conflating them would mean
+   opening a reference detail page could silently overwrite an in-progress
+   Try On selection. Added `'locationDetail'` to `AppScreen`
+   (`navigationSlice.ts`) and wired it into `AppNavigator.tsx`; no change
+   to `NON_RETURNABLE_SCREENS` needed since the existing single-level
+   `goBack()` already returns correctly to Reference. `PiercingDetailScreen`
+   carries `BottomNavBar` (`active="reference"`) like every other
+   post-onboarding screen per the earlier universal-nav-bar entry, and
+   falls back to a plain empty state rather than crashing if somehow
+   reached with `viewedLocationId === null`.
+
+2. `piercingLocations.ts`'s catalog grew from 26 to 35 locations: `flat`,
+   `auricle` (ear); `nefertiti`, `rhino`, `nasallang`, `verticalLabret`,
+   `antiEyebrow` (face); `nape`, `hip` (body) — same non-genital scope
+   boundary as the existing 26 (matches `studioSlice.ts`'s `JEWELRY_TYPES`,
+   which has no genital-piercing support either). The "Christina" piercing
+   was considered and deliberately excluded for this reason — it's a
+   genital-adjacent placement (mons pubis), outside scope, not an
+   oversight. "Stacked lobe" naming was also considered and skipped: it's a
+   styling convention (multiple ordinary lobe piercings), not a distinct
+   anatomical location, so it wouldn't add real information to the
+   catalog. Each new entry got the full existing field set (label, category,
+   pain rating, description, healing time, aftercare) in the same tone as
+   the original 26, plus an entry in `PiercingDiagram.tsx`'s
+   `LOCATION_VISUALS` (a `Record`, so TypeScript enforces this — it will
+   not compile with a location missing) and in `locationJewelryTypes.ts`'s
+   `PIERCING_LOCATION_JEWELRY_TYPES` and
+   `locationJewelryRecommendations.ts`'s `LOCATION_JEWELRY_RECOMMENDATIONS`
+   (both also `Record`s over `PiercingLocationId`, same enforcement).
+   Missing the jewelry-types mapping was the exact source of a real bug
+   earlier in the project (the Industrial/Snug-with-septum-jewelry
+   mismatch) — this time a regression test
+   (`locationJewelryRecommendations.test.ts`) was added that asserts every
+   location's *recommended* jewelry type is also in its *valid* jewelry
+   type list, so a future new location can't reintroduce that same class of
+   bug even if a developer forgets to cross-check by hand.
+   Label translations for the 9 new locations follow the catalog's existing
+   convention: short piercing-jargon terms get a real translation or
+   transliteration per language (matching how `Rook`/`Daith`/`Snug` were
+   already handled); the longer description/healing/aftercare copy repeats
+   the English text across all 10 language keys, same as the rest of the
+   catalog's lower-priority content.
+
 ## 5. Naming Notes
 
 **Decision (2026-07-24):** the public-facing name is **"Face Reader - AI

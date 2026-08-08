@@ -26,6 +26,8 @@ export const PIERCING_LOCATION_JEWELRY_TYPES: Record<PiercingLocationId, Jewelry
   snug: ['hoops', 'barbells'],
   industrial: ['industrial'],
   orbital: ['hoops'],
+  flat: ['studs', 'barbells'],
+  auricle: ['studs', 'hoops'],
   // Face
   eyebrow: ['barbells', 'studs'],
   bridge: ['barbells', 'studs'],
@@ -37,11 +39,18 @@ export const PIERCING_LOCATION_JEWELRY_TYPES: Record<PiercingLocationId, Jewelry
   monroe: ['studs'],
   tongue: ['barbells'],
   cheekDimple: ['studs', 'barbells'],
+  nefertiti: ['barbells', 'studs'],
+  rhino: ['barbells', 'studs'],
+  nasallang: ['barbells'],
+  verticalLabret: ['barbells', 'studs'],
+  antiEyebrow: ['dermal', 'barbells'],
   // Body (non-genital scope only)
   navel: ['barbells', 'hoops'],
   nipple: ['barbells', 'hoops'],
   surface: ['dermal', 'barbells'],
   dermal: ['dermal'],
+  nape: ['dermal', 'barbells'],
+  hip: ['dermal', 'barbells'],
 };
 
 // Falls back to every jewelry type rather than crashing or showing nothing

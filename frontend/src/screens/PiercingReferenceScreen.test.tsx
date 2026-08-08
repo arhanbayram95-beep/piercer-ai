@@ -6,7 +6,7 @@ import PiercingReferenceScreen from './PiercingReferenceScreen';
 
 describe('PiercingReferenceScreen', () => {
   beforeEach(() => {
-    useAppStore.setState({ screen: 'reference', previousScreen: 'settings' });
+    useAppStore.setState({ screen: 'reference', previousScreen: 'settings', viewedLocationId: null });
   });
 
   it('shows the pain-scale/healing/aftercare disclaimer as visible page copy', () => {
@@ -14,30 +14,20 @@ describe('PiercingReferenceScreen', () => {
     expect(screen.getByTestId('reference-disclaimer').props.children).toContain('not medical advice');
   });
 
-  it('shows the pain rating on the collapsed card, without the description/healing/aftercare detail', () => {
+  it('shows the pain rating on the card, without the description/healing/aftercare detail inline', () => {
     render(<PiercingReferenceScreen />);
     const helixCard = within(screen.getByTestId('reference-card-helix'));
     expect(helixCard.getByText('Pain: 5/10')).toBeTruthy();
     expect(helixCard.queryByText(/upper outer cartilage rim/)).toBeNull();
-    expect(helixCard.queryByTestId('reference-healing-helix')).toBeNull();
-    expect(helixCard.queryByTestId('reference-aftercare-helix')).toBeNull();
+    expect(screen.queryByTestId('reference-healing-helix')).toBeNull();
+    expect(screen.queryByTestId('reference-aftercare-helix')).toBeNull();
   });
 
-  it('reveals description, healing time, and aftercare tip when a collapsed card is pressed', () => {
+  it('navigates to the location detail screen and records the pressed location when a card is tapped', () => {
     render(<PiercingReferenceScreen />);
     fireEvent.press(screen.getByTestId('reference-card-helix'));
-    const helixCard = within(screen.getByTestId('reference-card-helix'));
-    expect(helixCard.getByText(/upper outer cartilage rim/)).toBeTruthy();
-    expect(helixCard.getByTestId('reference-healing-helix').props.children).toBe('Heals in 3-6 months');
-    expect(helixCard.getByTestId('reference-aftercare-helix').props.children).toContain('saline spray');
-  });
-
-  it('collapses an expanded card back down when pressed again', () => {
-    render(<PiercingReferenceScreen />);
-    fireEvent.press(screen.getByTestId('reference-card-helix'));
-    fireEvent.press(screen.getByTestId('reference-card-helix'));
-    const helixCard = within(screen.getByTestId('reference-card-helix'));
-    expect(helixCard.queryByTestId('reference-healing-helix')).toBeNull();
+    expect(useAppStore.getState().screen).toBe('locationDetail');
+    expect(useAppStore.getState().viewedLocationId).toBe('helix');
   });
 
   it('renders a piercing diagram for every location, not just text', () => {
@@ -46,19 +36,26 @@ describe('PiercingReferenceScreen', () => {
     expect(screen.getByTestId('reference-diagram-navel')).toBeTruthy();
   });
 
-  it('covers the full non-genital catalog, including the newly added locations', () => {
+  it('covers the full non-genital catalog, including the original and newly added locations', () => {
     render(<PiercingReferenceScreen />);
     expect(screen.getByTestId('reference-card-snug')).toBeTruthy();
     expect(screen.getByTestId('reference-card-dermal')).toBeTruthy();
     expect(screen.getByTestId('reference-card-surface')).toBeTruthy();
+    expect(screen.getByTestId('reference-card-nefertiti')).toBeTruthy();
+    expect(screen.getByTestId('reference-card-rhino')).toBeTruthy();
+    expect(screen.getByTestId('reference-card-nasallang')).toBeTruthy();
+    expect(screen.getByTestId('reference-card-flat')).toBeTruthy();
+    expect(screen.getByTestId('reference-card-auricle')).toBeTruthy();
+    expect(screen.getByTestId('reference-card-verticalLabret')).toBeTruthy();
+    expect(screen.getByTestId('reference-card-antiEyebrow')).toBeTruthy();
+    expect(screen.getByTestId('reference-card-nape')).toBeTruthy();
+    expect(screen.getByTestId('reference-card-hip')).toBeTruthy();
   });
 
-  it('has a healing time and aftercare tip for every single catalog location, not just a sample', () => {
+  it('renders a card for every single catalog location, not just a sample', () => {
     render(<PiercingReferenceScreen />);
     for (const id of PIERCING_LOCATION_IDS) {
-      fireEvent.press(screen.getByTestId(`reference-card-${id}`));
-      expect(screen.getByTestId(`reference-healing-${id}`)).toBeTruthy();
-      expect(screen.getByTestId(`reference-aftercare-${id}`)).toBeTruthy();
+      expect(screen.getByTestId(`reference-card-${id}`)).toBeTruthy();
     }
   });
 

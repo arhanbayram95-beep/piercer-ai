@@ -40,6 +40,12 @@ describe('AppNavigator', () => {
     expect(screen.getByTestId('reference-screen')).toBeTruthy();
   });
 
+  it('renders the piercing location detail screen when routed there', () => {
+    useAppStore.setState({ screen: 'locationDetail', viewedLocationId: 'helix' });
+    render(<AppNavigator />);
+    expect(screen.getByTestId('location-detail-screen')).toBeTruthy();
+  });
+
   it('renders the match hub screen when routed there', () => {
     useAppStore.setState({ screen: 'match' });
     render(<AppNavigator />);
