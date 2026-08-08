@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import BottomNavBar from '../components/common/BottomNavBar';
+import FadeInView from '../components/common/FadeInView';
 import GlassCard from '../components/common/GlassCard';
 import PiercingDiagram from '../components/common/PiercingDiagram';
-import { PIERCING_CATEGORIES, PIERCING_CATEGORY_LABEL_KEYS, piercingLocationsByCategory } from '../content/piercingLocations';
+import {
+  PIERCING_CATEGORIES,
+  PIERCING_CATEGORY_LABEL_KEYS,
+  PiercingLocation,
+  piercingLocationsByCategory,
+} from '../content/piercingLocations';
 import { useTranslation } from '../i18n/useTranslation';
 import { useAppStore } from '../state/useAppStore';
 import { Theme } from '../ui/theme';
@@ -17,6 +23,11 @@ import { Theme } from '../ui/theme';
 // are a claim a user could otherwise mistake for medical guidance, so the
 // "general estimate, not medical advice" framing needs to be something
 // they actually read.
+//
+// Cards are collapsed by default (name + diagram + pain badge only) and
+// expand on press to reveal description/healing/aftercare — with all 26
+// locations rendering description+healing+aftercare inline at once the
+// page read as an undifferentiated wall of text, per direct user feedback.
 export default function PiercingReferenceScreen() {
   const t = useTranslation();
   const goBack = useAppStore((s) => s.goBack);
@@ -48,33 +59,7 @@ export default function PiercingReferenceScreen() {
               <View style={styles.categoryHeadingRule} />
             </View>
             {piercingLocationsByCategory(category).map((location) => (
-              <GlassCard key={location.id} style={styles.locationCard} testID={`reference-card-${location.id}`}>
-                <View style={styles.locationRow}>
-                  <PiercingDiagram
-                    locationId={location.id}
-                    size={72}
-                    style={styles.locationDiagram}
-                    testID={`reference-diagram-${location.id}`}
-                  />
-                  <View style={styles.locationTextCol}>
-                    <View style={styles.locationHeaderRow}>
-                      <Text style={styles.locationName}>{t(location.labelKey)}</Text>
-                      <Text style={styles.painBadge}>{t('reference.painLabel', { rating: location.painRating })}</Text>
-                    </View>
-                    <Text style={styles.locationDescription}>{t(location.descriptionKey)}</Text>
-                    <Text style={styles.healingLabel} testID={`reference-healing-${location.id}`}>
-                      {t('reference.healingLabel', { time: t(location.healingTimeKey) })}
-                    </Text>
-                  </View>
-                </View>
-
-                <View style={styles.aftercareBlock}>
-                  <Text style={styles.aftercareHeading}>{t('reference.aftercareHeading')}</Text>
-                  <Text style={styles.aftercareText} testID={`reference-aftercare-${location.id}`}>
-                    {t(location.aftercareKey)}
-                  </Text>
-                </View>
-              </GlassCard>
+              <LocationReferenceCard key={location.id} location={location} />
             ))}
           </View>
         ))}
@@ -82,6 +67,56 @@ export default function PiercingReferenceScreen() {
 
       <BottomNavBar active="reference" />
     </View>
+  );
+}
+
+function LocationReferenceCard({ location }: { location: PiercingLocation }) {
+  const t = useTranslation();
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <Pressable
+      onPress={() => setExpanded((prev) => !prev)}
+      accessibilityRole="button"
+      accessibilityState={{ expanded }}
+      testID={`reference-card-${location.id}`}
+    >
+      <GlassCard style={styles.locationCard}>
+        <View style={styles.locationRow}>
+          <PiercingDiagram
+            locationId={location.id}
+            size={64}
+            style={styles.locationDiagram}
+            testID={`reference-diagram-${location.id}`}
+          />
+          <View style={styles.locationTextCol}>
+            <View style={styles.locationHeaderRow}>
+              <Text style={styles.locationName}>{t(location.labelKey)}</Text>
+              <Text style={styles.painBadge}>{t('reference.painLabel', { rating: location.painRating })}</Text>
+            </View>
+          </View>
+          <Text style={styles.expandIcon} testID={`reference-expand-icon-${location.id}`}>
+            {expanded ? '▾' : '▸'}
+          </Text>
+        </View>
+
+        {expanded ? (
+          <FadeInView style={styles.expandedBlock}>
+            <Text style={styles.locationDescription}>{t(location.descriptionKey)}</Text>
+            <Text style={styles.healingLabel} testID={`reference-healing-${location.id}`}>
+              {t('reference.healingLabel', { time: t(location.healingTimeKey) })}
+            </Text>
+
+            <View style={styles.aftercareBlock}>
+              <Text style={styles.aftercareHeading}>{t('reference.aftercareHeading')}</Text>
+              <Text style={styles.aftercareText} testID={`reference-aftercare-${location.id}`}>
+                {t(location.aftercareKey)}
+              </Text>
+            </View>
+          </FadeInView>
+        ) : null}
+      </GlassCard>
+    </Pressable>
   );
 }
 
@@ -175,6 +210,18 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: Theme.colors.accent.electricPurple,
   },
+  expandIcon: {
+    color: Theme.colors.accent.chromeSteel,
+    fontSize: 14,
+    marginLeft: Theme.spacing.xs,
+  },
+  expandedBlock: {
+    marginTop: Theme.spacing.xs,
+    paddingTop: Theme.spacing.xs,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: Theme.colors.surface.glassBorder,
+    gap: 4,
+  },
   locationDescription: {
     ...Theme.typography.bodyMd,
     fontSize: 13,
@@ -184,7 +231,6 @@ const styles = StyleSheet.create({
     ...Theme.typography.labelSm,
     fontSize: 11,
     color: Theme.colors.accent.chromeSteel,
-    marginTop: 2,
   },
   aftercareBlock: {
     marginTop: Theme.spacing.xs,
